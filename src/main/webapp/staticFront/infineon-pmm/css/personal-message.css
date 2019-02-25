@@ -1,0 +1,81 @@
+@charset "UTF-8";
+.page_link{}
+.page_link a{display: block;width: 137px;height: 46px;line-height: 46px;text-align: center;background: #f5f5f5;color: #928285;margin-right: 21px;}
+.page_link a.on{background: #9bc3b7;color: #fff;}
+.page_link a:hover{background: #9bc3b7;color: #fff;}
+@media only screen and (max-width: 768px) {
+	.page_link{text-align: center;}
+	.page_link a{display: inline-block;float: none;width: 20%;margin: 0 1%;}
+}
+
+
+
+.my_message .mymessage{border: 1px solid #d6d6d6;}
+.my_message .mymessage .mymessage_t{min-height: 58px;height: auto;line-height: 58px;width: 97%;padding-left: 3%;}
+.my_message .mymessage .mymessage_t .read p{display: inline-block;color: #999999;}
+.my_message .mymessage .mymessage_t .read a{color: #9bc3b7;}
+.my_message .mymessage .mymessage_t .read span{display: inline-block;color: #999999;padding: 0 5px;}
+.my_message .mymessage .mymessage_t .read i{color: #eb2648;}
+
+
+.my_message .mymessage .mymessage_c{background: #f2f2f2;padding-left: 3%;height: 37px;} 
+.my_message .mymessage .mymessage_c p{display: inline-block;line-height: 37px;}
+.my_message .mymessage .mymessage_c .quanxuan{cursor: pointer;width: 22%;}
+.my_message .mymessage .mymessage_c .quanxuan label{padding-left: 5%;}
+.my_message .mymessage .mymessage_c .p1{width: 43%;text-align: center;}
+.my_message .mymessage .mymessage_c .p2{width: 20%;text-align: center;}
+.my_message .mymessage .mymessage_c .p3{width: 10%;text-align: center;}
+.my_message .mymessage .mymessage_list{padding-left: 3%;}
+.my_message .mymessage .mymessage_list li{height: auto;border-bottom: 1px solid #f8faf8;min-height: 56px;}
+
+.my_message .mymessage .mymessage_list input{margin-top: 20px;}
+.my_message .mymessage .mymessage_list p{display: inline-block;line-height: 56px;}
+.my_message .mymessage .mymessage_list a{display: inline-block;line-height: 56px;}
+.my_message .mymessage .mymessage_list li .zhuangtai{width: 10%;}
+.my_message .mymessage .mymessage_list li .zhuangtai.on{color: red;}
+.my_message .mymessage .mymessage_list li .mymessage_bt{width: 70%;padding-left: 1%;
+-webkit-line-clamp: 1;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+text-overflow: ellipsis;
+overflow: hidden;
+height:auto; /*瀹瑰櫒楂樺害锛堣鏁�琛岄棿璺濓級*/
+max-height: 56px;
+}
+.my_message .mymessage .mymessage_list li.on .mymessage_bt{font-weight: bold;color: #000;}
+.my_message .mymessage .mymessage_list li .mymessage_bt:hover{color: #9bc3b7;}
+.my_message .mymessage .mymessage_list li .mymessage_bt:hover .newPath{color: #9bc3b7;}
+.my_message .mymessage .mymessage_list li .mymessage_time{width: 20%;text-align: center;overflow: hidden;height: 56px;}
+.my_message .mymessage .mymessage_list li .mymessage_caozuo{width: 10%;text-align: center;}
+
+input[type="checkbox"]{
+	position: relative;
+    -webkit-appearance: none;
+    vertical-align:middle;
+    margin-top:0;
+    background:#fff;
+    border:#ccc solid 1px;
+    border-radius: 0px;
+    min-height: 15px;
+    min-width: 15px;
+}
+input[type="checkbox"]:checked {
+    background: #9bc3b7;
+    border:#9bc3b7 solid 1px;
+}
+input[type=checkbox]:checked::after{
+    content: '';
+    top: 2px;
+    left: 2px;
+    position: absolute;
+    background: transparent;
+    border: #fff solid 2px;
+    border-top: none;
+    border-right: none;
+    height: 5px;
+    width: 8px;
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg); 
+    transform: rotate(-45deg);
+}

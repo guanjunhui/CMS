@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="RecommendMapper" >
+  <resultMap id="BaseResultMap" type="cn.cebest.entity.system.Recommend" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CONTENT_ID" property="contentId" jdbcType="VARCHAR" />
+    <result column="COLUM_ID" property="columId" jdbcType="VARCHAR" />
+    <result column="TYPE_ID" property="typeId" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID,CONTENT_ID, COLUM_ID, TYPE_ID, TYPE
+  </sql>
+  <!-- 根据内容ID获取与栏目分类的映射关系 -->
+  <select id="selectByContentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_RECOMMEND
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByContentId" parameterType="java.lang.String" >
+    delete from WEB_RECOMMEND
+    where CONTENT_ID = #{contentId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="saveBatch" parameterType="java.util.List" >
+    insert into WEB_RECOMMEND (ID,CONTENT_ID, COLUM_ID, TYPE_ID, TYPE)
+    values
+    <foreach collection="list" item="recommenditem01" separator=",">
+     (#{recommenditem01.id,jdbcType=VARCHAR},#{recommenditem01.contentId,jdbcType=VARCHAR}, #{recommenditem01.columId,jdbcType=VARCHAR}, #{recommenditem01.typeId,jdbcType=VARCHAR}, 
+      #{recommenditem01.type,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+</mapper>

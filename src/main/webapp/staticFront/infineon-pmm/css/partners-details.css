@@ -1,0 +1,15 @@
+@charset "UTF-8";
+.partner{}
+.partner .partner_top img{height: 45px;}
+.partner .partner_top p{line-height: 45px;margin-left: 20px;color: #333333;}
+.partner .partner_txt p{margin: 15px 0;}
+.partner .partner_txt a{display: block;}
+.partner .partner_link p{color: #928285;}
+.partner .partner_link a{color: #928285;}
+
+.partner .partner_icon{display: block;}
+.partner .partner_icon img{display: inline-block;height: 40px;}
+.partner .partner_icon p{display: inline-block;line-height: 40px;padding-left: 10px;color: #928285;}
+
+
+

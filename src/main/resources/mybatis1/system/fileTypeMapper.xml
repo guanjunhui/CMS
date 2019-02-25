@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fileTypeMapper">
+	<resultMap type="cn.cebest.entity.system.download.FileType"
+		id="BaseResultFileType">
+		<id property="download_id" column="DOWNLOAD_ID" />
+		<result property="pid" column="PID" />
+		<result property="download_name" column="DOWNLOAD_NAME" />
+		<result property="wburl" column="WBURL" />
+		<result property="created_time" column="CREATED_TIME" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="summary" column="SUMMARY" />
+		<result property="imageid" column="IMAGEID" />
+		<result property="keywords" column="KEYWORDS" />
+		<result property="siteid" column="SITEID" />
+		<result property="status" column="STATUS" />
+		<result property="templateid" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<association property="template" resultMap="TemplateMap" />
+	</resultMap>
+
+	<resultMap type="cn.cebest.entity.system.download.FileType"
+		id="resultFileType">
+		<id property="download_id" column="DOWNLOAD_ID" />
+		<result property="download_name" column="DOWNLOAD_NAME" />
+		<result property="wburl" column="WBURL" />
+		<result property="created_time" column="CREATED_TIME" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="summary" column="SUMMARY" />
+		<result property="imageid" column="IMAGEID" />
+		<result property="keywords" column="KEYWORDS" />
+		<result property="imgeId" column="IMGEID" />
+		<result property="siteid" column="SITEID" />
+		<result property="TXT" column="TXT" />
+		<result property="status" column="STATUS" />
+		<result property="count" column="COUNT" />
+		<result property="templateid" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<result property="pid" column="PID" />
+		<result property="title" column="TITLE" />
+		<result property="imgurl" column="IMGURL" />
+		<result property="pname" column="PNAME" />
+		<result property="is_home" column="IS_HOME" />
+		<result property="filedJson" column="FILEDJSON" />
+		<result property="filepath" column="filepath" />
+		<result property="columid" column="COLUMNID" />
+		<result property="filetypeId" column="FILETYPEID" />
+		<result property="filetypename" column="FILETYPENAME" />
+		<result property="typeUrlName" column="typeUrlName" />
+		<association property="template" resultMap="TemplateMap" />
+		<collection property="childList"
+			ofType="cn.cebest.entity.system.download.FileType">
+			<id property="download_id" column="DOWNLOAD_ID_" />
+			<result property="download_name" column="DOWNLOAD_NAME_" />
+			<result property="wburl" column="WBURL_" />
+			<result property="created_time" column="CREATED_TIME_" />
+			<result property="update_time" column="UPDATE_TIME_" />
+			<result property="summary" column="SUMMARY_" />
+			<result property="imageid" column="IMAGEID_" />
+			<result property="keywords" column="KEYWORDS_" />
+			<result property="imgeId" column="IMGEID_" />
+			<result property="siteid" column="SITEID_" />
+			<result property="TXT" column="TXT_" />
+			<result property="status" column="STATUS_" />
+			<result property="count" column="COUNT_" />
+			<result property="pid" column="PID_" />
+		</collection>
+		<collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="ID_" />
+			<result property="columName" column="COLUMNAME_" />
+		</collection>
+	</resultMap>
+
+	<resultMap id="TemplateMap" type="cn.cebest.entity.system.Template">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+		<result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+		<result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+		<result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+	</resultMap>
+	<!-- 查询图片路径 -->
+	<select id="selectImagePach" resultType="pd">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_IMAGE I ON
+		F.IMAGEID=I.IMAGE_ID
+		WHERE F.DOWNLOAD_ID IN
+		<foreach collection="array" item="filetypeid01" open="(" close=")"
+			separator=",">
+			<if test="filetypeid01 !=null and filetypeid01 != ''">
+				#{filetypeid01}
+			</if>
+		</foreach>
+	</select>
+	<select id="selectFileTypeAearchTop" parameterType="pd"
+		resultMap="resultFileType">
+		
+		SELECT FT.DOWNLOAD_ID,C.COLUM_NAME AS COLUMNAME_
+		,FT.DOWNLOAD_NAME,C.ID AS ID_ ,(SELECT COUNT(*)
+		FROM WEB_FILE F
+		WHERE F.FILEID IN (SELECT FF.FILEID
+		FROM WEB_FILETYPE_FILE FF
+		WHERE
+		FF.FILETYPEID=FT.DOWNLOAD_ID)) AS COUNT ,FT.PID,STATUS,FT.SORT
+		FROM
+		WEB_FILETYPE FT
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=FT.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG C ON
+		C.ID=FC.COLUMNID
+		<where>
+			FT.SITEID=#{SITEID}
+			<if test="KEYWORDS !=null and KEYWORDS !=''">AND FT.KEYWORDS LIKE '%' #{KEYWORDS}
+				'%' </if>
+		</where>
+	</select>
+	<!-- 查询分类列表根列表 -->
+	<select id="selectFileTypeliltPageTop" parameterType="pd"
+		resultMap="resultFileType">
+		SELECT FT.DOWNLOAD_ID,C.COLUM_NAME AS COLUMNAME_
+		,FT.DOWNLOAD_NAME,C.ID AS ID_ ,(SELECT COUNT(*)
+		FROM WEB_FILE F
+		WHERE F.FILEID IN (SELECT FF.FILEID
+		FROM WEB_FILETYPE_FILE FF
+		WHERE
+		FF.FILETYPEID=FT.DOWNLOAD_ID)) AS COUNT ,FT.PID,STATUS,FT.SORT
+		FROM
+		WEB_FILETYPE FT
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=FT.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG C ON
+		C.ID=FC.COLUMNID
+		WHERE
+		FT.PID='0'
+		AND FT.SITEID=#{SITEID}
+	</select>
+
+
+	<!-- 查询分类列表 -->
+	<select id="selectFileTypeliltPageAll" parameterType="pd"
+		resultMap="resultFileType">
+		SELECT FT.DOWNLOAD_ID,C.COLUM_NAME AS COLUMNAME_
+		,FT.DOWNLOAD_NAME,C.ID AS ID_ ,(SELECT COUNT(*)
+		FROM WEB_FILE F
+		WHERE F.FILEID IN (SELECT FF.FILEID
+		FROM WEB_FILETYPE_FILE FF
+		WHERE
+		FF.FILETYPEID=FT.DOWNLOAD_ID)) AS COUNT ,FT.PID,STATUS,FT.SORT
+		FROM
+		WEB_FILETYPE FT
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=FT.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG C ON
+		C.ID=FC.COLUMNID
+		<where>
+			FT.SITEID=#{SITEID}
+			<if test="KEYWORDS !=null and KEYWORDS !=''">AND FT.DOWNLOAD_NAME LIKE '%' #{KEYWORDS}
+				'%' </if>
+		</where>
+
+	</select>
+
+	<!-- 查询分类根列表 -->
+	<select id="selectFileTypeTop" parameterType="pd"
+		resultType="cn.cebest.entity.system.download.FileType">
+		SELECT
+		DOWNLOAD_ID,PID,DOWNLOAD_NAME,WBURL,CREATED_TIME,UPDATE_TIME,SUMMARY,IMAGEID,KEYWORDS,SITEID,STATUS,TEMPLATEID,SORT
+		FROM WEB_FILETYPE
+		WHERE PID='0'
+		AND SITEID=#{SITEID}
+		<if test="DOWNLOAD_ID !=null and DOWNLOAD_ID != ''"> and DOWNLOAD_ID!=#{DOWNLOAD_ID}</if>
+	</select>
+	<!-- 根据id查询 -->
+	<select id="selectById" resultMap="resultFileType">
+		SELECT
+		F.DOWNLOAD_ID,F.DOWNLOAD_NAME,F.WBURL,F.SUMMARY,F.KEYWORDS
+		,F.STATUS,T.TXT,F.IMAGEID,
+		I.TITLE,FT.DOWNLOAD_NAME AS
+		PNAME,C.COLUM_NAME AS COLUMNAME_,C.ID AS
+		ID_,F.PID,F.TEMPLATEID,F.SORT,F.IS_HOME,I.IMGURL,WSC.SKIPPATH AS typeUrlName
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_TXT T ON T.CONTENT_ID=F.DOWNLOAD_ID
+		LEFT JOIN WEB_IMAGE I
+		ON I.IMAGE_ID=F.IMAGEID
+		LEFT JOIN WEB_FILETYPE FT ON FT.DOWNLOAD_ID=F.PID
+		LEFT JOIN
+		WEB_FILETYPE_COLUMN FC ON FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT JOIN
+		WEB_COLUMCONFIG C ON FC.COLUMNID=C.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON F.DOWNLOAD_ID=WSC.TYPEID
+		WHERE F.DOWNLOAD_ID=#{ID}
+	</select>
+
+	<!-- 查询分类根列表 -->
+	<select id="selectFiles" resultType="String">
+		SELECT F.FILEID
+		FROM WEB_FILE F
+		LEFT JOIN WEB_FILETYPE_FILE FF ON
+		F.FILEID=FF.FILEID
+		LEFT JOIN WEB_FILETYPE FT ON
+		FF.FILETYPEID=FT.DOWNLOAD_ID
+		WHERE FT.DOWNLOAD_ID IN
+		<foreach collection="array" close=")" open="(" item="filetypeid02"
+			separator=",">
+			#{filetypeid02}
+		</foreach>
+
+	</select>
+
+	<!-- 查询分类全部列表 -->
+	<!-- <select id="selectFileTypeAll" parameterType="pd"
+		resultType="cn.cebest.entity.system.download.FileType">
+		SELECT
+		DOWNLOAD_ID,PID,DOWNLOAD_NAME,WBURL,CREATED_TIME,UPDATE_TIME,SUMMARY,IMAGEID,KEYWORDS,SITEID,STATUS,TEMPLATEID,SORT
+		FROM WEB_FILETYPE
+		<where>
+			<if test="SITEID !=null and SITEID != ''"> and SITEID=#{SITEID}</if>
+			<if test="DOWNLOAD_ID !=null and DOWNLOAD_ID != ''"> and DOWNLOAD_ID!=#{DOWNLOAD_ID}</if>
+		</where>
+	</select> -->
+	
+	<select id="selectFileTypeAll" parameterType="pd"
+		resultType="cn.cebest.entity.system.download.FileType">
+		SELECT
+		DOWNLOAD_ID,PID,DOWNLOAD_NAME,WBURL,CREATED_TIME,UPDATE_TIME,SUMMARY,IMAGEID,KEYWORDS,SITEID,STATUS,TEMPLATEID,SORT
+		FROM WEB_FILETYPE
+		<where>
+			<if test="SITEID !=null and SITEID != ''"> and SITEID=#{SITEID}</if>
+			
+		</where>
+	</select>
+
+	<!-- 查询分类全部列表 -->
+	<select id="selectFileTypeByCloumnId" parameterType="pd"
+		resultMap="resultFileType">
+		SELECT DISTINCT
+		F.DOWNLOAD_ID,F.PID,F.DOWNLOAD_NAME,F.WBURL,F.CREATED_TIME,F.UPDATE_TIME,F.SUMMARY,F.IMAGEID,F.KEYWORDS,F.SITEID,F.STATUS,F.TEMPLATEID,F.SORT,
+		FC.COLUMNID AS ID_
+		FROM WEB_FILETYPE F
+		JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=F.DOWNLOAD_ID
+		<where>
+			<if test="SITEID !=null and SITEID != ''">SITEID=#{SITEID}</if>
+			AND FC.COLUMNID IN
+			<foreach collection="columnids" close=")" item="filetypeid03"
+				open="(" separator=",">
+				#{filetypeid03}
+			</foreach>
+		</where>
+	</select>
+	<!-- 777777777777777777777777777777777777777777777777777777777777777777 -->
+	<select id="selectFileTypeByColumnIdTop" resultMap="resultFileType">
+		SELECT
+		F.DOWNLOAD_ID,F.PID,F.DOWNLOAD_NAME,F.WBURL,F.CREATED_TIME,F.UPDATE_TIME,F.SUMMARY,F.IMAGEID,F.KEYWORDS,F.SITEID,F.STATUS,F.TEMPLATEID,F.SORT,
+		T.ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,
+		I.IMGURL,CCF.ID AS ID_,CCF.COLUM_NAME AS COLUMNAME_,WT.TXT,WSC.SKIPPATH as typeUrlName
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		FC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON
+		F.TEMPLATEID=T.ID
+		LEFT JOIN WEB_IMAGE I
+		ON I.IMAGE_ID=F.IMAGEID
+		LEFT JOIN WEB_TXT WT ON WT.CONTENT_ID = F.DOWNLOAD_ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON F.DOWNLOAD_ID = WSC.TYPEID
+		WHERE FC.COLUMNID=#{ID}
+	</select>
+	<!-- 添加文件类型 -->
+	<insert id="insertFileType" parameterType="cn.cebest.entity.system.download.FileType">
+		INSERT INTO
+		WEB_FILETYPE(DOWNLOAD_ID,PID,DOWNLOAD_NAME,WBURL,CREATED_TIME,UPDATE_TIME,SUMMARY,IMAGEID,KEYWORDS,SITEID,STATUS,TEMPLATEID,is_home)
+		VALUES(#{download_id},#{pid},#{download_name},#{wburl},#{created_time},#{update_time},#{summary},#{imageid},#{keywords},#{siteid},#{status},#{templateid},#{is_home})
+	</insert>
+	<!-- 保存富文本 -->
+	<insert id="insertTXT" parameterType="cn.cebest.entity.system.download.FileType">
+		INSERT INTO
+		WEB_TXT(CONTENT_ID,TXT)
+		VALUES(#{download_id},#{TXT})
+	</insert>
+	<!-- 修改富文本 -->
+	<update id="updateTXT" parameterType="cn.cebest.entity.system.download.FileType">
+		update WEB_TXT
+		<set>
+			<if test="TXT !=null ">TXT=#{TXT},</if>
+		</set>
+		where CONTENT_ID=#{download_id}
+	</update>
+
+	<select id="selectTXTCount" parameterType="cn.cebest.entity.system.download.FileType"
+		resultType="Integer">
+		select count(1)
+		from WEB_TXT
+		where CONTENT_ID=#{download_id}
+	</select>
+	<!-- 批量删除富文本 -->
+	<delete id="deleteTXT">
+		DELETE FROM WEB_TXT
+		WHERE CONTENT_ID IN
+		<foreach collection="array" item="filetypeid04" close=")" open="("
+			separator=",">
+			#{filetypeid04}
+		</foreach>
+	</delete>
+
+	<!-- 添加栏目关系 -->
+	<insert id="insertColumnids" parameterType="cn.cebest.entity.system.download.FileType">
+		INSERT INTO WEB_FILETYPE_COLUMN(COLUMNID,DOWNLOADID)
+		VALUES
+		<foreach collection="columnids" item="filetypeid05" close="" open=""
+			separator=",">
+			(#{filetypeid05},#{download_id})
+		</foreach>
+	</insert>
+	
+	<!-- 保存分类url信息 -->
+	<insert id="saveContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.download.FileType">
+		<if test="columnids !=null and columnids.length>0">
+			insert into WEB_SKIPPATH_COLUMN (
+				COLUMNID,TYPEID,TYPE,ISCHANNEL,SKIPPATH,ISSELECT
+			) values (
+				<foreach collection="columnids" item="messagetypeid03" open=""
+					separator="," close="">
+					#{messagetypeid03},#{download_id},5,0,#{typeUrlName},1
+				</foreach>
+			)
+		</if>
+	</insert>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentTypeUrlNameList" parameterType="cn.cebest.entity.system.download.FileType" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH_COLUMN 
+		WHERE TYPEID = #{download_id}
+	</select>
+	
+	<!-- 修改分类url信息 -->
+	<update id="editContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.download.FileType" >
+		UPDATE WEB_SKIPPATH_COLUMN
+		<set>
+			<foreach collection="columnids" item="messagetypeid04" open=""
+				separator="," close="">
+					TYPE				= 5
+					,ISCHANNEL			= 0
+					,ISSELECT			= 1
+					<if test="typeUrlName!=null and typeUrlName!=''">
+						,SKIPPATH			= #{typeUrlName}
+					</if>
+					<if test="messagetypeid04!=null and messagetypeid04!=''">
+						,COLUMNID			= #{messagetypeid04}
+					</if>
+			</foreach>
+		</set>
+		WHERE 
+			TYPEID = #{download_id}
+	</update>
+	
+	<!-- 批量删除文件类型 -->
+	<delete id="deleteFileType">
+		DELETE FROM WEB_FILETYPE
+		WHERE DOWNLOAD_ID IN
+		<foreach collection="array" close=")" item="filetypeid06" open="("
+			separator=",">
+			#{filetypeid06}
+		</foreach>
+	</delete>
+	<!-- 批量删除栏目关系 -->
+	<delete id="deleteColumnids">
+		DELETE FROM WEB_FILETYPE_COLUMN
+		WHERE DOWNLOADID IN
+		<foreach collection="array" close=")" item="filetypeid07" open="("
+			separator=",">
+			#{filetypeid07}
+		</foreach>
+	</delete>
+
+	<update id="updateById" parameterType="cn.cebest.entity.system.download.FileType">
+		update WEB_FILETYPE
+		<set>
+			<if test="download_name !=null and download_name !='' ">download_name=#{download_name},</if>
+			<if test="update_time !=null and update_time !=''">update_time=#{update_time},</if>
+			<if test="imageid !=null and imageid !=''">imageid=#{imageid},</if>
+			<if test="siteid !=null and siteid !=''">siteid=#{siteid},</if>
+			<if test="pid !=null and pid !=''">pid=#{pid},</if>
+			status=#{status},
+			keywords=#{keywords},
+			summary=#{summary},
+			TEMPLATEID=#{templateid},
+			wburl=#{wburl},
+			is_home=#{is_home}
+		</set>
+		WHERE download_id=#{download_id}
+
+	</update>
+
+	<!-- 根据栏目ids查询分类ids -->
+	<select id="selectIdsByColumnIds" resultType="String">
+		SELECT DOWNLOADID
+		FROM WEB_FILETYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="filetypeid08" close=")" open="("
+			separator=",">
+			#{filetypeid08}
+		</foreach>
+	</select>
+	<!-- 查询类型对应的栏目数 -->
+	<select id="selectCountByIds" resultType="HashMap">
+		SELECT COUNT(*),DOWNLOADID
+		FROM WEB_FILETYPE_COLUMN
+		WHERE DOWNLOADID IN
+		<foreach collection="array" item="filetypeid09" close=")" open="("
+			separator=",">
+			#{filetypeid09}
+		</foreach>
+		GROUP BY DOWNLOADID
+	</select>
+	<!-- 查询所有id和pid -->
+	<select id="selectAllIdPiD" resultType="HashMap">
+		SELECT DOWNLOAD_ID AS
+		ID,PID
+		FROM WEB_FILETYPE
+	</select>
+	<!-- 根据栏目ids删除和栏目的关联关系 -->
+	<delete id="deleteByColumnIds">
+		DELETE FROM WEB_FILETYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="filetypeid10" close=")" open="("
+			separator=",">
+			#{filetypeid10}
+		</foreach>
+	</delete>
+	<!-- 修改排序 -->
+	<update id="updateSortById" parameterType="HashMap">
+		UPDATE WEB_FILETYPE
+		SET
+		SORT=#{sort}
+		WHERE DOWNLOAD_ID=#{id}
+	</update>
+	<!-- 根据条件查询文件类型 -->
+	<select id="selectAllByAll" parameterType="HashMap"
+		resultType="cn.cebest.entity.system.download.FileType">
+		SELECT F.DOWNLOAD_ID,F.DOWNLOAD_NAME,F.WBURL,T.TXT,
+		F.TEMPLATEID,F.SORT,F.SUMMARY
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_TXT T ON
+		T.CONTENT_ID=F.DOWNLOAD_ID
+		<where>
+			<if test="SITEID !null and SITEID !=''">and SITEID=#{SITEID}</if>
+		</where>
+	</select>
+
+	<!-- 通过ID查询信息 -->
+	<select id="findTypeInfoById" resultMap="BaseResultFileType">
+		SELECT
+		F.DOWNLOAD_ID,F.PID,F.DOWNLOAD_NAME,F.WBURL,F.CREATED_TIME,F.UPDATE_TIME,F.SUMMARY,F.IMAGEID,F.KEYWORDS,F.SITEID,F.STATUS,F.TEMPLATEID,F.SORT,
+		T.ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH
+		FROM WEB_FILETYPE F,WEB_TEMPLATE T
+		WHERE F.DOWNLOAD_ID=#{id} AND
+		F.TEMPLATEID=T.ID
+	</select>
+
+	<!-- 根据分类id批量查询内容 -->
+	<select id="findAllGroomData" parameterType="string"
+		resultType="cn.cebest.entity.bo.ContentInfoBo">
+		SELECT
+		WF.FILEID 'id', WF.TITLE 'name',WI.IMGURL
+		'imageUrl',WDF.FILEPACH 'fileUrl',WF.RECOMMEND_TIME 'creatTime'
+		FROM
+		WEB_FILETYPE WFT
+		LEFT JOIN WEB_FILETYPE_FILE WFF ON
+		WFT.DOWNLOAD_ID=WFF.FILETYPEID
+		LEFT JOIN WEB_FILE WF ON
+		WFF.FILEID=WF.FILEID AND WF.RECOMMEND='1'
+		LEFT JOIN WEB_DOWNLOAD_FILE
+		WDF ON (WDF.FILEID=WF.FILEID)
+		LEFT JOIN WEB_IMAGE WI ON
+		WF.IMAGEID=WI.IMAGE_ID
+		WHERE WFT.DOWNLOAD_ID in
+		<foreach collection="list" item="filetypeid11" close=")" open="("
+			separator=",">
+			#{filetypeid11}
+		</foreach>
+	</select>
+	<!-- 首页的类型 -->
+	<select id="selectFileTypeOption" resultMap="resultFileType">
+		SELECT F.DOWNLOAD_ID,F.DOWNLOAD_NAME,C.ID AS ID_,WSC.SKIPPATH as typeUrlName
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT
+		JOIN WEB_COLUMCONFIG C ON C.ID=FC.COLUMNID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON F.DOWNLOAD_ID = WSC.TYPEID	
+		WHERE F.DOWNLOAD_ID in
+		<foreach collection="list" close=")" item="filetypeid12" open="("
+			separator=",">
+			#{filetypeid12}
+		</foreach>
+	</select>
+
+	<!-- 首页的类型 -->
+	<select id="selectFileTypeOption1" parameterType="pd"
+		resultType="string">
+		SELECT DISTINCT F.DOWNLOAD_ID
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT JOIN
+		WEB_COLUMCONFIG C ON C.ID=FC.COLUMNID
+		WHERE C.COLUM_TYPE='5' AND F.IS_HOME='1'
+		LIMIT 0,#{showcount}
+	</select>
+
+	<!-- 重复性验证 -->
+	<select id="selectCount" parameterType="HashMap" resultType="Integer">
+		SELECT count(1)
+		FROM WEB_FILETYPE
+		<where>
+			DOWNLOAD_NAME=#{download_name}
+			<if test="download_id !=null and download_id !=''">and download_id != #{download_id}</if>
+			<if test="SITEID !=null and SITEID !=''">and SITEID = #{SITEID}</if>
+		</where>
+	</select>
+	
+	<!-- 展示所有顶级分类的查询 -->
+	<select id="findTypelistPageByColumnIds" parameterType="page" resultMap="resultFileType">
+		SELECT
+		F.DOWNLOAD_ID,F.PID,F.DOWNLOAD_NAME,F.WBURL,F.CREATED_TIME,F.UPDATE_TIME,F.SUMMARY,F.IMAGEID,F.KEYWORDS,F.SITEID,F.STATUS,F.TEMPLATEID,F.SORT,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,
+		I.IMGURL,CCF.ID AS COLUM_ID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		FC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON
+		F.TEMPLATEID=T.ID
+		LEFT JOIN WEB_IMAGE I
+		ON I.IMAGE_ID=F.IMAGEID
+		WHERE FC.COLUMNID=#{pd.columId} AND F.PID = '0'
+	</select>
+	
+	<!-- 展示所有不是顶级分类的查询 -->
+	<select id="findTypeChildByColumnIds" parameterType="page" resultMap="resultFileType">
+		SELECT
+		F.DOWNLOAD_ID,F.PID,F.DOWNLOAD_NAME,F.WBURL,F.CREATED_TIME,F.UPDATE_TIME,F.SUMMARY,F.IMAGEID,F.KEYWORDS,F.SITEID,F.STATUS,F.TEMPLATEID,F.SORT,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,
+		I.IMGURL,CCF.ID AS COLUM_ID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_FILETYPE F
+		LEFT JOIN WEB_FILETYPE_COLUMN FC ON
+		FC.DOWNLOADID=F.DOWNLOAD_ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		FC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON
+		F.TEMPLATEID=T.ID
+		LEFT JOIN WEB_IMAGE I
+		ON I.IMAGE_ID=F.IMAGEID
+		WHERE FC.COLUMNID=#{pd.columId} AND F.PID != '0'
+	</select>
+	
+	<update id="updateStatusByIds" parameterType="pd">
+		UPDATE WEB_FILETYPE
+		SET STATUS=${status}
+		WHERE
+		DOWNLOAD_ID IN
+		<foreach collection="ids" item="filetypeid13" close=")" open="("
+			separator=",">
+			#{filetypeid13}
+		</foreach>
+	</update>
+	
+	<update id="updateTypeStatusByIds" parameterType="HashMap">
+		UPDATE WEB_FILETYPE
+		SET STATUS=#{STATUS}
+		WHERE
+		DOWNLOAD_ID IN
+		<foreach collection="ids" item="filetypeid14" close=")" open="("
+			separator=",">
+			#{filetypeid14}
+		</foreach>
+	</update>
+	
+	<update id="updateContentStatusByIds" parameterType="HashMap">
+		UPDATE WEB_FILE F
+		LEFT JOIN WEB_FILETYPE_FILE FF
+		ON F.FILEID = FF.FILEID
+		SET F.STATUS=#{STATUS}
+		WHERE
+		FF.FILETYPEID IN
+		<foreach collection="ids" item="filetypeid15" close=")" open="("
+			separator=",">
+			#{filetypeid15}
+		</foreach>
+	</update>
+	
+	<select id="selectFileByColumdlistPage" parameterType="page" resultMap="resultFileType">
+		SELECT
+		F.FILEID AS download_id,
+		F.FILEDJSON,
+		F.TITlE,
+		DF.FILEPACH AS filepath,
+		DF.NAME AS download_name,
+		FF.FILETYPEID ,
+		FF.COLUMNID,
+		T.TXT,
+		FT.DOWNLOAD_NAME AS FILETYPENAME,
+		I.IMGURL,
+		F.SUMMARY
+	FROM
+		WEB_FILE F
+	LEFT JOIN WEB_FILETYPE_FILE FF ON FF.FILEID = F.FILEID
+	LEFT JOIN WEB_FILETYPE FT ON FT.DOWNLOAD_ID = FF.FILETYPEID
+	LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID = F.IMAGEID
+	LEFT JOIN WEB_DOWNLOAD_FILE DF ON DF.FILEID=F.FILEID
+	LEFT JOIN WEB_TXT T ON T.CONTENT_ID = F.FILEID
+	
+	<where>
+			1=1
+		<if test="pd.columnId!=null and pd.columnId!=''">
+		    AND FF.COLUMNID=#{pd.columnId}
+	    </if>
+	    <if test="pd.typeId!=null and pd.typeId!=''">
+		    AND FF.FILETYPEID=#{pd.typeId}
+	    </if>
+	</where>
+	GROUP BY
+		F.FILEID
+	
+	</select>
+	
+	<!-- 删除下载分类的地址栏URL信息 -->
+	<delete id="deleteFiletypeUrlName">
+		DELETE FROM WEB_SKIPPATH_COLUMN
+		WHERE TYPEID IN
+		<foreach collection="array" item="id" close=")" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除下载内容的地址栏URL信息 -->
+	<delete id="deleteFiletypeContentUrlName">
+		DELETE FROM WEB_SKIPPATH
+		WHERE TYPEID IN
+		<foreach collection="array" item="id" close=")" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+</mapper>

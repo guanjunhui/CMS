@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CustomformAttributeValueMapper" >
+  <resultMap id="FormAttributeValueResultMap" type="cn.cebest.entity.system.customForm.CustomformAttributeValue" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ATTR_ID" property="attrId" jdbcType="VARCHAR" />
+    <result column="ATTR_VALUE" property="attrValue" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ATTR_ID, ATTR_VALUE, CREATED_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="FormAttributeValueResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据表单项ID获取值集合 -->
+  <select id="selectValuListByAttrId" resultMap="FormAttributeValueResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID = #{attrId,jdbcType=VARCHAR}
+    ORDER BY CREATED_TIME DESC
+  </select>
+  <!-- 根据表单项集合查询表单项值的总数量 -->
+  <select id="selectCountByAttrIds" parameterType="pd" resultType="java.lang.Integer">
+    select count(*)
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach> 
+    <if test="customform_keyword !=null and customform_keyword != ''">
+		AND ATTR_VALUE LIKE '%' #{customform_keyword} '%'
+	</if> 
+  </select>
+  <!-- 根据表单项集合查询表单项值的总数量 -->
+  <select id="selectCountByAttrValueIds" parameterType="pd" resultType="java.lang.Integer">
+    select count(*)
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach> 
+    AND CREATED_TIME = #{creatTime}
+  </select>
+  <!-- 根据表单项集合查询表单项值的集合 （时间倒序） -->
+  <select id="selectListByAttrIds" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    select
+	V.ID, A.ID AS ATTR_ID, V.ATTR_VALUE, V.CREATED_TIME
+    FROM WEB_CUSTOMFORM_ATTRIBUTE A
+    LEFT JOIN  WEB_CUSTOMFORM_ATTRIBUTE_VALUE V ON A.ID=V.ATTR_ID
+    WHERE A.ID IN 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+    <if test="customform_keyword !=null and customform_keyword != ''">
+		AND ATTR_VALUE LIKE '%' #{customform_keyword} '%'
+	</if>
+    ORDER BY CREATED_TIME DESC 
+    LIMIT #{offset},#{limit}
+  </select>
+  
+  <!-- 根据表单项集合查询表单项值的集合 （时间倒序） -->
+  <select id="selectListByAttrValueIds" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+    AND CREATED_TIME = #{creatTime}
+    ORDER BY CREATED_TIME DESC 
+    LIMIT #{offset},#{limit}
+  </select>
+  
+  <!-- 根据表单项集合查询表单项值的集合 （时间倒序） -->
+  <select id="selectListByAttrValueCreatTimes" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+    AND CREATED_TIME in
+    <foreach collection="creatTimeList" item="time" index="index" open="(" separator="," close=")">  
+        #{time}
+    </foreach>
+    ORDER BY CREATED_TIME DESC 
+    LIMIT #{offset},#{limit}
+  </select>
+  <!--  根据表单项集合以及值查询表单项值的集合 （时间倒序） -->
+  <select id="selectListByAttrIdsAndConditon" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    SELECT 
+    <include refid="Base_Column_List"/>
+    FROM WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    WHERE CREATED_TIME IN(
+    	SELECT
+			CREATED_TIME
+		FROM WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+		WHERE ATTR_ID IN
+	   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+	        #{item}
+	    </foreach>
+	    AND ATTR_VALUE LIKE CONCAT(CONCAT('%', #{attrValue}), '%')
+    )
+  </select>
+  
+  
+  
+  
+  <!-- 根据表单项集合以及值查询表单项值的集合 （时间倒序） -->
+  <select id="selectListByAttrIdsAndAddress" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    SELECT 
+    <include refid="Base_Column_List"/>
+    FROM WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    WHERE CREATED_TIME IN(
+    	SELECT
+			CREATED_TIME
+		FROM WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+		WHERE ATTR_ID IN
+	   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+	    <foreach collection="attrValue" item="item" index="index">
+	    	AND ATTR_VALUE LIKE CONCAT(CONCAT(#{item}), '%')
+	    </foreach>
+    )
+  </select>
+  
+  <!-- 根据表单值id修改表单数据 -->
+  <update id="updateformAttributeValue" parameterType="java.util.Map" >
+    UPDATE WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    SET ATTR_VALUE = #{name}
+    where ID = #{id}
+  </update>
+  
+  <!-- 根据表单项集合删除表单项值 -->
+  <delete id="deleteByAttrIds" parameterType="java.util.List" >
+    delete from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+  </delete>
+  
+  <!-- 根据创建时间删除表单项值 -->
+  <delete id="deleteByTimes">
+    delete from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where CREATED_TIME in 
+   	<foreach collection="array" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+  </delete>
+  
+  <!-- 根据表单项ID删除表单项值 -->
+  <delete id="deleteByAttrId" parameterType="java.lang.String" >
+    delete from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID = #{attrId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 插入 -->
+  <insert id="save" parameterType="cn.cebest.entity.system.customForm.CustomformAttributeValue" >
+    insert into WEB_CUSTOMFORM_ATTRIBUTE_VALUE (ID, ATTR_ID, ATTR_VALUE, 
+      CREATED_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{attrId,jdbcType=VARCHAR}, #{attrValue,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 批量插入 -->
+  <insert id="saveBatch" parameterType="java.util.List" >
+    insert into WEB_CUSTOMFORM_ATTRIBUTE_VALUE (ID, ATTR_ID, ATTR_VALUE, 
+      CREATED_TIME)
+    values 
+	<foreach collection="list" item="item" separator=",">
+    (#{item.id,jdbcType=VARCHAR}, #{item.attrId,jdbcType=VARCHAR}, #{item.attrValue,jdbcType=VARCHAR}, 
+      #{item.createdTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  
+  <!-- 根据表单项集合查询表单项值的集合 （时间倒序,获取全部数据） -->
+  <select id="selectValueListByAttrIds" resultMap="FormAttributeValueResultMap" parameterType="pd" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE_VALUE
+    where ATTR_ID in 
+   	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+    ORDER BY CREATED_TIME DESC 
+  </select>
+  
+</mapper>

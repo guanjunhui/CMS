@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustomFormAttributeMapper">
+  <resultMap id="FormAttributeResultMap" type="cn.cebest.entity.system.customForm.CustomFormAttribute">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="FORM_ID" jdbcType="VARCHAR" property="formId" />
+    <result column="ATTR_NAME" jdbcType="VARCHAR" property="attrName" />
+    <result column="ATTR_REQUIRED" jdbcType="VARCHAR" property="attrRequired" />
+    <result column="ATTR_STATS" jdbcType="VARCHAR" property="attrStats" />
+    <result column="ATTR_TYPE" jdbcType="VARCHAR" property="attrType" />
+    <result column="ATTR_DEFAULT" jdbcType="VARCHAR" property="attrDefault" />
+    <result column="ATTR_DESCRIPTION" jdbcType="VARCHAR" property="attrDescription" />
+    <result column="ATTR_SORT" jdbcType="VARCHAR" property="attrSort" />
+  </resultMap>
+  <!-- 表单项以及值的集合 -->
+  <resultMap id="FormAttributeAndValuesResultMap" type="cn.cebest.entity.system.customForm.CustomFormAttribute">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="FORM_ID" jdbcType="VARCHAR" property="formId" />
+    <result column="ATTR_NAME" jdbcType="VARCHAR" property="attrName" />
+    <result column="ATTR_REQUIRED" jdbcType="VARCHAR" property="attrRequired" />
+    <result column="ATTR_STATS" jdbcType="VARCHAR" property="attrStats" />
+    <result column="ATTR_TYPE" jdbcType="VARCHAR" property="attrType" />
+    <result column="ATTR_DEFAULT" jdbcType="VARCHAR" property="attrDefault" />
+    <result column="ATTR_DESCRIPTION" jdbcType="VARCHAR" property="attrDescription" />
+    <result column="ATTR_SORT" jdbcType="VARCHAR" property="attrSort" />
+    <collection property="attributeValueList" column="ID" 
+	    ofType="cn.cebest.entity.system.customForm.CustomFormAttributeValue" 
+    	select="CustomformAttributeValueMapper.selectValuListByAttrId">
+    </collection>
+    </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, FORM_ID, ATTR_NAME, ATTR_REQUIRED, ATTR_STATS, ATTR_TYPE, ATTR_DEFAULT, ATTR_DESCRIPTION,ATTR_SORT
+  </sql>
+  <select id="getObjectById" parameterType="java.lang.String" resultMap="FormAttributeResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据表单ID查询表单项 （仅显示）-->
+  <select id="getAttributeListByFormID" parameterType="java.lang.String" resultMap="FormAttributeResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR} AND ATTR_STATS='1'
+    ORDER BY ATTR_SORT
+  </select>
+  <!-- 根据表单ID查询表单项 (全部)-->
+  <select id="getAttributeListAllByFormID" parameterType="java.lang.String" resultMap="FormAttributeResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR}
+    ORDER BY ATTR_SORT
+  </select>
+  
+  <!-- 根据表单ID查询表单项(启用)分页 -->
+  <select id="getAttributelistPageByFormID" parameterType="page" resultMap="FormAttributeAndValuesResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{pd.formId,jdbcType=VARCHAR} AND ATTR_STATS='1'
+  </select>
+  <!-- 根据表单ID查询表单项（所有）分页 -->
+  <select id="getAttributeAlllistPageByFormID" parameterType="page" resultMap="FormAttributeAndValuesResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{pd.formId,jdbcType=VARCHAR}
+    order by ATTR_SORT asc
+  </select>
+  
+  
+  <!-- 根据表单ID查询表单项以及表单项的值集合 -->
+  <select id="getAttributeAndValueListByFormID" parameterType="java.lang.String" resultMap="FormAttributeAndValuesResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据表单ID查询表单项的数量 -->
+  <select id="selectCountByFormID" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*)
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR} AND ATTR_STATS='1'
+  </select>
+  <!-- 根据表单ID查询表单项的ID集合 -->
+  <select id="selectAttrIdsByFormID" parameterType="java.lang.String" resultType="java.lang.String">
+    select ID
+    from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WEB_CUSTOMFORM_ATTRIBUTE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteByFormId" parameterType="java.lang.String">
+    delete from WEB_CUSTOMFORM_ATTRIBUTE
+    where FORM_ID = #{formId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="save" parameterType="cn.cebest.entity.system.customForm.CustomFormAttribute">
+    insert into WEB_CUSTOMFORM_ATTRIBUTE (ID, FORM_ID, ATTR_NAME, 
+      ATTR_REQUIRED, ATTR_STATS, ATTR_TYPE, 
+      ATTR_DEFAULT, ATTR_DESCRIPTION,ATTR_SORT)
+    values (#{id,jdbcType=VARCHAR}, #{formId,jdbcType=VARCHAR}, #{attrName,jdbcType=VARCHAR}, 
+      #{attrRequired,jdbcType=VARCHAR}, #{attrStats,jdbcType=VARCHAR}, #{attrType,jdbcType=VARCHAR}, 
+      #{attrDefault,jdbcType=VARCHAR}, #{attrDescription,jdbcType=VARCHAR}, #{attrSort,jdbcType=INTEGER})
+  </insert>
+  <update id="update" parameterType="cn.cebest.entity.system.customForm.CustomFormAttribute">
+    update WEB_CUSTOMFORM_ATTRIBUTE
+    <set>
+      <if test="formId != null">
+        FORM_ID = #{formId,jdbcType=VARCHAR},
+      </if>
+      <if test="attrName != null">
+        ATTR_NAME = #{attrName,jdbcType=VARCHAR},
+      </if>
+      <if test="attrRequired != null">
+        ATTR_REQUIRED = #{attrRequired,jdbcType=VARCHAR},
+      </if>
+      <if test="attrStats != null">
+        ATTR_STATS = #{attrStats,jdbcType=VARCHAR},
+      </if>
+      <if test="attrType != null">
+        ATTR_TYPE = #{attrType,jdbcType=VARCHAR},
+      </if>
+      <if test="attrDefault != null">
+        ATTR_DEFAULT = #{attrDefault,jdbcType=VARCHAR},
+      </if>
+      <if test="attrDescription != null">
+        ATTR_DESCRIPTION = #{attrDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="attrSort != null" >
+        ATTR_SORT = #{attrSort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

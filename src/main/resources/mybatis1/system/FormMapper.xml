@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FormMapper">
+	
+	<insert id="joinForm">
+		INSERT INTO
+			JOINFORM(name,sex,phone,investment,email,area,bz)
+		VALUES
+			(#{name},#{sex},#{phone},#{investment},#{email},#{area},#{bz})
+	</insert>
+	
+	<insert id="appointmentForm">
+		INSERT INTO
+			APPOINTMENTFORM(phone,region,area)
+		VALUES
+			(#{phone},#{region},#{area})
+	</insert>
+	
+</mapper>

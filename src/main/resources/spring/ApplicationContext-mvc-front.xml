@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<mvc:annotation-driven/>	
+	<mvc:default-servlet-handler/>
+	
+	<context:component-scan base-package="cn.cebest.controller.front,cn.cebest.controller.member" />
+
+	<!-- 对静态资源文件的访问  restful-->     
+	<mvc:resources mapping="/admin/**" location="/admin/" />
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/plugins/**" location="/plugins/" />
+	<mvc:resources mapping="/uploadFiles/**" location="/uploadFiles/" />	
+	<mvc:resources mapping="/staticRelease/**" location="/staticRelease/" /> 
+	
+
+	<!-- 访问拦截  -->  
+  	<mvc:interceptors>
+  	    <mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="cn.cebest.interceptor.BlacklistInterceptor"/>
+		</mvc:interceptor>
+  		<mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="cn.cebest.interceptor.FrontSiteInterceptor"/>
+		</mvc:interceptor>
+  		<mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="cn.cebest.interceptor.FrontLocaleInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/member/**/**"/>
+			<bean class="cn.cebest.interceptor.MemberLoginHandlerInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	 
+	<bean id="exceptionResolver" class="cn.cebest.resolver.MyExceptionResolver"></bean>
+    
+    <!-- freemarker的配置 -->
+    <bean id="freemarkerConfig"
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!--把自定义标签加入freemarker配置中去-->
+		<property name="freemarkerVariables" value="#{systemConfig.getBeanMap('custommacro.')}"/>
+        <property name="templateLoaderPath" value="" />
+        <property name="freemarkerSettings">
+			<props>
+				<prop key="tag_syntax">auto_detect</prop>
+				<prop key="template_update_delay">0</prop>
+				<prop key="defaultEncoding">UTF-8</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="boolean_format">true,false</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="time_format">HH:mm:ss</prop>
+				<prop key="number_format">0.######</prop>
+				<prop key="whitespace_stripping">true</prop>
+				<prop key="auto_import">WEB-INF/classes/ftl/common/spring.ftl as s</prop>
+            </props>
+        </property>
+    </bean>
+	
+	<!-- Spring国际化 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">  
+	    <property name="basenames">  
+	        <list>  
+	             <value>/languages/front/messages</value>
+	        </list>  
+	    </property>
+	</bean>  
+	<!-- 基于Session的国际化配置 -->    
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+	   <property name="cookieMaxAge" value="-1"/>
+       <property name="defaultLocale" value="zh_CN"/>
+       <property name="cookieName" value="Language"></property>
+	</bean>
+	
+	<bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="contentType" value="text/html; charset=utf-8"/>
+		<property name="prefix" value="/WEB-INF/htmlFront/"/>
+		<property name="suffix" value=".html"/>
+		<!-- 结果是请求和会话属性都被复制到模板的属性集中，可以使用FreeMarker的表达式语言来访问并显示 -->
+		<property name="exposeRequestAttributes" value="true"/>
+		<property name="exposeSessionAttributes" value="true"/>
+		<!--<property name="requestContextAttribute" value="request"/>-->
+		<!-- 使用宏 -->
+		<property name="exposeSpringMacroHelpers" value="true"/>
+		<property name="order" value="0"/>
+	</bean>
+	
+	<!-- 上传拦截，如最大上传值及最小上传值 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >   
+	  <property name="maxUploadSize">    
+      	<value>104857600</value>
+      </property>   
+      <property name="maxInMemorySize">    
+      	<value>4096</value>
+      </property>   
+      <property name="defaultEncoding">    
+        <value>utf-8</value>
+	  </property> 
+    </bean>  
+</beans>

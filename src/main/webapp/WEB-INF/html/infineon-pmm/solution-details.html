@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<@content_detail contentId="${contentId}" currentId="${currentId}">
+  	<#if out_bean??>
+  		<title>${out_bean.contentTitle!}-解决方案-英飞凌电源与传感社区</title>
+  	</#if>
+</@content_detail>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/jquery.atwho.css" />
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/solution-details.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/baseData.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/jquery.caret.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/jquery.atwho.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- 评论模板 -->
+<template id="commentT" style="display:none">
+	<li class="answer pt_55 pb_55">
+		<div class="user fl">
+			<div class="img_w">
+				<img class="scale" style="width: 100%; height: 100%" src="{photoUrl}"/>
+			</div>
+			<p class="fnt_14 username">{userName}</p>
+		</div>
+		<div class="answer_r fr">
+			<div class="answer_t">
+				<div class="answer_t_t">
+					<p class="fnt_16">{content1}</p>
+				</div>
+				<div class="answer_t_b">
+					<a class="fr fnt_16 huifu comment" href="javascript:;" data-id="{toUserId}" data-name="{userId}" parentId="{parentId}" contentId="{contentId}">回复({replyNum})</a>
+					<a class="fr fnt_16 zan {onClass}" data-id="{contId}" href="javascript:;">赞(<i>{likeNum}</i>)</a>
+					<span class="fl fnt_12">{time}</span>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="answer_c mt_15" style="display: none;">
+				<div class="inputor" id="content{commId2}" contentEditable="true"></div>
+				<!-- <textarea class="answer_txt1" id="content{commId2}" rows="4" cols=""></textarea> -->
+				<input class="fr fnt_16 contents childSub" type="submit" value="确定" />
+				<p class="fr fnt_16" href="javascript:;">取消</p>
+				<div class="clear"></div>
+			</div>
+			{childList}
+		</div>
+		<div class="clear"></div>
+	</li>
+</template>
+<template id="childListT" style="display:none">
+	<div class="answer_b mt_15">
+		<ul class="answer_b_n">
+			{child}
+		</ul>
+		<a href="javascript:;" class="more fnt_16 ">更多<img src="${autoPath}/staticRelease/img/more.png" /></a>
+		<a href="javascript:;" class="more more_up fnt_16">收起<img src="${autoPath}/staticRelease/img/more_up.png" /></a>
+	</div>
+</template>
+<template id="childT" style="display:none">
+	<li>
+		<p class="fnt_16 commen2" data-id="{userId}" parentId="{parentId}" contentId="{contentId}">{userName}</p>
+		<p class="fnt_16">回复</p>
+		<p class="fnt_16 commen2" data-id="{userId2}" parentId="{parentId2}" contentId="{contentId2}">{toUserName}</p>
+		<p class="fnt_16">:</p>
+		<p class="fnt_16">{content2}</p>
+	</li>
+</template>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+
+<@colum_detail columId="0ac6d48dc93b42a499ef8ab9732e78b8">
+  	<#if out_bean??>
+  		<input type="hidden" id="columUrlName" value="${out_bean.COLUM_URLNAME!}">
+  	</#if>
+</@colum_detail>
+
+<@content_detail contentId="${contentId}" currentId="${currentId}">
+	
+	<#if out_bean??>
+		
+	<div class="positionBox">
+		<div class="wrap">
+			<a href="${autoPath}" class="fnt_14">首页 > </a>
+			<#if columConfigTop?? && columConfigTop?size gt 0>
+					<a href="${autoPath}/channel/${columConfigTop.columUrlName}.html" class="fnt_14">${columConfigTop.columName!} > </a>
+					
+			</#if>
+			<a href="javascript:;" class="fnt_14 active">${out_bean.contentTitle!}</a>
+		</div>
+	</div>
+		
+		<input type="hidden" id="title" value="${out_bean.contentTitle!}">
+		<input type="hidden" id="contentUrlName" value="${out_bean.contentUrlName!}">
+		
+		<div class="solution_d_con wrap">
+			<div class="solution_d_bt pt_75" style="padding_bottom:30px">
+				<p class="fnt_32 p1">${out_bean.contentTitle!}</p>
+				<p class="fnt_16 p2 mt_15">${out_bean.contentSummary!}</p>
+				<div class="bdsharebuttonbox fr">
+					<a href="#" class="bds_more" data-cmd="more"></a>
+					<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+					<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+					<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+					<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+					<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+				</div>
+				<script>
+					window._bd_share_config = {
+						"common": {
+							"bdSnsKey": {},
+							"bdText": "",
+							"bdMini": "2",
+							"bdMiniList": false,
+							"bdPic": "",
+							"bdStyle": "2",
+							"bdSize": "16"
+						},
+						"share": {}
+					};
+					with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+				</script>
+			</div>
+			<div class="solution_d_area1 pt_75">
+			<#if out_bean.imageList?? && out_bean.imageList ?size gt 0  >
+				<#list  out_bean.imageList as img>
+					<#if img_index == 2>
+						<div class="solution_d_area4 mt_60 pb_25">
+							${out_bean.contentTxt!}	
+						</div>
+					</#if>
+					<#if img.title == '应用场景'>
+						<div class="area1_left fl pb_40">
+						<div class="txt_w fl">
+							<p class="fnt_20 p1 bold">${img.title!}</p>
+							<p class="fnt_16 p2 mt_15">${img.bz!}</p>
+						</div>
+							<#if (img.imgurl)?? && (img.imgurl) != ''>
+								<div class="img_w mt_15 fl">
+									<img  style="max-height:100%;max-width:100%" src="${imgPath}${img.imgurl!}"/>
+								</div>
+							</#if>
+						<div class="clear"></div>
+						</div>
+					<#else>
+						<div class="area1_left fl pb_40">
+							<p class="fnt_20 p1 bold">${img.title!}</p>
+							<#if img.tourl?? && img.tourl != "">
+								<a href="${img.tourl!}">
+									<p class="fnt_16 p2 mt_15">${img.bz!}</p>
+								</a>
+							<#else>
+								<p class="fnt_16 p2 mt_15">${img.bz!}</p>
+							</#if>
+							<#if (img.imgurl)?? && (img.imgurl) != '' && img_index lt 5>
+								<div class="img_w mt_15 fl">
+									<img  style="max-height:100%;max-width:100%" src="${imgPath}${img.imgurl!}"/>
+								</div>
+								<#if out_bean.imageList?size gt 5>
+									<div class="img_w mt_15 fl">
+										<img  style="max-height:100%;max-width:100%" src="${imgPath}${out_bean.imageList[5].imgurl!}"/>
+									</div>
+								</#if>
+								<div class="clear"></div>
+							</#if>
+						</div>
+					</#if>
+					
+				</#list>
+			</#if>
+			<#if out_bean.contentRelevantList?? && out_bean.contentRelevantList ?size gt 0  >
+				<#list  out_bean.contentRelevantList as cr>
+					<#if cr?size gt 0>
+						<#if cr_index == 0>
+							<div class="area1_right fr pt_40 pb_40">
+								<p class="p1 fnt_20 bold">方案来源</p>
+								<i class="mt_15"></i>
+									<a href="${autoPath}/content/${cr.id!}.html?type=1&columnId=fb65fe99fc574aa4844646d83bc428a0"><p class="p2 fnt_20 mt_40">${cr.contentTitle!}</p></a>
+							</div>
+						</#if>
+					</#if>
+				</#list>
+			<#else>
+				<div class="area1_right fr pt_40 pb_40">
+					<p class="p1 fnt_20 bold">方案来源</p>
+					<i class="mt_15"></i>
+						<p class="p2 fnt_20 mt_40">${out_bean.programme!}</p>
+				</div>
+			</#if>
+					<div class="clear"></div>
+			</div>
+			
+		
+			
+		</div>
+	</#if>
+</@content_detail>
+<div class="solution_d_bto pb_110">
+	<div class="wrap">
+		<div class="bt pt_30 pb_30" id="">
+			<p class="fnt_20">提问与回答</p>
+		</div>
+		
+		<ul class="tiwen_list" id="comment">
+			
+		</ul>
+		
+		<div id="page" class="page_div"></div>
+		<div class="tiwen">
+			<p class="bt2 fnt_20 fl">提问内容:</p>
+			<div class="tiwen_txt fl mt_15">
+					<div class="inputor" id="content" contentEditable="true"></div>
+					<!-- <textarea class="fnt_16" id="content" rows="" cols=""></textarea> -->
+					<input class="mt_40" type="submit" id="mainSub" value="确认发送"/>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+<div class="reply">
+	<div class="zz"></div>
+	<div class="reply_inp">
+		<div class="wrap">
+			<div class="inputor" id="newContent" contentEditable="true"></div>
+			<!-- <textarea name="" rows="" cols="" id="newContent" placeholder=""></textarea> -->
+			<input type="button" name="" id="" value="取消" />
+			<input type="submit" name="" id="childSub2" value="发送" />
+		</div>
+	</div>
+</div>
+<div class="solution_fix">
+	<div class="SolutionDetail_btn">
+		<a href="javascript:;">
+			<img src="${autoPath}/staticRelease/img/kefu.png">
+			<p class="fnt_14">联系该方案</p>
+		</a>
+	</div>
+	<div class="SolutionCollection_btn">
+	<input type="hidden" id="collId">
+		<a href="javascript:;">
+			<div class="img_w">
+				<img src="${autoPath}/staticRelease/img/shoucang.png">
+			</div>
+			<p class="fnt_14">收藏该方案</p>
+		</a>
+	</div>
+</div>
+<@form_itemsList formId='95e9937ee9714cd3bf4e579af6e3094c'>
+	<#if out_list2??>
+		<#assign itemList=out_list2/>
+	</#if>
+</@form_itemsList>
+<form id="form">
+	<input type="hidden" value="${(_const_cas_assertion_.principal.attributes.id)!}" class="userIDClass">
+<div class="SolutionForm">
+	<div class="SolutionFormBox pra">
+		<div class="SolutionFormBoxes">
+			<img src="${autoPath}/staticRelease/img/fromLogo.png" alt="">
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[0].attrName)!}</p>
+				<input type="text" class="fl username" id="username" name="${(itemList[0].id)!}" placeholder="请输入您的姓名">
+			</div>
+			<em style="color:red" id="username1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[1].attrName)!}</p>
+				<input type="text" class="fl phone" id="phone" name="${(itemList[1].id)!}" placeholder="请输入您的手机号码">
+			</div>
+			<em style="color:red" id="phone1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[2].attrName)!}</p>
+				<input type="text" class="fl email" id="email" name="${(itemList[2].id)!}" placeholder="请输入您的邮箱">
+			</div>
+			<em style="color:red" id="email1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[3].attrName)!}</p>
+				<input type="text" class="fl company" id="company" name="${(itemList[3].id)!}" placeholder="请输入您的单位">
+			</div>
+			<em style="color:red" id="company1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[4].attrName)!}</p>
+				<textarea  class="fl" id="textcont" name="${(itemList[4].id)!}" placeholder="请输入您的联系事宜"></textarea>
+			</div>
+			<em style="color:red" id="textcont1"></em>
+			<p class="SolutionForm_btn"><a href="javascript:;" class="fnt_18" id="save">提交</a></p>
+		</div>
+		<a href="javascript:;" class="pra SolutionForm_close"><img src="${autoPath}/staticRelease/img/close.png" alt=""></a>
+	</div>
+</div>
+</form>
+<div class="fixBox">
+	<div class="content pra"></div>
+</div>
+<script>
+var userId = "${((_const_cas_assertion_.principal.attributes.id))!}"
+//获取输入框长度
+function length(obj){
+	var val = obj.val();
+	//获取字符长度
+	var len = 0;  		
+	for (var i=0; i<val.length; i++) {  
+		if (val[i].match( /^[\u4E00-\u9FA5]{1,}$/)) {  
+		 	len += 2;  
+		} else {  
+		    len ++;  
+		} 			
+	}  
+	return len;
+}
+
+$(function(){
+		$("#username").blur(function(){
+			var _this = $(this);
+			var tex = _this.val();
+			var len = length(_this);
+			if(len > 100){
+				$("#username1").text('您输入的姓名过长，请重新输入');
+				return;
+			}
+			if(len == 0){
+				$("#username1").text('姓名不能为空，请重新输入');
+				return;
+			}
+		}).focus(function(){
+			$("#username1").text('');
+		});
+		$("#phone").blur(function(){
+			var _this = $(this);
+			var tex = _this.val();
+			var len = length(_this);
+			if(len == 0){
+				$("#phone1").text('手机号不能为空，请重新输入');
+				return;
+			}
+			if(len > 17){
+				$("#phone1").text('您输入的手机号过长，请重新输入');
+				return;
+			}
+			
+		}).focus(function(){
+			$("#phone1").text('');
+		});
+		$("#email").blur(function(){
+			var _this = $(this);
+			var tex = _this.val();
+			var len = length(_this);
+			if(len == 0){
+				$("#email1").text('邮箱不能为空，请重新输入');
+				return;
+			}
+		}).focus(function(){
+			$("#email1").text('');
+		});
+		$("#company").blur(function(){
+			var _this = $(this);
+			var tex = _this.val();
+			var len = length(_this);
+			if(len == 0){
+				$("#company1").text('单位不能为空，请重新输入');
+				return;
+			}
+			if(len > 150){
+				$("#company1").text('您输入的地址过长，请重新输入');
+				return;
+			}
+		}).focus(function(){
+			$("#company1").text('');
+		});
+		$("#textcont").blur(function(){
+			var _this = $(this);
+			var tex = _this.val();
+			var len = length(_this);
+			if(len == 0){
+				$("#textcont1").text('联系事宜不能为空，请重新输入');
+				return;
+			}
+			if(len > 150){
+				$("#textcont1").text('您输入的地址过长，请重新输入');
+				return;
+			}
+		}).focus(function(){
+			$("#textcont1").text('');
+		});
+		//表单内容
+		$(document).on('click','.SolutionFormBox',function(){
+			return false;
+		});
+		
+		//表单外盒子
+		/* $(document).on('click','.SolutionForm',function(){
+			$('.SolutionForm').fadeOut();
+		}) */
+		
+		//关闭
+		$(document).on('click','.SolutionForm_close',function(){
+			$('.SolutionForm').fadeOut();
+		});
+		
+		$(document).on('click','.fixBox',function(){
+			$(this).hide();
+		})
+		$(document).on('click','.SolutionDetail_btn',function(){
+			if(userId == null || userId == ''){
+				var contentUrlName = $("#contentUrlName").val();
+				var columUrlName = $("#columUrlName").val();
+				window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+				return false;
+			}
+			$('.SolutionForm').show();
+			$("#username1").text('');
+			$("#email1").text('');
+			$("#phone1").text('');
+			$("#company1").text('');
+			$("#textcont1").text('');
+		})
+		$(window).resize(function(){
+			if($(window).height()<768){
+				$('.SolutionForm .SolutionFormBox').css({
+					'height':680
+				})
+				//$('.SolutionFormBox').mCustomScrollbar()
+			}
+		}).resize();
+		
+		
+		$("#save").click(function(){
+			var username = $("#username");
+			var phone = $("#phone");
+			var email = $("#email");
+			var company = $("#company");
+			var textcont = $("#textcont");
+			var flag = true;
+			if(length(username) == 0){
+				$("#username1").text('姓名不能为空，请重新输入');
+				flag = false;
+			}
+			if(length(phone) == 0){
+				$("#phone1").text('手机号不能为空，请重新输入');
+				flag = false;
+			}
+			if(length(email) == 0){
+				$("#email1").text('邮箱不能为空，请重新输入');
+				flag = false;
+			}
+			if(length(company) == 0){
+				$("#company1").text('单位不能为空，请重新输入');
+				flag = false;
+			}
+			if(length(textcont) == 0){
+				$("#textcont1").text('联系事宜不能为空，请重新输入');
+				flag = false;
+			}
+			if(!flag){
+				return false;
+			}
+			var formJson={};
+			//表单信息
+			var formData = $("#form").jsonObject();
+			formJson.itemsData=formData;
+		    $.ajax({
+				type: "POST",
+				url:"/customformsubmit/beinengSave",
+				data:JSON.stringify(formJson),
+				dataType:'json',
+				contentType:'application/json;charset=utf-8',
+				success: function(result){
+					$('.SolutionForm').hide();
+					$("#form")[0].reset();
+				}
+			});
+		    
+		    $.ajax({
+				type : "POST",
+				url : "/stationMessage/addMessage",
+				data:{
+					"toUserId" : userId,
+					"title" : $("#title").val()
+				},
+				dataType : "json",
+				success : function(data) {
+					
+				}// end success
+			});//ajax end
+		
+		});
+	})
+	
+</script>
+<script type="text/javascript">
+	/* $('.SolutionCollection_btn').click(function(){
+		$(this).toggleClass('on');
+	}) */
+	$(".SolutionCollection_btn").click(function(){
+		if(userId == null || userId == ''){
+			var contentUrlName = $("#contentUrlName").val();
+			var columUrlName = $("#columUrlName").val();
+			window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+			return false;
+		}
+		var collId = $("#collId").val();
+		if(collId != null && collId != ''){
+			$.ajax({
+				type : "POST",
+				url : "/collection/delColl",
+				data:{
+					"id" : collId
+				},
+				dataType : "json",
+				success : function(data) {
+					if(data.code == 200){
+						$(".SolutionCollection_btn").toggleClass('on');
+						$("#collId").val("");
+					}
+				}// end success
+			});//ajax end
+		}else{
+			$.ajax({
+				type : "POST",
+				url : "/collection/addCollection",
+				data:{
+					"resourceId" : '${contentId}',
+					"resourceType" : 1,
+					"userId" : "${(_const_cas_assertion_.principal.attributes.id)!}"
+					
+				},
+				dataType : "json",
+				success : function(data) {
+					if(data.code == 200){
+						$(".SolutionCollection_btn").toggleClass('on');
+						$("#collId").val(data.data.id);
+					}
+				}// end success
+			});//ajax end
+		}
+		
+	});
+</script>
+
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/jquery-util.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+<style>
+       ._fc1, ._fc2{
+           /*display: none;*/
+       }
+       .atwho-inserted {
+           color: #4183C4;
+       }
+</style>
+<script type="text/javascript">
+var collUserId = '${(_const_cas_assertion_.principal.attributes.id)!}';
+	$(document).on('click','.answer_b .more',function(){
+		$(this).parent().toggleClass('on');
+	});
+	var contentUrlName = $("#contentUrlName").val();
+	var columUrlName = $("#columUrlName").val();
+	$(document).on('click','.answer_r .answer_t_b a.huifu',function(){
+		if(collUserId == null || collUserId == ''){
+			
+			window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+			return;
+		}
+		$('.answer_c').hide();
+		$(this).parent().parent().next().show();
+	});
+	
+	$(document).on('click','.answer_c p',function(){
+		$(this).parent().hide();
+	});
+	
+	$(document).on('click','.answer_b .commen2',function(){
+		/* toUserId = $(this).data("id");
+		if(toUserId == collUserId){
+			return false;
+		} */
+		$("#newContent").html("");
+		$('.reply').show();
+	})
+	
+	$(document).on('click','.reply .zz',function(){
+		$('.reply').hide();
+	})
+	
+	$(".reply_inp input[type='button']").click(function(){
+		$('.reply').hide();
+	})
+	
+	//点赞
+	$(document).on('click','.answer_r .answer_t_b .zan',function(){
+		if(collUserId == null || collUserId == ''){
+			window.location.href= baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+			return;
+		}
+		var contentId = $(this).data("id");
+		if ($(this).hasClass('on')) {
+			//取消点赞
+			$(this).children('i').text(parseInt($(this).children('i').text())-1)
+			$.ajax({
+				type : "POST",
+				url : baseData.clientUrl+"/solutionComment/cancelLike",
+				data:{
+					"userId" : collUserId,
+					"contentId" : contentId
+				},
+				dataType : "json",
+				success : function(data) {
+					if(data.status == 999){
+						window.location.href = data.location;
+					}
+					
+				}// end success
+			});//ajax end
+		} else{
+			$(this).children('i').text(parseInt($(this).children('i').text())+1)
+			//点赞
+			$.ajax({
+				type : "POST",
+				url :  baseData.clientUrl+"/solutionComment/like",
+				data:{
+					"userId" : collUserId,
+					"contentId" : contentId,
+					"path" : window.location.href,
+					"title" : $("#title").val()
+				},
+				dataType : "json",
+				success : function(data) {
+					if(data.status == 999){
+						window.location.href = data.location;
+					}
+					
+				}// end success
+			});//ajax end
+		}
+		
+		$(this).toggleClass('on');
+	})
+	
+</script>
+<script type="text/javascript">
+var collUserId = '${(_const_cas_assertion_.principal.attributes.id)!}';
+var userData = [];
+function comment(num){
+	
+	$.ajax({
+		type : "POST",
+		url :  baseData.clientUrl+"/solutionComment/commentList",
+		data:{
+			"resourceId" : '${contentId}',
+			"parentId" : 0,
+			"userId" : collUserId,
+			"currentPage" : num,
+			"showCount" : 3
+		},
+		dataType : "json",
+		success : function(data) {
+			var d = data.data; 
+			$("#page").show();
+			if(d.data == null || d.data == ''){
+				$("#page").hide();
+				return;
+			}
+			$("#comment").empty();
+			$(d.data).each(function(){
+				var commentT = $("#commentT").html();
+				if(this.userId == null || this.userId == ''){
+					if(user.photoUrl != null && user.photoUrl != ''){
+						commentT = commentT.replace("{photoUrl}",baseData.member_base_url+"upload/"+this.photoUrl);
+					}else{
+						commentT = commentT.replace("{photoUrl}","https://power-sensor.infineon.cn/center/upload/base/baseUser.jpg");
+					}
+					commentT = commentT.replace("{userName}","未知用户");
+				}else{
+					if(this.photoUrl != null && this.photoUrl != ''){
+						commentT = commentT.replace("{photoUrl}",baseData.member_base_url+"upload/"+this.photoUrl);
+					}else{
+						commentT = commentT.replace("{photoUrl}","");
+					}
+					if(this.username != null && this.username != ''){
+						commentT = commentT.replace("{userName}",this.username);
+					}else{
+						commentT = commentT.replace("{userName}",'未知用户');
+					}
+					
+				}
+				var newcontent = this.content;
+				if(newcontent != null && newcontent != ''){
+					var reg1 = new RegExp("&lt;","g");
+					newcontent = newcontent.replace(reg1, "<");
+					var reg2 = new RegExp("</script","g");
+					newcontent = newcontent.replace(reg2, "&lt;/script");
+					var reg3 = new RegExp("&gt;","g");
+					newcontent = newcontent.replace(reg3, ">");
+					var reg4 = new RegExp("&quot;","g");
+					newcontent = newcontent.replace(reg4, "");
+				}
+				commentT = commentT.replace("{content1}",newcontent);
+				commentT = commentT.replace("{toUserId}",this.userId);
+				commentT = commentT.replace("{userId}",this.toUserId);
+				commentT = commentT.replace("{parentId}",this.id);
+				commentT = commentT.replace("{contId}",this.id);
+				commentT = commentT.replace("{replyNum}",this.replyNum);
+				if(this.status > 0){
+					commentT = commentT.replace("{onClass}","on");
+				}else{
+					commentT = commentT.replace("{onClass}","");
+				}
+				commentT = commentT.replace("{likeNum}",this.likeNum);
+				commentT = commentT.replace("{time}",this.createTime);
+				commentT = commentT.replace("{commId2}",this.id);
+				
+				if(this.commentList != null){
+					var childListT = $("#childListT").html();
+					
+					var child = '';
+					$(this.commentList).each(function(){
+						var childT = $("#childT").html();
+						childT = childT.replace("{userId}",this.userId);
+						childT = childT.replace("{parentId}",this.parentId);
+						childT = childT.replace("{contentId}",this.id);
+						if(userId == null || userId == '' || this.username == null){
+							childT = childT.replace("{userName}","未知用户");
+						}else{
+							childT = childT.replace("{userName}",this.username);
+						}
+						childT = childT.replace("{userId2}",this.toUserId);
+						childT = childT.replace("{parentId2}",this.parentId);
+						childT = childT.replace("{contentId2}",this.id);
+						if(this.toUserId == null || this.toUserId == '' || this.toUserName == null){
+							childT = childT.replace("{toUserName}","未知用户");
+						}else{
+							childT = childT.replace("{toUserName}",this.toUserName);
+						}
+						var newcontenT = this.content;
+						newcontenT = ToCDB(newcontenT);
+						if(newcontenT != null && newcontenT != ''){
+							var reg1 = new RegExp("&lt;","g");
+							newcontenT = newcontenT.replace(reg1, "<");
+							var reg2 = new RegExp("</script","g");
+							newcontenT = newcontenT.replace(reg2, "&lt;/script");
+							var reg3 = new RegExp("&gt;","g");
+							newcontenT = newcontenT.replace(reg3, ">");
+							var reg4 = new RegExp("&quot;","g");
+							newcontenT = newcontenT.replace(reg4, "");
+						}
+						childT = childT.replace("{content2}",newcontenT);
+						
+						child+=childT;
+					});
+					
+					childListT = childListT.replace("{child}",child);
+					commentT = commentT.replace("{childList}",childListT);
+				}else{
+					commentT = commentT.replace("{childList}","");
+				}
+				commentT = commentT.substr(0, commentT.length-1);
+				$("#comment").append(commentT);
+				
+				
+			});
+			if(collUserId != null && collUserId != ''){
+				commentA();
+			} 
+			
+			//分页
+			$("#page").paging({
+				pageNo: num,
+				totalPage: d.page.totalPage,
+				totalSize: d.page.totalResult,
+				callback: function(num) {
+					comment(num)
+				}
+			})
+		}// end success
+	});//ajax end
+}
+
+function ToCDB(str) {
+    var tmp = "";
+    for (var i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) > 65248 && str.charCodeAt(i) < 65375) {
+            tmp += String.fromCharCode(str.charCodeAt(i) - 65248);
+        }
+        else {
+            tmp += String.fromCharCode(str.charCodeAt(i));
+        }
+    }
+    return tmp
+}
+
+//查询当前登录用户是否已收藏
+function coll(userId){
+	if(userId == null || userId == ''){
+		return false;
+	}
+	$.ajax({
+		type : "POST",
+		url : baseData.clientUrl+"/collection/getColl",
+		data:{
+			"resourceId" : '${contentId}',
+			"resourceType" : 1,
+			"userId" : userId
+		},
+		dataType : "json",
+		success : function(data) {
+			if(data.code == 200 && data.data != null){
+				$(".SolutionCollection_btn").toggleClass('on');
+				
+				$("#collId").val(data.data);
+			}
+		}// end success
+	});//ajax end
+}
+
+//返回用户信息
+function getUser(userId){
+	var user;
+	
+	for(var i = 0;i < userData.length; i++){
+		if(userData[i].id == userId){
+			user = userData[i];
+			break;
+		}
+	}
+	return user;
+}
+$(function(){
+	comment(1);
+	coll(collUserId);
+	
+	
+	var toUserId;
+	var parentId;
+	var commId;
+	var contentId;
+	var userName;
+	//发布评论
+	$("#mainSub").click(function(){
+		if(collUserId == null || collUserId == ''){
+			window.location.href= baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+			return;
+		}
+		var content = $("#content").html();
+		if(content == null || content == ''){
+			return;
+		}
+		var dataIdArr=[];
+		$('.tiwen .aaa').each(function(){
+			var dataId=$(this).attr('data-id');
+			dataIdArr.push(dataId)
+		});
+		var reg1 = new RegExp("<script","g");
+		content = content.replace(reg1, "&lt;script");
+		var reg2 = new RegExp("</script","g");
+		content = content.replace(reg2, "&lt;/script");
+		/* content = content.replace("<script","&lt;script");
+		content = content.replace("</script","&lt;/script"); */
+		$.ajax({
+			type : "POST",
+			url :  baseData.clientUrl+"/solutionComment/synch",
+			data:{
+				"resourceId" : '${contentId}',
+				"parentId" : 0,
+				"userId" : collUserId,
+				"toUserId" : 0,
+				"content" : content,
+				"path" : window.location.href,
+				"username" : "${(_const_cas_assertion_.principal.attributes.nickname)!}",
+				"ATusers" : dataIdArr,
+				"resourceName" : $("#title").val()
+			},
+			dataType : "json",
+			traditional: true,
+			success : function(data) {
+				if(data.status == 999){
+					window.location.href = data.location;
+				}else{
+					window.location.reload();
+				}
+				
+			}// end success
+		});//ajax end
+	});
+	
+	//一级评论
+	$(document).on('click','.comment',function(){
+		toUserId = $(this).data("id");
+		parentId = $(this).attr("parentId");
+		commId = $(this).attr("commId");
+		contentId = $(this).attr("parentId");
+		//userName = $(this).html();
+	});
+	
+	
+	$(document).on('click','.childSub',function(){
+		var content = $("#content"+parentId).html();
+		var dataIdArr2=[];
+		$(this).parents('.answer_c').find('.inputor').find('i').each(function(){
+			dataIdArr2.push($(this).attr('data-id'))
+		})
+		if(content != null && content != ''){
+			$("#content"+parentId).text("");
+			send(content,parentId,collUserId,toUserId,1,contentId,dataIdArr2);
+		}else{
+			return;
+		}
+	});
+	
+	
+	//二级评论
+	$(document).on('click','.commen2',function(){
+		
+		toUserId = $(this).data("id");
+		parentId = $(this).attr("parentId");
+		contentId = $(this).attr("contentId");
+		//userName = $(this).html();
+		$("#newContent").attr("placeholder","回复:"+userName);
+	});
+	
+	$(document).on('click','#childSub2',function(){
+		var content = $("#newContent").html();
+		
+		var dataIdArr=[];
+		$('.reply_inp .aaa').each(function(){
+			var dataId=$(this).attr('data-id');
+			dataIdArr.push(dataId)
+		});
+		if(content != null && content != ''){
+			$("#newContent").text("");
+			send(content,parentId,collUserId,toUserId,2,contentId,dataIdArr);
+		}else{
+			return;
+		}
+	});
+	
+});
+
+function send(cont,pid,uid,toUid,type,contentId,ids){
+	$.ajax({
+		type : "POST",
+		url :  baseData.clientUrl+"/solutionComment/synch",
+		data:{
+			"resourceId" : '${contentId}',
+			"parentId" : pid,
+			"userId" : uid,
+			"toUserId" : toUid,
+			"content" : cont,
+			"ATusers" : ids,
+			"path" : window.location.href,
+			"type" : type,
+			"username":"${(_const_cas_assertion_.principal.attributes.nickname)!}",
+			"contentId" : contentId,
+			"resourceName" : $("#title").val()
+		},
+		dataType : "json",
+		success : function(data) {
+			if(data.status == 999){
+				window.location.href = data.location;
+			}else{
+				window.location.reload();
+			}
+			
+		}// end success
+	});//ajax end
+}
+</script>
+<script type="text/javascript" src="../../staticRelease/js/comment.js"></script>
+</body>
+</html>          

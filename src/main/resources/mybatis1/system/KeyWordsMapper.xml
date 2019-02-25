@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="KeyWordsMapper">
+	
+	<select id="selectKeyWordslistPage" parameterType="page" resultType="cn.cebest.entity.system.infineon.KeyWords">
+		SELECT 
+			ID id,
+			KEY_WORDS keyWords,
+			STATUS status,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %h:%i:%s') createTime
+		FROM WEB_KEY_WORDS
+		WHERE 1=1
+		<if test="pd.key != null and pd.key != ''">
+			AND KEY_WORDS like CONCAT('%',#{pd.key},'%')
+		</if>
+	</select>
+	
+	<select id="selectKeyWords" parameterType="pd" resultType="cn.cebest.entity.system.infineon.KeyWords">
+		SELECT 
+			ID id,
+			KEY_WORDS keyWords,
+			STATUS status,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') createTime
+		FROM WEB_KEY_WORDS
+		WHERE ID=#{id}
+	</select>
+	
+	<insert id="insert" parameterType="cn.cebest.entity.system.infineon.KeyWords">
+		INSERT INTO WEB_KEY_WORDS
+			(ID,KEY_WORDS,STATUS,CREATE_TIME)
+		VALUES
+			(#{id},#{keyWords},#{status},NOW())
+	</insert>
+	
+	<update id="update" parameterType="pd">
+		UPDATE WEB_KEY_WORDS
+		<set>
+			<if test="keyWords != null and keyWords != ''">
+				KEY_WORDS = #{keyWords},
+			</if>
+			<if test="status != null and status != ''">
+				STATUS=#{status}
+			</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="pd">
+		DELETE FROM 
+			WEB_KEY_WORDS
+		WHERE ID IN
+		<foreach collection="array" item="item" index="index" open="("  separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

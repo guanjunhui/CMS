@@ -1,0 +1,85 @@
+@charset "UTF-8";
+		* {
+				padding: 0;
+				margin: 0;
+			}
+			/*
+			  * 外面盒子样式---自己定义
+			  */
+			
+			.page_div {
+				width:50%;
+				margin: 20px auto 0;
+				margin-bottom: 20px;
+				font-size: 15px;
+				font-family: "microsoft yahei";
+				color: #666666;
+				/* margin-right: 10px;
+				padding-left: 20px; */
+				box-sizing: border-box;
+				text-align:center;
+			}
+			/*
+			 * 页数按钮样式
+			 */
+			
+			.page_div a {
+				min-width: 30px;
+				height: 35px;
+				width:35px;
+				border: 1px solid #dce0e0;
+				text-align: center;
+				margin: 0 4px;
+				cursor: pointer;
+				line-height: 32px;
+				color: #fff;
+				font-size: 13px;
+				display: inline-block;
+				box-sizing:border-box;
+				background:#dedede;
+			}
+			
+			#firstPage,
+			#lastPage {
+				width: 50px;
+				color: #0073A9;
+				border: 1px solid #0073A9!important;
+			}
+			
+			#prePage,
+			#nextPage {
+				width: auto;
+				height:35px;
+				padding:0 8px;
+				border: 1px solid #9bc3b7!important;
+				color:#fff;
+				background:#9bc3b7;
+			}
+			
+			.page_div .current {
+				background-color: #9bc3b7;
+				border-color: #9bc3b7;
+				color: #FFFFFF;
+			}
+			
+			.totalPages {
+				margin: 0 10px;
+			}
+			
+			.totalPages span,
+			.totalSize span {
+				color: #0073A9;
+				margin: 0 5px;
+			}
+			
+		@media only screen and (max-width: 768px){
+			.page_div{width: 100%}
+		}
+		@media only screen and (max-width: 440px){
+			.page_div a{width: 30px;height: 30px;line-height: 30px;min-width: 25px;margin:0 2px;}
+			#prePage, #nextPage{height: 30px;line-height: 30px;padding:0 6px;}
+		}
+		@media only screen and (max-width: 380px){
+			.page_div a{width: 25px;height: 25px;line-height: 25px;min-width: 25px;margin:0 2px;}
+			#prePage, #nextPage{height: 25px;line-height: 25px;padding:0 4px;}
+		}	

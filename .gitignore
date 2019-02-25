@@ -1,0 +1,12 @@
+*.class
+.settings
+.settings/
+*.classpath
+*.project
+.git/
+target/
+logs/
+*.log
+log/
+bin/
+.externalToolBuilders

@@ -1,0 +1,100 @@
+<div class="footer">
+	<div class="wrap clearfix">
+		<div class="fl footConBox">
+			<p class="footConBox_line1 cleargap">
+				<span class="fnt_14">友情链接：</span>
+			<@content_list currentId="d31b066542fe403eabfeb6160e6f18ed" sort="sort">
+				<#if out_list?? && out_list?size gt 0>
+				<#list out_list as out>
+					<a href="${(out.contentSummary)!}" class="fnt_14" target="view_window">${(out.contentTitle)!}</a>
+				</#list>
+				</#if>
+			</@content_list>
+				<!-- <a href="https://www.infineon.cn/" class="fnt_14" target="view_window">英飞凌官网</a>
+				<a href="https://www.infineon-autoeco.com/" class="fnt_14" target="view_window">英飞凌汽车电子生态圈</a>
+				<a href="https://www.infineon-power-rf.org/" class="fnt_14" target="view_window">英飞凌家电生态圈</a> -->
+			</p>
+			<div class="footConBox_line2 footConBox_line2_a">
+			<@colum_list groupId='88832e840bd44e77b7be88e2662cb32b'>
+            	<#if out_list?? && out_list?size gt 0>
+            		<#list out_list as out>
+            			<#if out_index == 0>
+            				<a href="${autoPath}/channel/${out.id}.html" class="fnt_18">英飞凌电源与传感社区</a>
+            			<#else>
+            				<a href="${autoPath}/channel/${out.id}.html" class="fnt_18">${out.columName!}</a>
+            			</#if>
+            		</#list>
+            	</#if>
+            </@colum_list>
+			</div>
+			<div class="footConBox_line2 footConBox_line3 footConBox_line_more">
+				<a href="javascript:;" class="fnt_12">Copyright© 1999 - 2018 英飞凌科技（中国）有限公司</a>
+				<@pmm_content_list currentId="b33a649ffea5492bbe0a9c234252f5fa" sort="sort">
+					<#list out_list as out>
+						<#if out_index == 0>
+							<a href="/jump/privacy.html" class="fnt_12">${(out.contentTitle)!}</a>
+						</#if>
+						<#if out_index == 1>
+							<a href="/jump/clause.html" class="fnt_12">${(out.contentTitle)!}</a>
+						</#if>
+					</#list>
+				</@pmm_content_list>
+				<@pmm_content_list currentId="355393c3de5a460b9d64b69603ccc4ff" sort="sort">
+					<#list out_list as out>
+						<#if out_index == 0>
+							<a href="mailto:${(out.contentTitle)!}" class="fnt_12">联系我们：${(out.contentTitle)!}</a>
+						</#if>
+					</#list>
+				</@pmm_content_list>
+			</div>
+			<div class="footConBox_line2 footConBox_line3 footConBox_line_last">
+				<a href="http://www.miitbeian.gov.cn/" target="view_window" class="fnt_12">${site.siteRecordno!}</a>
+				<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32021402001016" target="view_window" class="fnt_12 iconA">${site.siteDesc!}</a>
+			</div>
+		</div>
+		<div class="fr footIcon clearfix">
+			<@pmm_content_list currentId="4ae5cc6ce9db4fd2beda018abc45dc73" sort="sort">
+				<#list out_list as out>
+					<#if out_index == 0>
+						<div class="fl footIcon_li">
+							<img src="/uploadFiles/uploadImgs/${(out.surface_imageurl)!}">
+							<p class="fnt_14">${(out.contentTitle)!}</p>
+						</div>
+					</#if>
+					<#if out_index == 1>
+						<div class="fl footIcon_li">
+							<img src="/uploadFiles/uploadImgs/${(out.surface_imageurl)!}">
+							<p class="fnt_14">${(out.contentTitle)!}</p>
+						</div>
+					</#if>
+				</#list>
+			</@pmm_content_list>
+		</div>
+	</div>
+</div>
+
+<div class="cookie-banner" style="display: none">
+	<div class="wrap clearfix">
+		<p class="fl con fnt_16">为了优化您的浏览体验，英飞凌正在使用cookies.您的继续浏览表明您已经同意cookies的使用。欲知更多关于cookies以及您的个人信息处理的详情，请阅读我们的 ><a href="/jump/privacy.html" class="link">隐私政策</a>。</p>
+		<p class="btn fr"><a href="javascript:;">好</a></p>
+	</div>
+</div>
+<script>
+
+	$(function(){
+		var cookietime = new Date(); 
+	    
+	    if($.cookie('the_cookie')==undefined){
+	        setTimeout(function(){
+	            $('.cookie-banner').show();
+	        },200);
+	    }else{
+	    	$('.cookie-banner').hide();
+	    }
+	    $(document).on('click','.cookie-banner .btn',function(){
+	        $('.cookie-banner').hide();
+	        cookietime.setTime(cookietime.getTime() + (1.3*24*60*60*1000));
+	        $.cookie('the_cookie', 'aaa', { expires:cookietime});
+	    })
+	})
+</script>

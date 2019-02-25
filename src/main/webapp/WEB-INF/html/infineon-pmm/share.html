@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/share.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 热门视频模板 -->
+	<template id="videoT" style="display:none">
+		<li class="hot_video_inx fl wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+				<a href="{url}">
+					<div class="img_w">
+						<img class="scale" src="${imgPath}{image}"/>
+					</div>
+					<div class="txt_w">
+						<p class="p1 fnt_18">{title}</p>
+						<p class="p2 fnt_14">观看视频</p>
+					</div>
+				</a>
+			</li>
+  	</template>
+
+	<!-- 下载列表模板 -->
+	<template id="dow1T" style="display:none">
+		<li class="pb_40 pt_30 fl wow fadeInUp"  data-wow-delay="0.5s" data-wow-duration="1s">
+			<div class="data_list_t">
+				<p class="fnt_16 fl">{time} </p>
+				<p class="fnt_16 fl">文件大小：{size}</p>
+				<div class="clear"></div>
+			</div>
+			<p class="fnt_20 bigbt">{title}</p>
+			<a class="mt_15" href="javascript:;">
+				<div class="img_w fl"></div>
+				<p class="fnt_16 fl dow" data-id="{dow1Id}" data-name="{dow2Id}" fileName="{fileName}" fileNameEl="{fileNameEl}">点击下载</p>
+				<div class="clear"></div>
+			</a>
+		</li>
+  	</template>
+  	
+	<template id="clear" style="display:none">
+		<div class="clear"></div>
+  	</template>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<div class="hot_video wrap pt_60 pb_75">
+	<#include "../htmlFront/include/crumb.html"/>
+	<div class="hot_video_list pt_75 pb_40">
+		<ul id="video">
+			
+		</ul>
+	</div>
+	<@colum_detail columId="f0f075563c744050b4737ef08b038534">
+	  	<#if out_bean??>
+			<div class="learn_more">
+				<a class="fnt_16" href="${autoPath}/channel/${out_bean.COLUM_URLNAME!}">查看更多</a>
+			</div>
+		</#if>
+	</@colum_detail>
+	
+</div>
+<div class="data_list wrap pb_85">
+	<div class="bt">
+		<p class="p1 fnt_30 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">资料下载</p>
+		<p class="p2 fnt_18 mt_15 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">我们让人们的生活更加便利、安全和环保、英飞凌的微电子产品和解决方案带您通往美好的未来</p>
+	</div>
+	<ul class="pt_75 pb_55" id="dow1">
+		
+	</ul>
+	<@colum_detail columId="d6d72acbe8d84fb7abfb1583a085a5a0">
+	  	<#if out_bean??>
+			<div class="learn_more">
+				<a class="fnt_16" href="${autoPath}/channel/${out_bean.COLUM_URLNAME!}">查看更多</a>
+			</div>
+		</#if>
+	</@colum_detail>
+	
+</div>
+<div class="down_xuan">
+	<div class="zz"></div>
+	<div class="data_x">
+		<p class="bt">请选择文档语言</p>
+		<div class="data_n" id="dow2">
+		
+		</div>
+	</div>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+
+
+<script type="text/javascript">
+	//文档选择弹窗
+	$(document).on('click','.dow',function(){
+		var dow1Id = $(this).data("id");
+		var dow2Id = $(this).data("name");
+		var fileName = $(this).attr("fileName");
+		var fileNameEl = $(this).attr("fileNameEl");
+		
+		$("#dow2").empty();
+		if(dow1Id != null && dow1Id != ''){
+			$("#dow2").append('<a class="fnt_16" href="${filePath}'+dow1Id+'" download="'+fileName+'">中文文档</a>');
+		}
+		if(dow2Id != null && dow2Id != ''){
+			$("#dow2").append('<a class="fnt_16" href="${filePath}'+dow2Id+'" download="'+fileNameEl+'">英文文档</a>');
+		}
+		$("#dow2").append('<a class="fnt_16 close" href="javascript:;">取消下载</a>');
+		
+		$('.down_xuan').show();
+	})
+    $(document).on('click','.down_xuan .zz',function(){
+    	$('.down_xuan').hide();
+    })
+    $(document).on('click','.down_xuan .data_x .data_n a.close',function(){
+    	$('.down_xuan').hide()
+    })
+	
+	$(function(){
+		dow(1,null,null,null,null);
+		
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getContentList",
+			data:{
+				"columId" : 'f0f075563c744050b4737ef08b038534',
+				"hot" : '1',
+				"currentPage" : 1,
+				"showCount" : 4
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				$("#video").empty();
+				var d = data.data;
+				if(d != null){
+					$(d.data).each(function(){
+						var videoT = $("#videoT").html();
+						if('${(_const_cas_assertion_.principal.attributes.id)!}' != ''){
+							videoT = videoT.replace("{url}","${basePath!}/content/"+this.id+".html?type=1&columnId=f0f075563c744050b4737ef08b038534");
+						}else{
+							videoT = videoT.replace("{url}",baseData.loginUrl+"?service="+baseData.clientUrl+"/");
+						}
+						if(this.imageList != null && this.imageList[0] != null){
+							videoT = videoT.replace("{image}",this.surface_imageurl);
+						}
+						videoT = videoT.replace("{title}",this.contentTitle);
+						$("#video").append(videoT);
+					});
+					
+					$("#video").append($("#clear").html());
+				}
+				
+			}// end success
+			
+		});//ajax end
+	});
+	
+	function dow(){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getDowList",
+			data:{
+				"columnId" : 'd6d72acbe8d84fb7abfb1583a085a5a0',
+				"currentPage" : 1,
+				"showCount" : 3
+			},
+			dataType : "json",
+			success : function(data) {
+				$("#dow1").empty();
+				var d = data.data;
+				if(d != null){
+					$(d.data).each(function(){
+						
+						var dow1T = $("#dow1T").html();
+						dow1T = dow1T.replace("{time}",this.update_time);
+						dow1T = dow1T.replace("{title}",this.title);
+						dow1T = dow1T.replace("{dowId}",this.fileid);
+						if(this.files.length == 1){
+							dow1T = dow1T.replace("{size}",this.files[0].size);
+							if(this.files[0].mark == '0'){
+								dow1T = dow1T.replace("{dow1Id}",this.files[0].filepach);
+								dow1T = dow1T.replace("{fileName}",this.files[0].name);
+								dow1T = dow1T.replace("{dow2Id}","");
+								dow1T = dow1T.replace("{fileNameEl}","");
+							}else{
+								dow1T = dow1T.replace("{dow1Id}","");
+								dow1T = dow1T.replace("{fileName}","");
+								dow1T = dow1T.replace("{dow2Id}",this.files[0].filepach);
+								dow1T = dow1T.replace("{fileNameEl}",this.files[0].name);
+							}
+						}
+						
+						if(this.files.length == 2){
+							dow1T = dow1T.replace("{size}",this.files[0].size);
+							for(var i = 0;i < this.files.length; i++){
+								if(this.files[i].mark == '0'){
+									dow1T = dow1T.replace("{dow1Id}",this.files[i].filepach);
+									dow1T = dow1T.replace("{fileName}",this.files[i].name);
+								}else{
+									dow1T = dow1T.replace("{dow2Id}",this.files[i].filepach);
+									dow1T = dow1T.replace("{fileNameEl}",this.files[i].name);
+								}
+							}
+							
+						}
+						
+						if(this.files == null){
+							dow1T = dow1T.replace("{size}","0 KB");
+							dow1T = dow1T.replace("{dow1Id}","");
+							dow1T = dow1T.replace("{dow2Id}","");
+						}
+						
+						$("#dow1").append(dow1T);
+					});
+					
+					setTimeout(function(){
+						$('img.scale').imageScale();
+					},0);
+					new WOW().init();
+					//$('img.scale').imageScale();
+					
+				}
+				$("#dow1").append($("#clear").html());
+				
+			}// end success
+			
+			
+		});//ajax end
+	}
+</script>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>          

@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EmployMapper">
+	<resultMap id="BaseResultMap" type="cn.cebest.entity.system.Recruit" >
+	    <id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="COLUMCONFIG_ID" property="columid" jdbcType="VARCHAR" />
+	    <result column="RECRUIT_TITLE" property="recruitTitle" jdbcType="VARCHAR" />
+	    <result column="TOURL" property="tourl" jdbcType="VARCHAR" />
+	    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+	    <result column="RECRUIT_PEOPLENUM" property="recruit_peoplenum" jdbcType="INTEGER" />
+	    <result column="RECRUIT_EMAIL" property="recruitEmail" jdbcType="VARCHAR" />
+	    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="IFALWAYS" property="ifalways" jdbcType="VARCHAR" />
+	    <result column="RECRUIT_POSITION" property="recruitPosition" jdbcType="VARCHAR" />
+	    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+	    <result column="WORK_AREAS" property="workAreas" jdbcType="VARCHAR" />
+	    <result column="WORK_CATEGORY" property="workCategory" jdbcType="VARCHAR" />
+	    <result column="EDUCATION_REQUIRED" property="educationRequired" jdbcType="VARCHAR" />
+	    <result column="SALARY_RANGE" property="salaryRange" jdbcType="VARCHAR" />
+	    <result column="WORK_DEPARTMENT" property="workDepartment" jdbcType="VARCHAR" />
+	    <result column="WORK_AGE" property="workAge" jdbcType="VARCHAR" />
+	    <result column="AGE_REQUIRED" property="ageRequired" jdbcType="VARCHAR" />
+	    <result column="JOB_DESCRIPTION" property="jobDescription" jdbcType="VARCHAR" />
+	    <result column="RELEASE_TIME" property="releaseTime" jdbcType="TIMESTAMP" />
+	    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result property="ifrecommend" column="IFRECOMMEND" jdbcType="VARCHAR" />
+		<result property="recommend_time" column="RECOMMEND_TIME" jdbcType="TIMESTAMP"/>
+		<result property="ifhot" column="IFHOT" jdbcType="VARCHAR" />
+		<result property="hot_time" column="HOT_TIME" jdbcType="TIMESTAMP"/>
+		<result property="iftop" column="IFTOP" jdbcType="VARCHAR" />
+		<result property="top_time" column="TOP_TIME" jdbcType="TIMESTAMP"/>
+	    <result column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+	    <result column="OUTLINEDES" property="outlinedes" jdbcType="VARCHAR" />
+	    <result column="JOB_REQUIRE" property="jobRequire" jdbcType="VARCHAR" />
+	    <result column="JOB_CONTACT" property="jobContact" jdbcType="VARCHAR" />
+	    <result column="JOB_DESSIMPLE" property="jobDessimple" jdbcType="VARCHAR" />
+	    <result column="EDUCATION_IN_CHINESE" property="educationInChinese" jdbcType="VARCHAR" />
+	    <result column="AGE_IN_CHINESE" property="ageInChinese" jdbcType="VARCHAR" />
+	    <result column="WORK_AGE_CHINESE" property="workAgeChinese" jdbcType="VARCHAR" />
+	    <result column="WORK_CATEGORY_CHINESE" property="workCategoryChinese" jdbcType="VARCHAR" />
+	    <result column="SEX_IN_CHINESE" property="sexInChinese" jdbcType="VARCHAR" />
+	    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+	    <result column="SORT" property="sort" jdbcType="INTEGER" />
+	    <collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="COLUMN_ID" />
+			<result property="columName" column="COLUMN_NAME_" />
+		</collection>
+	</resultMap>
+	<!-- 招聘列表 -->
+ 	<select id="listPage" parameterType="page" resultType="pd">
+ 		SELECT
+			WR.ID,
+			WR.RECRUIT_TITLE,
+			WR.RECRUIT_PEOPLENUM,
+			WR.RECRUIT_POSITION,
+			WR.RELEASE_TIME,
+			WR.IFRECOMMEND,
+			WR.IFTOP,
+			WR.WORK_AREAS,
+			WCC.COLUM_NAME,
+			T.TXT AS JOB_DESCRIPTION,
+			TX.TXT AS JOB_REQUIRE,
+			S.VALUE AS EDUCATION_REQUIRED
+		FROM
+			WEB_EMPLOY WR
+		INNER JOIN WEB_COLUMCONFIG WCC ON WCC.ID = WR.COLUMCONFIG_ID
+		LEFT JOIN WEB_TXT T ON T.CONTENT_ID = WR.JOB_DESCRIPTION 
+		LEFT JOIN WEB_TXT TX ON TX.CONTENT_ID = WR.JOB_REQUIRE 
+		LEFT JOIN SYS_DICTIONARIES S ON S.DICTIONARIES_ID = WR.EDUCATION_REQUIRED 
+		<where>
+				1=1
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				AND WR.RECRUIT_POSITION LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+			</if>
+			<if test="pd.siteId!=null and pd.siteId!=''">
+			    AND WR.SITE_ID=#{pd.siteId}
+		    </if>
+		    <if test="pd.colum_id!=null and pd.colum_id!=''">
+			    AND WR.COLUMCONFIG_ID=#{pd.colum_id}
+		    </if>
+		</where>
+			<choose>
+				<when test="pd.RELEASE_TIME !=null and pd.RELEASE_TIME !=''">ORDER BY WR.RELEASE_TIME DESC</when>
+				<when test="pd.UPDATE_TIME !=null and pd.UPDATE_TIME !=''">ORDER BY WR.UPDATE_TIME DESC</when>
+				<when test="pd.TOP_TIME !=null and pd.TOP_TIME !=''">ORDER BY WR.TOP_TIME DESC</when>
+				<when test="pd.RECOMMEND_TIME !=null and pd.RECOMMEND_TIME !=''">ORDER BY WR.RECOMMEND_TIME DESC</when>
+				<otherwise>
+					ORDER BY WR.UPDATE_TIME DESC
+				</otherwise>
+			</choose>
+ 	</select>
+ 	<!-- ==============    用于栏目检索       ================== begin -->
+ 	<select id="selectColum" parameterType="pd" resultType="pd">
+		SELECT C.ID,C.COLUM_NAME
+		FROM WEB_COLUMCONFIG C
+        WHERE C.SITEID=#{SITEID} AND C.COLUM_TYPE='4'
+	</select>
+	
+	<!-- 查询栏目id与pid -->
+	<select id="selectallcolum_ids" parameterType="page" resultType="HashMap">
+		SELECT ID,PARENTID AS PID
+		FROM WEB_COLUMCONFIG
+		WHERE COLUM_TYPE='4'
+	</select>
+	
+	 <select id="selectByColumIDDlistPage" parameterType="page" resultType="string">
+		SELECT DISTINCT E.ID
+        FROM  WEB_EMPLOY E
+       LEFT JOIN WEB_COLUMCONFIG CC on CC.ID=E.COLUMCONFIG_ID
+        <where>
+			1=1
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND CC.SITEID=#{pd.SITEID}
+			</if>
+		  
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND CC.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CC.ID in 
+				<foreach collection="pd.list" close=")" item="cid" open="(" separator=",">
+					"${cid}"
+				</foreach>
+			</if>
+		</where>
+	</select> 
+	<select id="selectTest"  resultType="pd">
+		SELECT
+			WR.ID,
+			WR.RECRUIT_TITLE,
+			WR.RECRUIT_POSITION,
+			WR.RELEASE_TIME,
+			WR.IFRECOMMEND,
+			WR.IFTOP,
+			WR.JOB_DESCRIPTION,
+			WCC.COLUM_NAME
+		FROM
+			WEB_EMPLOY WR
+		INNER JOIN WEB_COLUMCONFIG WCC ON WCC.ID = WR.COLUMCONFIG_ID
+			where WR.ID IN
+		<foreach collection="list" close=")" item="employid01" open="(" separator=",">
+		 #{employid01}
+		</foreach>
+		ORDER BY WR.RELEASE_TIME DESC
+	</select>
+	<!-- ==============    用于栏目检索       ================== end -->
+	
+ 	<!-- 删除招聘 -->
+ 	<delete id="del" parameterType="pd">
+ 		DELETE FROM WEB_EMPLOY WHERE ID=#{ID}
+ 	</delete>
+ 	
+ 	<!-- 删除栏目下的招聘 -->
+ 	<delete id="deleteByColumnIds">
+ 		DELETE FROM WEB_EMPLOY WHERE COLUMCONFIG_ID in
+ 		<foreach collection="array" item="employid02" close=")" open="(" separator=",">
+			#{employid02}
+		</foreach>
+ 	</delete>
+ 	
+ 	<!-- 批量删除招聘 -->
+ 	<delete id="delAll" parameterType="String">
+ 		DELETE FROM WEB_EMPLOY WHERE ID in
+ 		<foreach item="employid03" index="index" collection="array" open="(" separator="," close=")">
+        	#{employid03}
+        </foreach>
+ 	</delete>
+ 	
+ 	<!-- 保存招聘 -->
+ 	<insert id="save" parameterType="pd">
+ 		insert into WEB_EMPLOY (
+			ID,COLUMCONFIG_ID,RECRUIT_TITLE,TOURL,TEMPLATE_ID,RECRUIT_PEOPLENUM,RECRUIT_EMAIL,
+			START_TIME,END_TIME,IFALWAYS,RECRUIT_POSITION,SEX,WORK_AREAS,WORK_CATEGORY,EDUCATION_REQUIRED,
+			SALARY_RANGE,WORK_DEPARTMENT,WORK_AGE,AGE_REQUIRED,JOB_DESCRIPTION,RELEASE_TIME,IFRECOMMEND,IFTOP,
+			SITE_ID,JOB_REQUIRE,JOB_CONTACT,JOB_DESSIMPLE,UPDATE_TIME,FILEDJSON,EMPLOY_TYPE
+		) values (
+			#{ID},#{COLUMCONFIG_ID},#{RECRUIT_TITLE},#{TOURL},#{TEMPLATE_ID},#{RECRUIT_PEOPLENUM},#{RECRUIT_EMAIL},#{START_TIME},
+			#{END_TIME},#{IFALWAYS},#{RECRUIT_POSITION},#{SEX},#{WORK_AREAS},#{WORK_CATEGORY},#{EDUCATION_REQUIRED},
+			#{SALARY_RANGE},#{WORK_DEPARTMENT},#{WORK_AGE},#{AGE_REQUIRED},#{JOB_DESCRIPTION},#{RELEASE_TIME},
+			#{IFRECOMMEND},#{IFTOP},#{SITE_ID},#{JOB_REQUIRE},#{JOB_CONTACT},#{JOB_DESSIMPLE},#{UPDATE_TIME},#{FILEDJSON},#{EMPLOY_TYPE}
+		)
+ 	</insert>
+ 	
+ 	<!-- 根据id查询招聘 -->
+ 	<select id="findById" parameterType="pd" resultType="pd">
+ 		SELECT
+			WR.ID,
+			WR.COLUMCONFIG_ID,
+			WR.RECRUIT_TITLE,
+			WR.TOURL,
+			WCC.COLUM_NAME,
+			WR.TEMPLATE_ID,
+			WT.TEM_NAME,
+			WR.RECRUIT_PEOPLENUM,
+			WR.RECRUIT_EMAIL,
+			DATE_FORMAT(WR.START_TIME,'%Y-%m-%d') AS START_TIME,
+			DATE_FORMAT(WR.END_TIME,'%Y-%m-%d') AS END_TIME,
+			WR.IFALWAYS,
+			WR.RECRUIT_POSITION,
+			WR.SEX,
+			WR.WORK_AREAS,
+			WR.WORK_CATEGORY,
+			WR.EDUCATION_REQUIRED,
+			WR.SALARY_RANGE,
+			WR.WORK_DEPARTMENT,
+			WR.WORK_AGE,
+			WR.AGE_REQUIRED,
+			WR.JOB_DESCRIPTION,
+			TX.TXT AS JOB_DESCRIPTION_CONTENT,
+			TXR.TXT AS JOB_REQUIRE_CONTENT,
+			TXC.TXT AS JOB_CONTACT_CONTENT,
+			WR.RELEASE_TIME,
+			WR.IFRECOMMEND,
+			WR.IFTOP,
+			WR.JOB_DESSIMPLE,
+			WR.FILEDJSON,
+			WR.EMPLOY_TYPE,
+			WS.ID AS contentUrlName
+		FROM
+			WEB_EMPLOY WR
+		LEFT JOIN WEB_COLUMCONFIG WCC ON WCC.ID = WR.COLUMCONFIG_ID
+		LEFT JOIN WEB_TEMPLATE WT ON WR.TEMPLATE_ID = WT.ID
+		LEFT JOIN WEB_TXT TX ON WR.JOB_DESCRIPTION = TX.CONTENT_ID
+		LEFT JOIN WEB_TXT TXR ON WR.JOB_REQUIRE = TXR.CONTENT_ID
+		LEFT JOIN WEB_TXT TXC ON WR.JOB_CONTACT = TXC.CONTENT_ID
+		LEFT JOIN WEB_SKIPPATH WS ON WR.ID=WS.CONTENTID
+		WHERE WR.ID=#{ID}
+ 	</select>
+ 	
+ 	<!-- 修改招聘 -->
+ 	<update id="edit" parameterType="pd">
+	 	UPDATE WEB_EMPLOY WR 
+	 	SET
+			WR.RECRUIT_TITLE 					= #{RECRUIT_TITLE},
+			WR.COLUMCONFIG_ID 					= #{COLUMCONFIG_ID},
+			WR.TEMPLATE_ID 						= #{TEMPLATE_ID},
+			WR.RECRUIT_PEOPLENUM 				= #{RECRUIT_PEOPLENUM},
+			WR.RECRUIT_EMAIL 					= #{RECRUIT_EMAIL},
+			WR.START_TIME 						= #{START_TIME},
+			WR.END_TIME 						= #{END_TIME},
+			WR.IFALWAYS 						= #{IFALWAYS},
+			WR.RECRUIT_POSITION 				= #{RECRUIT_POSITION},
+			WR.SEX 								= #{SEX},
+			WR.WORK_AREAS 						= #{WORK_AREAS},
+			WR.WORK_CATEGORY 					= #{WORK_CATEGORY},
+			WR.EDUCATION_REQUIRED 				= #{EDUCATION_REQUIRED},
+			WR.SALARY_RANGE 					= #{SALARY_RANGE},
+			WR.WORK_DEPARTMENT 					= #{WORK_DEPARTMENT},
+			WR.WORK_AGE 						= #{WORK_AGE},
+			WR.AGE_REQUIRED 					= #{AGE_REQUIRED},
+			WR.JOB_DESCRIPTION 					= #{JOB_DESCRIPTION},
+			WR.SITE_ID                          = #{SITE_ID},
+			WR.JOB_REQUIRE                      = #{JOB_REQUIRE},
+			WR.JOB_CONTACT                      = #{JOB_CONTACT},
+			WR.UPDATE_TIME						= #{UPDATE_TIME},
+			WR.JOB_DESSIMPLE					= #{JOB_DESSIMPLE},
+			WR.FILEDJSON						= #{FILEDJSON},
+			WR.EMPLOY_TYPE                      = #{EMPLOY_TYPE} 
+		WHERE
+			WR.ID = #{ID}
+ 	</update>
+ 	
+	<!-- 查询各个栏目下置顶的招聘 -->
+	<select id="findTopContentList" resultType="pd">
+	  	SELECT E.ID,E.RECRUIT_TITLE,E.RELEASE_TIME,E.COLUMCONFIG_ID,E.TOP_TIME
+		FROM WEB_EMPLOY E
+		WHERE E.IFTOP='1'
+	</select>
+ 	<!-- 根据id查询模板路径 -->
+	<select id="selectTemplatePachById" resultType="pd">
+	  	SELECT T.TEM_FILEPATH as template_Path
+		FROM WEB_TEMPLATE T
+		LEFT JOIN WEB_EMPLOY E  ON T.ID=E.TEMPLATE_ID
+        WHERE E.ID=#{id}
+	</select>
+	<!-- 根据id查询招聘 -->
+ 	<select id="selectAllByColumIdlistPage" parameterType="page" resultType="cn.cebest.entity.system.Recruit">
+ 		SELECT
+			WR.ID,
+			WR.COLUMCONFIG_ID,
+			WR.RECRUIT_TITLE recruitTitle,
+			WR.TOURL,
+			WCC.COLUM_NAME,
+			WR.TEMPLATE_ID,
+			WT.TEM_NAME,
+			WR.RECRUIT_PEOPLENUM,
+			WR.RECRUIT_EMAIL,
+			DATE_FORMAT(WR.START_TIME,'%Y-%m-%d') AS releaseTime,
+			DATE_FORMAT(WR.END_TIME,'%Y-%m-%d') AS END_TIME,
+			WR.IFALWAYS,
+			WR.RECRUIT_POSITION recruitPosition,
+			WR.SEX,
+			WR.WORK_AREAS workAreas,
+			WR.WORK_CATEGORY,
+			WR.EDUCATION_REQUIRED,
+			WR.SALARY_RANGE,
+			WR.WORK_DEPARTMENT,
+			WR.WORK_AGE workAge,
+			WR.AGE_REQUIRED,
+			WR.JOB_DESCRIPTION,
+			TX.TXT AS jobDescription ,
+			WR.RELEASE_TIME release_time,
+			WR.UPDATE_TIME updateTime,
+			WR.IFRECOMMEND,
+			WR.IFTOP,
+			WR.FILEDJSON,
+			WR.JOB_DESSIMPLE jobDsssimple,
+			TX2.TXT AS jobRequire,
+			WS.ID AS contentUrlName
+		FROM
+			WEB_EMPLOY WR
+		INNER JOIN WEB_COLUMCONFIG WCC ON WCC.ID = WR.COLUMCONFIG_ID
+		LEFT JOIN WEB_TEMPLATE WT ON WR.TEMPLATE_ID = WT.ID
+		LEFT  JOIN WEB_TXT TX ON WR.JOB_DESCRIPTION = TX.CONTENT_ID
+		LEFT  JOIN WEB_TXT TX2 ON WR.JOB_REQUIRE = TX2.CONTENT_ID
+		LEFT JOIN WEB_SKIPPATH WS ON WR.ID=WS.CONTENTID
+		WHERE WR.COLUMCONFIG_ID=#{pd.thiscolum}		
+		<if test="pd.EMPLOY_TYPE !=null and pd.EMPLOY_TYPE !=''">
+			AND WR.EMPLOY_TYPE=#{pd.EMPLOY_TYPE}
+		</if>
+		ORDER BY WR.TOP_TIME DESC,WR.SORT, WR.UPDATE_TIME DESC
+ 	</select>
+ 	<!-- 江铜开始 -->
+ 	<select id="selectColumnByColumId" parameterType="page" resultType="cn.cebest.entity.system.ColumConfig">
+ 		SELECT  C.ID AS id,C.COLUM_NAME AS columName,WSC.SKIPPATH as columUrlName
+	    FROM WEB_COLUMCONFIG C
+	    LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON C.ID = WSC.COLUMNID
+	    WHERE C.PARENTID=#{pd.columId}
+ 	</select>
+ 	<!-- 江铜结束 -->
+ 	
+ 	<!--检索  -->
+ 	 <select id="selectlistPageInfoByIdArry" parameterType="page" resultMap="BaseResultMap">
+ 		SELECT
+			WR.ID,WR.RECRUIT_TITLE,WR.RECRUIT_POSITION,WR.RELEASE_TIME,WR.JOB_DESCRIPTION,WCC.COLUM_NAME,WR.COLUMCONFIG_ID,
+			WR.WORK_AREAS,WR.RECRUIT_PEOPLENUM,WR.UPDATE_TIME,WR.IFTOP,WR.TOP_TIME,WR.IFRECOMMEND,WR.RECOMMEND_TIME,WR.STATUS,WR.IFHOT,WR.HOT_TIME,WR.SORT,
+			WCC.ID AS COLUMN_ID,WCC.COLUM_NAME AS COLUMN_NAME_
+		FROM
+			WEB_EMPLOY WR
+			INNER JOIN WEB_COLUMCONFIG WCC ON WCC.ID = WR.COLUMCONFIG_ID
+		<!-- 检索条件 -->
+		<where>
+			1=1
+			<if test="pd.keyword!=null and pd.keyword !=''">
+				AND RECRUIT_POSITION LIKE '%' #{pd.keyword} '%'
+			</if>
+		    <if test="pd.columId!=null and pd.columId!=''">
+			    AND WR.COLUMCONFIG_ID=#{pd.columId}
+		    </if>
+		</where>
+		ORDER BY WR.TOP_TIME DESC,WR.SORT, WR.UPDATE_TIME DESC
+ 	</select>
+ 	
+ 	<update id="updateStatusByIds" parameterType="pd">
+		UPDATE WEB_EMPLOY
+		SET STATUS=${status}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="employid04" close=")" open="("
+			separator=",">
+			#{employid04}
+		</foreach>
+	</update>
+	
+	<!-- 是否热 -->
+ 	<update id="hot">
+ 		UPDATE WEB_EMPLOY
+		SET IFHOT = #{IFHOT},
+		HOT_TIME = #{HOT_TIME}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="employid05" close=")" open="("
+			separator=",">
+			#{employid05}
+		</foreach>
+ 	</update>
+ 	
+ 	<!-- 是否推荐 -->
+ 	<update id="recommend">
+ 		UPDATE WEB_EMPLOY
+		SET IFRECOMMEND = #{IFRECOMMEND},
+		RECOMMEND_TIME = #{RECOMMEND_TIME}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="employid06" close=")" open="("
+			separator=",">
+			#{employid06}
+		</foreach>
+ 	</update>
+ 	
+ 	<!-- 置顶 -->
+ 	<update id="top">
+ 		UPDATE WEB_EMPLOY
+		SET IFTOP = #{IFTOP},
+		TOP_TIME = #{TOP_TIME}
+		WHERE ID IN
+		<foreach collection="ids" item="employid07" close=")" open="("
+			separator=",">
+			#{employid07}
+		</foreach>
+ 	</update>
+ 	<!-- 排序 -->
+ 	<update id="updateSort" parameterType="pd">
+		UPDATE WEB_EMPLOY SET SORT = #{sort}
+		WHERE ID = #{id}
+	</update>
+	
+	<resultMap id="EmployFieldMap" type="cn.cebest.entity.system.EmployField" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="DEFAULT_NAME" property="default_name" jdbcType="VARCHAR" />
+	    <result column="DISPLAY_NAME" property="display_name" jdbcType="VARCHAR" />
+	    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+	    <result column="ISDISPLAY" property="isdisplay" jdbcType="INTEGER" />
+	    <result column="SORT" property="sort" jdbcType="INTEGER" />
+	    <result column="TYPE" property="type" jdbcType="INTEGER" />	    
+	</resultMap>
+	
+	<!-- 招聘职位基础字段 -->
+ 	<select id="listEmployFields" parameterType="page" resultMap="EmployFieldMap">
+ 		SELECT
+			WEF.ID,
+			WEF.DEFAULT_NAME,
+			WEF.DISPLAY_NAME,
+			WEF.KEYWORD,
+			WEF.ISDISPLAY,
+			WEF.SORT,
+			WEF.TYPE
+		FROM
+			WEB_EMPLOY_FIELD WEF	
+		WHERE
+			WEF.ISDISPLAY=1 AND WEF.TYPE=0 	
+		ORDER BY WEF.SORT			
+ 	</select>
+ 	
+ 	<!-- 删除招聘地址栏的url信息-->
+ 	<delete id="delUrlName" parameterType="pd">
+ 		DELETE FROM WEB_SKIPPATH WHERE CONTENTID=#{ID}
+ 	</delete>
+ 	
+ 	<!-- 删除招聘地址栏的url信息 -->
+	<delete id="delAllUrlName">
+		DELETE FROM WEB_SKIPPATH
+		WHERE CONTENTID IN
+		<foreach collection="array" close=")" item="id" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+ 	<!-- 保存招聘url信息 -->
+	<insert id="insertTypeEmployUrlNameColumRelation" parameterType="pd">
+		INSERT INTO WEB_SKIPPATH(CONTENTID,COLUMNID) VALUES(#{ID},#{COLUMCONFIG_ID})
+	</insert>
+	
+	<!-- 修改招聘Url信息 -->
+ 	<update id="editUrlName" parameterType="pd">
+	 	UPDATE WEB_SKIPPATH 
+	 	SET
+			COLUMNID					= #{COLUMCONFIG_ID}
+		WHERE
+			CONTENTID = #{ID}
+ 	</update>
+ 	
+ 	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentUrlNameList" parameterType="pd" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH 
+		WHERE CONTENTID = #{ID}
+	</select>
+ 	
+ 	<select id="findRecruitByTypeOrColumnid" parameterType="pd" resultType="cn.cebest.entity.system.Recruit">
+ 		SELECT
+ 			WR.ID,
+			WR.COLUMCONFIG_ID,
+			WR.RECRUIT_TITLE recruitTitle,
+			WR.TOURL,
+			WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName
+	    FROM WEB_EMPLOY WR
+		    LEFT JOIN WEB_SKIPPATH WS ON WS.CONTENTID = WR.ID
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WS.COLUMNID = WSC.COLUMNID
+		<where>
+			1=1
+			<if test="SITEID !=null and SITEID !=''">and WR.SITEID=#{SITEID}</if>
+			<if test="contentId !=null and contentId !=''">and WR.ID=#{contentId}</if>
+			<if test="columnId !=null and columnId !=''">and WS.COLUMNID=#{columnId}</if>
+			<if test="typeId !=null and typeId !=''">and WS.TYPEID=#{typeId}</if>
+		</where>
+ 	</select>
+</mapper>

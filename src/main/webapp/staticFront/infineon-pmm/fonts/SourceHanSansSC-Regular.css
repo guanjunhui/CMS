@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "SourceHanSansSC-Regular";
+  src: url("SourceHanSansSC-Regular.woff2") format("woff2"),
+       url("SourceHanSansSC-Regular.woff") format("woff"),
+       url("SourceHanSansSC-Regular.ttf") format("truetype"),
+       url("SourceHanSansSC-Regular.eot") format("embedded-opentype"),
+       url("SourceHanSansSC-Regular.svg") format("svg"),
+       url("SourceHanSansSC-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

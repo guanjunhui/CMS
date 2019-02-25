@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<@newmessage_details currentId="${contentId}" columId="${currentId}">
+	<#if message??>
+		<title>${message.message_title!}-新闻速递-英飞凌电源与传感社区</title>
+	</#if>
+</@newmessage_details>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/news-details.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<@newmessage_details currentId="${contentId}" columId="${currentId}">
+	
+	<#if message??>
+		<div class="positionBox">
+			<div class="wrap">
+				<a href="${autoPath}" class="fnt_14">首页 > </a>
+				<#if columConfigTop?? && columConfigTop?size gt 0>
+						<a href="${autoPath}/channel/${columConfigTop.columUrlName}.html" class="fnt_14">${columConfigTop.columName!} > </a>
+				</#if>
+				<a href="javascript:;" class="fnt_14 active">${message.message_title!}</a>
+			</div>
+		</div>
+		<div class="new_con wrap pt_55 pb_85">
+			<p class="fnt_32 bt">${message.message_title!}</p>
+			<p class="fnt_14 fbt mt_15 mb_30"><span id="newTime"></span>  
+			<#if message.author?? && message.author != "">
+				|  ${message.author!}
+			<#else>
+			
+			</#if>
+			</p>
+			<div class="new_txt">
+				${message.detail!}
+			</div>
+		</div>
+		<input type="hidden" id="oldTime" value="${(message.release_time?long)!}">
+	</#if>
+</@newmessage_details>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html"/>
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+	
+	
+$(function(){
+	var oldTime = $("#oldTime").val();
+	
+	$("#newTime").html(formatDate(oldTime));
+	function formatDate(millinSeconds){	
+		var date = new Date(parseInt(millinSeconds));	
+		var monthArr = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");	
+		var suffix = new Array("st","nd","rd","th");		
+		var year = date.getFullYear(); //年	
+		var month = monthArr[date.getMonth()]; //月	
+		var ddate = date.getDate(); //日		
+		/* if(ddate % 10 < 1 || ddate % 10 > 3) {		
+			ddate = ddate + suffix[3];
+		}else if(ddate % 10 == 1) {		
+			ddate = ddate + suffix[0];
+		} else if(ddate % 10 == 2) {		
+			ddate = ddate + suffix[1];	
+		}else {		
+			ddate = ddate + suffix[2];	
+		} */	
+		return month + " "+ ddate + "," + year;
+		
+	}
+	//$("#newTime").html(formatDate(oldTime));
+});
+</script>
+</body>
+</html>          

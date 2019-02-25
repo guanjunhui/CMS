@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>个人中心-我的方案</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/personal-solution.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 我的方案模板 -->
+	<template id="solutionT" style="display:none">
+		<li class="mysolu_inx pt_30 pb_30 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="${autoPath}/content/{id}.html?type=1&columnId={columId}">
+				<p class="solu_bt fnt_20">{title}</p>
+				<p class="solu_time fnt_12">{time}</p>
+				<p class="solu_txt fnt_16 mt_20">{content}</p>
+				<img class="mt_25 next_ico" src="${autoPath}/staticRelease/img/next.png"/>
+			</a>
+		</li>
+  	</template>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<@colum_detail columId="9c83f37d371044ce9773fb3399be6f8c">
+	<#if out_bean??>
+		<div class="innerBanner prz">
+			<img src="${imgPath}${out_bean.PIC_PATH!}" alt="">
+			<div class="innerBox pra">
+				<div class="wrap">
+					<p class="chTil fnt_32 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_NAME!}</p>
+					<p class="line wow fadeInUp" data-wow-duration="1.5s"><span></span></p>
+					<p class="enTil fnt_22 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_SUBNAME!}</p>
+				</div>
+			</div>
+		</div>
+	</#if>
+</@colum_detail>
+<div class="positionBox">
+		<div class="wrap">
+			<a href="${autoPath}" class="fnt_14">首页 > </a>
+			<a href="${autoPath}/channel/center" class="fnt_14">个人中心 > </a>
+			<a href="javascript:;" class="fnt_14 active">我的方案 </a>
+		</div>
+	</div>
+<div class="page_link wrap pt_75">
+	<a class="fl fnt_18 on wow fadeInRight" href="javascript:;" data-wow-delay="0s" data-wow-duration="1s">我的方案</a>
+	<a class="fl fnt_18 wow fadeInRight" href="/jump/personal-video.html" data-wow-delay="0.1s" data-wow-duration="1s">我的视频</a>
+	<a class="fl fnt_18 wow fadeInRight" href="/jump/personal-partner.html" data-wow-delay="0.2s" data-wow-duration="1s">我的伙伴</a>
+	<a class="fl fnt_18 wow fadeInRight" href="/jump/personal-message.html" data-wow-delay="0.3s" data-wow-duration="1s">站内消息</a>
+	<div class="clear"></div>
+</div>
+<div class="mysolu wrap pt_75">
+	<div class="bt fnt_32 wow fadeIn" data-wow-delay="0.3s" data-wow-duration="1s">我的方案</div>
+	<ul class="mysolu_list pt_30 pb_60" id="solution">
+		
+	</ul>
+	<div id="page" class="page_div"></div>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+var userId = "${(_const_cas_assertion_.principal.attributes.id)!}"
+	function solution(num){
+		$.ajax({
+			type : "POST",
+			url : "/collection/getCollections",
+			data:{
+				"userId" : userId,
+				"resourceType" : 1,
+				"currentPage" : num,
+				"showCount" : 6
+			},
+			dataType : "json",
+			success : function(data) {
+				if(data.status == 999){
+					window.location.href = data.location;
+				}
+				$("#solution").empty();
+				var d = data.data; 
+				$(d.data).each(function(){
+					var solutionT = $("#solutionT").html();
+					solutionT = solutionT.replace("{id}",this.ID);
+					solutionT = solutionT.replace("{columId}",'0ac6d48dc93b42a499ef8ab9732e78b8');
+					solutionT = solutionT.replace("{title}",this.CONTENT_TITLE);
+					solutionT = solutionT.replace("{time}",this.CREATE_TIME);
+					solutionT = solutionT.replace("{content}",this.CONTENT_SUMMARY);
+					$("#solution").append(solutionT);
+				});
+				
+				$('img.scale').imageScale();
+				new WOW().init();
+				
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						solution(num)
+					}
+				})
+			}// end success
+			
+			
+		});//ajax end
+	};
+	$(function(){
+		solution(1);
+	});
+</script>
+</body>
+</html>          

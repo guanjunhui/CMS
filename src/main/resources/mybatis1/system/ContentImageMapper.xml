@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContentImageMapper">
+	<!-- 查询内容的图片列表 -->
+	<select id="contentImageList" parameterType="page" resultType="pd">
+		SELECT
+			WC.ID AS contentId,
+			WI.IMAGE_ID AS contentImageId,
+			WI.TITLE AS contentImageTitle,
+			WI.IMGURL AS contentImageUrl,
+			WI.TOURL AS contentImageTourl
+		FROM
+			WEB_CONTENT WC
+		INNER JOIN WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID=WC.ID
+		INNER JOIN WEB_IMAGE WI ON WCI.IMAGE_ID=WI.IMAGE_ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="pd.contentId!=null and pd.contentId!=''">
+				WC.ID=#{pd.contentId}
+			</if>
+			<if test="pd.keyword!=null and pd.keyword!=''">
+				AND WI.TITLE LIKE CONCAT(CONCAT('%', #{pd.keyword}),'%')
+			</if>
+		</trim>
+	</select>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		DELETE FROM WEB_IMAGE WHERE IMAGE_ID=#{imageId}
+	</delete>
+	<!-- 删除内容图片中间关系 -->
+	<delete id="deleteContent_image" parameterType="pd">
+		DELETE FROM WEB_CONTENT_IMAGE WHERE IMAGE_ID=#{imageId}
+	</delete>
+	<!-- 保存图片 -->
+	<insert id="save" parameterType="pd">
+		insert into WEB_IMAGE(
+			IMAGE_ID,TITLE,IMGURL,TYPE,BZ
+		) values (
+			#{contentImageId},#{contentImageTitle},#{contentImageUrl},6,#{bz}
+		)
+	</insert>
+	<!-- 保存内容与图片的关联关系 -->
+	<insert id="saveContent_image" parameterType="pd">
+		insert into WEB_CONTENT_IMAGE(
+			IMAGE_ID,CONTENT_ID
+		) values (
+			#{contentImageId},#{contentId}
+		)
+	</insert>
+	
+</mapper>

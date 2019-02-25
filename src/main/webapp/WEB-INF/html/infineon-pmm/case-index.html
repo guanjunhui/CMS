@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/case-index.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 置顶案例模板 -->
+	<template id="news1T" style="display:none">
+		<a href="${autoPath}/skippath/{contentUrl}">
+				<div class="img_w fl">
+					<img class="scale" src="${imgPath}{img}"/>
+				</div>
+				<div class="case_txt fl pt_30 pb_30">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_16 mt_15">{content}</p>
+				</div>
+				<div class="clear"></div>
+			</a>
+	</template>
+	<template id="news1T2" style="display:none">
+		<a href="http://{link}" target="blank">
+				<div class="img_w fl">
+					<img class="scale" src="${imgPath}{img}"/>
+				</div>
+				<div class="case_txt fl pt_30 pb_30">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_16 mt_15">{content}</p>
+				</div>
+				<div class="clear"></div>
+			</a>
+	</template>
+	
+	<!-- 案例模板 -->
+	<template id="news2T" style="display:none">
+		<li class="case_list_inx mt_20 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="${autoPath}/skippath/{contentUrl}">
+				<div class="img_w fl">
+					<img class="scale" src="${imgPath}{img}"/>
+				</div>
+				<div class="case_txt fl pt_30 pb_30">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_16 mt_15">{content}</p>
+				</div>
+				<div class="clear"></div>
+			</a>
+		</li>
+  	</template>
+  	<template id="news2T2" style="display:none">
+		<li class="case_list_inx mt_20 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="http://{link}" target="blank">
+				<div class="img_w fl">
+					<img class="scale" src="${imgPath}{img}"/>
+				</div>
+				<div class="case_txt fl pt_30 pb_30">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_16 mt_15">{content}</p>
+				</div>
+				<div class="clear"></div>
+			</a>
+		</li>
+  	</template>
+  	
+  	<template id="clear" style="display:none">
+		<div class="clear"></div>
+  	</template>
+
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+
+<div class="case_list wrap pt_30 pb_110">
+	<div id="news1" class="case_list_inx1 case_list_inx mt_20 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+	
+	</div>
+	<ul id="news2">
+	
+	</ul>
+</div>
+
+<div id="page" class="page_div"></div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+	function news1(){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getNewsList",
+			data:{
+				"columId" : '${template.columId!}',
+				"top" : 1,
+				"currentPage" : 1,
+				"showCount" : 1
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				var d = data.data;
+				$(d.data).each(function(){
+					var news1T;
+					if(this.link != null && this.link != ''){
+						news1T = $("#news1T2").html();
+						news1T = news1T.replace("{link}",this.link);
+					}else{
+						news1T = $("#news1T").html();
+						news1T = news1T.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+					}
+					
+					if(this.image != null){
+						news1T = news1T.replace("{imageUrl}",this.image.imgurl);
+					}
+					if(this.image != null && this.image != ''){
+						news1T = news1T.replace("{img}",this.image.imgurl);
+					}
+					news1T = news1T.replace("{title}",this.message_title);
+					news1T = news1T.replace("{content}",this.description);
+					
+					$("#news1").append(news1T);
+				});
+				
+				$('img.scale').imageScale();
+				new WOW().init();
+			}// end success
+			
+		});//ajax end
+	};
+	
+	function news2(num){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getNewsList",
+			data:{
+				"columId" : '${template.columId!}',
+				"top" : '',
+				"currentPage" : num,
+				"showCount" : 6
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				
+				$("#news2").empty();
+				var d = data.data;
+				$("#page").show();
+				if(d.data == null || d.data == ''){
+					$("#page").hide();
+					return;
+				}
+				
+				$(d.data).each(function(){
+					var news2T;
+					if(this.link != null && this.link != ''){
+						news2T = $("#news2T2").html();
+						news2T = news2T.replace("{link}",this.link);
+					}else{
+						news2T = $("#news2T").html();
+						news2T = news2T.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+					}
+					if(this.image != null && this.image != ''){
+						news2T = news2T.replace("{img}",this.image.imgurl);
+					}
+					news2T = news2T.replace("{title}",this.message_title);
+					news2T = news2T.replace("{content}",this.description);
+					$("#news2").append(news2T);
+				});
+				$('img.scale').imageScale();
+				new WOW().init();
+				
+				$("#news2").append($("#clear").html());
+				
+				
+				
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						news2(num)
+					}
+				})
+				
+			}// end success
+			
+		});//ajax end
+	};
+	
+	$(function(){
+		news1();
+		news2(1);
+		
+		
+	});
+</script>
+</body>
+</html>          

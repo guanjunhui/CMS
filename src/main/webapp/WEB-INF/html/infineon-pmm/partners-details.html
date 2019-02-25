@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<@content_detail contentId="${contentId}" currentId="${currentId}">
+  	<#if out_bean??>
+  		<title>${out_bean.contentTitle!}-合作伙伴-英飞凌电源与传感社区</title>
+  	</#if>
+</@content_detail>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/partners-details.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<@colum_detail columId="fb65fe99fc574aa4844646d83bc428a0">
+  	<#if out_bean??>
+  		<input type="hidden" id="columUrlName" value="${out_bean.COLUM_URLNAME!}">
+  	</#if>
+</@colum_detail>
+<@content_detail contentId="${contentId}" currentId="${currentId}">
+	
+	<#if out_bean??>
+	<div class="positionBox">
+		<div class="wrap">
+			<a href="${autoPath}" class="fnt_14">首页 > </a>
+			<#if columConfigTop?? && columConfigTop?size gt 0>
+					<a href="${autoPath}/channel/${columConfigTop.columUrlName}.html" class="fnt_14">${columConfigTop.columName!} > </a>
+					
+			</#if>
+			<a href="javascript:;" class="fnt_14 active">${out_bean.contentTitle!}</a>
+		</div>
+	</div>
+	<input type="hidden" id="contentUrlName" value="${out_bean.contentUrlName!}">
+	<div class="partner wrap pt_55 pb_85">
+		<div class="partner_top">
+			<img class="fl" src="${imgPath}${out_bean.surface_imageurl!}"/>
+			<p class="fnt_20 fl">${out_bean.contentTitle!}</p>
+			<div class="clear"></div>
+		</div>
+		<div class="partner_txt pt_30 fnt_16">
+			${out_bean.contentTxt!}	
+		</div>
+		<p style="text-indent: 0em;">
+   			<a href="/channel/join" target="_blank" title="加入我们" _href="/channel/join">
+   				<#if out_bean.friend!="">
+   					<img src="${autoPath}/staticRelease/img/${out_bean.friend!}.png" alt="INFIN_Associated_Partner_Signet_Update.png"/>
+   				<#else>
+   					<img src="${autoPath}/staticRelease/img/associated-partner.png" alt="INFIN_Associated_Partner_Signet_Update.png"/>
+   				</#if>
+   			</a>
+		</p>
+		<a class="partner_icon mt_40" href="${autoPath}/channel/solution?contentId=${contentId}" title="查看该公司解决方案">
+			<img src="${autoPath}/staticRelease/img/par_icon.png"/>
+			<p class="fnt_20">查看该公司解决方案</p>
+		</a>
+		<div class="partner_link mt_20">
+		
+			<p class="fnt_20">${out_bean.fileds[0].value!}&nbsp;:&nbsp; <a target="blank" href="${out_bean.fileds[1].value!}">${out_bean.fileds[1].value!}</a></p>
+		
+		</div>
+	</div>
+	</#if>
+</@content_detail>
+
+<div class="solution_fix">
+	<!-- <div class="SolutionDetail_btn">
+		<a href="${autoPath}/channel/solution?contentId=${contentId}" title="查看该公司解决方案">
+			<img src="${autoPath}/staticRelease/img/kefu.png">
+			<p class="fnt_14">浏览方案</p>
+		</a>
+	</div> -->
+	<div class="SolutionCollection_btn">
+	<input type="hidden" id="collId">
+		<a href="javascript:;">
+			<div class="img_w">
+				<img src="${autoPath}/staticRelease/img/shoucang.png">
+			</div>
+			<p class="fnt_14">收藏</p>
+		</a>
+	</div>
+</div>
+
+
+<div class="fixBox">
+	<div class="content pra"></div>
+</div>
+<script>
+</script>
+<script type="text/javascript">
+var collUserId = "${((_const_cas_assertion_.principal.attributes.id))!}";
+
+$(".SolutionCollection_btn").click(function(){
+	if(collUserId == null || collUserId == ''){
+		var contentUrlName = $("#contentUrlName").val();
+		var columUrlName = $("#columUrlName").val();
+		window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+columUrlName+"/"+columUrlName+"_"+contentUrlName;
+		return false;
+	}
+	var collId = $("#collId").val();
+	if(collId != null && collId != ''){
+		$.ajax({
+			type : "POST",
+			url : "/collection/delColl",
+			data:{
+				"id" : collId
+			},
+			dataType : "json",
+			success : function(data) {
+				if(data.code == 200){
+					$(".SolutionCollection_btn").toggleClass('on');
+					$("#collId").val("");
+				}
+			}// end success
+		});//ajax end
+	}else{
+		$.ajax({
+			type : "POST",
+			url : "/collection/addCollection",
+			data:{
+				"resourceId" : '${contentId}',
+				"resourceType" : 2,
+				"userId" : collUserId
+				
+			},
+			dataType : "json",
+			success : function(data) {
+				if(data.status == 999){
+					window.location.href = data.location;
+				}
+				if(data.code == 200){
+					$(".SolutionCollection_btn").toggleClass('on');
+					$("#collId").val(data.data.id);
+				}
+			}// end success
+		});//ajax end
+	}
+	
+});
+
+//查询当前登录用户是否已收藏
+function coll(userId){
+	
+	if(userId == null || userId == ''){
+		return;
+	}
+	$.ajax({
+		type : "POST",
+		url : "/collection/getColl",
+		data:{
+			"resourceId" : '${contentId}',
+			"resourceType" : 2,
+			"userId" : userId
+		},
+		dataType : "json",
+		success : function(data) {
+			if(data.code == 200 && data.data != null){
+				$(".SolutionCollection_btn").toggleClass('on');
+				
+				$("#collId").val(data.data);
+			}
+		}// end success
+	});//ajax end
+}
+$(function(){
+	coll(collUserId);
+});
+</script>
+
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/jquery-util.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+</body>
+</html>          

@@ -1,0 +1,72 @@
+@charset "UTF-8";
+/* .positionBox{background: #f2f2f2;} */
+
+/*瑙嗛鍒楄〃*/
+.video_list{}
+.video_list .bt{color: #928285;}
+.video_list ul li.myvideo_inx{width: 100%;border-bottom: 1px solid #f2f2f2;}
+.video_list ul li.myvideo_inx .video_img{position: relative;height: 0;padding-bottom: 220px;overflow: hidden;width: 410px;}
+.video_list ul li.myvideo_inx .video_img img{position: absolute;top: 0;
+transition: 1s;
+-moz-transition: 1s; /* Firefox 4 */
+-webkit-transition: 1s; /* Safari 鍜�Chrome */
+-o-transition: 1s;
+}
+
+.video_list ul li.myvideo_inx:hover .video_img .video_img_n{
+-ms-transform:scale(1.1); 
+-moz-transform:scale(1.1); 
+-webkit-transform:scale(1.1); 
+-o-transform:scale(1.1);
+}
+.video_list ul li.myvideo_inx .video_txt{width: 700px;}
+.video_list ul li.myvideo_inx .video_txt .p1{color: #000;}
+.video_list ul li.myvideo_inx .video_txt .p2{color: #928285;
+-webkit-line-clamp: 4; 
+display: -webkit-box;
+-webkit-box-orient: vertical;
+text-overflow: ellipsis;
+overflow: hidden;
+line-height: 1.5em;
+height:6em; /*瀹瑰櫒楂樺害锛堣鏁�琛岄棿璺濓級*/
+}
+.video_list ul li.myvideo_inx .video_txt .time{margin-top: 7px;color: #ccc;}
+.video_list ul li.myvideo_inx .video_txt .see{display: block;background: #f4f4f4;color: #928285;width: 90px;height: 30px;line-height: 30px;text-align: center;
+transition: 0.5s;
+-moz-transition: 0.5s; /* Firefox 4 */
+-webkit-transition: 0.5s; /* Safari 鍜�Chrome */
+-o-transition: 0.5s;
+}
+.video_list ul li.myvideo_inx:hover .video_txt .see{background: #9bc3b7;color: #fff;}
+
+@media only screen and (max-width: 1200px) {
+.video_list ul li.myvideo_inx .video_img{padding-bottom: 190px;width: 350px;}
+.video_list ul li.myvideo_inx .video_txt{width: 60%;}
+}
+@media only screen and (max-width: 1024px) {
+	.video_list ul li.myvideo_inx a img{opacity: 1;margin-left: 0px;}
+}
+@media only screen and (max-width: 960px) {
+/*.video_list ul li.myvideo_inx .video_img{padding-bottom: 150px;width: 300px;}*/
+.video_list ul li.myvideo_inx .video_txt{width: 55%;}
+}
+@media only screen and (max-width: 860px) {
+.video_list ul li.myvideo_inx .video_txt{width: 50%;}
+}
+@media only screen and (max-width: 768px) {
+	.page_link{text-align: center;}
+	.page_link a{display: inline-block;float: none;width: 20%;margin: 0 1%;}
+	.video_list ul li.myvideo_inx .video_img{padding-bottom: 155px;width: 280px;}
+	.video_list ul li.myvideo_inx .video_txt{width: 55%;}
+}
+@media only screen and (max-width: 720px) {
+	.video_list ul li.myvideo_inx{margin-bottom: 10px;}
+}
+@media only screen and (max-width: 680px) {
+	.video_list ul li.myvideo_inx .video_img{padding-bottom: 55%;width: 100%;}
+	.video_list ul li.myvideo_inx .video_txt{width: 100%;margin-top: 20px;}
+}
+@media only screen and (max-width: 540px) {
+	.page_link a{height: 35px;line-height: 35px;}
+}
+

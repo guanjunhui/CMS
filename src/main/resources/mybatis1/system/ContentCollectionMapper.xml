@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContentCollectionMapper">
+	
+	<resultMap type="cn.cebest.entity.system.content.Content" id="detailAndImgRelevantList">
+ 		<id column="id" property="id"/>
+ 		<result column="contentTitle" property="contentTitle"/>
+ 		<result column="contentWbUrl" property="contentWbUrl"/>
+ 		<result column="contentSummary" property="contentSummary"/>
+ 		<result column="contentKeyWords" property="contentKeyWords"/>
+ 		<result column="contentStatus" property="contentStatus"/>
+ 		<result column="typeId" property="typeId"/>
+ 		<result column="typeName" property="typeName"/>
+ 		<result column="typeCode" property="typeCode"/>
+ 		<result column="source" property="source"/>
+ 		<result column="detailTitle" property="detailTitle"/>
+ 		<result column="createdTime" property="createdTime"/>
+		<result column="releaseTime" property="releaseTime"/>
+		<result column="pv" property="pv"/>
+		<result column="shareCount" property="shareCount"/>
+		<result column="contentTxt" property="contentTxt"/>
+		<result column="columconfigId" property="columconfigId"/>
+		<result column="contentTemplatetId" property="contentTemplatetId"/>
+ 		<collection property="imageList" column="imgId" javaType="ArrayList" ofType="cn.cebest.entity.system.Image">
+ 			<id column="imgId" property="imageId"/>
+			<result column="imgurl" property="imgurl"/>
+ 		</collection>
+ 		<collection property="contentRelevantList" column="contentId" ofType="cn.cebest.entity.system.content.Content" javaType="ArrayList">
+ 			<id column="contentId" property="id"/>
+			<result column="contentTitle" property="contentTitle"/>
+			<result column="contentWbUrl" property="contentWbUrl"/>
+			<result column="contentSummary" property="contentSummary"/>
+			<result column="contentKeyWords" property="contentKeyWords"/>
+			<result column="createdTime" property="createdTime"/>
+			<result column="contentStatus" property="contentStatus"/>
+ 		</collection>
+ 	</resultMap>
+ 	
+	<!-- 收藏机构/资讯 -->
+	<insert id="contentCollection" parameterType="pd">
+		INSERT EASYAPP_MYCOLLECTION (
+			ID,
+			MEM_ID,
+			SC_ID,
+			CREATED_TIME,
+			SITE_ID
+		)
+		VALUES
+			(#{id}, #{userId}, #{contentId}, #{createTime}, #{siteId})
+	</insert>
+	
+	<!-- 查询收藏机构/资讯列表 -->
+	<select id="contentCollectionlistpage" resultMap="detailAndImgRelevantList" parameterType="page">
+		SELECT
+			WC.ID AS id,
+			WC.TYPEID AS typeId,
+			WCT.TYPE_NAME AS typeName,
+			WI.IMAGE_ID AS imgId,
+			WI.IMGURL AS imgurl,
+			WC.CONTENT_TITLE AS contentTitle,
+			WC.CREATED_TIME AS createdTime,
+			WC.CONTENT_SUMMARY AS contentSummary,
+			WC.CONTENT_KEYWORDS AS contentKeyWords
+		FROM
+			EASYAPP_MYCOLLECTION EM
+		INNER JOIN WEB_CONTENT WC ON EM.SC_ID = WC.ID
+		LEFT JOIN WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_IMAGE WI ON WCI.IMAGE_ID = WI.IMAGE_ID
+		INNER JOIN WEB_CONTENTTYPE WCT ON WC.TYPEID = WCT.ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			WC.CONTENT_STATUS = '0'
+			<if test="pd.typeCode!=null and pd.typeCode!=''">
+				AND WCT.TYPE_CODE = #{pd.typeCode}
+			</if>
+			<if test="pd.userId!=null and pd.userId!=''">
+				AND EM.MEM_ID = #{pd.userId}
+			</if>
+		</trim>
+	</select>
+	
+	
+</mapper>

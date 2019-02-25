@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ColumGroupMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		WEB_COLUMGROUP
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+    	ID, COLUM_GROUPNAME, CREATETIME,SITE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{COLUM_GROUPNAME},
+		#{CREATETIME},	
+		#{SITE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{COLUMGROUP_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			COLUM_GROUPNAME = #{COLUM_GROUPNAME}
+		where 
+			ID = #{ID}
+	</update>
+	
+	<!-- 查询所有数据 -->
+	<select id="findAll" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+			SITE_ID=#{SITE_ID}
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	<!-- 查询数据 -->
+	<select id="selectObject" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where
+			ID=#{COLUMGROUP_ID}
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	<!-- 列表 -->
+	<select id="gropulistPage" resultType="pd" parameterType="page">
+		select 
+		GOUP.ID, GOUP.COLUM_GROUPNAME, GOUP.CREATETIME,GOUP.SITE_ID,(SELECT COUNT(COLUMGROUP_ID)
+								FROM WEB_COLUMCONFIG
+								WHERE COLUMGROUP_ID = GOUP.ID)  COUNT
+		from 
+		WEB_COLUMGROUP GOUP
+		where
+			GOUP.SITE_ID=#{pd.SITE_ID}
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByName" parameterType="pd" resultType="String">
+		select 
+			COLUM_GROUPNAME
+		from 
+			<include refid="tableName"></include>
+		where 
+			COLUM_GROUPNAME = #{COLUM_GROUPNAME}
+	</select>
+	
+	<!-- 查询具有权限的站点 -->
+	<select id="findPermAllList" parameterType="pd" resultType="pd">
+		select 
+		grp.ID, grp.COLUM_GROUPNAME, grp.SITE_ID
+		from 
+			WEB_COLUMGROUP grp
+			INNER JOIN SYS_ROLE_PERMISSION role ON role.MENU_ID=grp.ID
+			INNER JOIN SYS_USER_ROLE ur ON ur.ROLE_ID=role.ROLE_ID
+		where 
+			grp.SITE_ID=#{siteid} AND role.SITE_ID=#{siteid} AND role.TYPE='3' AND ur.USER_ID=#{userId}
+	</select>
+	
+	<!-- 查询内容管理的站点 -->
+	<select id="findColumAllList" parameterType="pd" resultType="pd">
+		select 
+		grp.ID, grp.COLUM_GROUPNAME, grp.SITE_ID
+		from 
+			WEB_COLUMGROUP grp
+		where 
+			grp.SITE_ID=#{siteid}
+	</select>
+	
+	
+	<!--复制整站栏目组之前，如果执行过复制，再次执行需要先根据网站ID批量删除之前复制的栏目组-->
+	<delete id="deleteBeforCopy" parameterType="String">
+		delete from WEB_COLUMGROUP
+		where 
+			SITE_ID=#{siteID}
+	</delete>
+</mapper>

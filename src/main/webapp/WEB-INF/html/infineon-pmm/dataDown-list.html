@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/dataDown-list.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 下载列表模板 -->
+	<template id="dow1T" style="display:none">
+		<li class="pb_40 pt_30 fl wow fadeInUp"  data-wow-delay="0.5s" data-wow-duration="1s">
+			<div class="data_list_t">
+				<p class="fnt_16 fl">{time} </p>
+				<p class="fnt_16 fl">文件大小：{size}</p>
+				<div class="clear"></div>
+			</div>
+			<p class="fnt_20 bigbt">{title}</p>
+			<a class="mt_15" href="javascript:;">
+				<div class="img_w fl"></div>
+				<p class="fnt_16 fl dow" dowId="{dowId}" data-id="{dow1Id}" data-name="{dow2Id}" fileName="{fileName}" fileNameEl="{fileNameEl}">点击下载</p>
+				<div class="clear"></div>
+			</a>
+		</li>
+  	</template>
+  	
+	<template id="clear" style="display:none">
+		<div class="clear"></div>
+	</template>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+<div class="data_list_t wrap">
+	<div class="data_list_top pt_30">
+		
+		<div class="data_top_left fl">
+			<div class="fl fnt_18 time">
+				<a class="fl fnt_18 on types" data-id="" href="javascript:;">全部</a>
+			</div>
+		</div>
+		<input type="hidden" id="types">
+		
+			<@colum_typeList columId="${template.columId!}">
+				<#if out_list?? && out_list?size gt 0>
+					<#list out_list as list>
+						<div class="data_top_left fl">
+						<div class="fl fnt_18 time">
+							<a class="fl fnt_18 types" data-id="${list.id!}" href="javascript:;">${list.name!}</a>
+							<ul class="time_list">
+							<#if list.childList ?? && list.childList? size gt 0 >
+								<#list  list.childList as childData>
+									<li>
+										<a class="types" href="javascript:;"  data-id="${childData.id!}">${childData.name!}</a>
+									</li>
+								</#list>
+								</#if>
+							</ul>
+						</div>
+						</div>
+					</#list>
+				</#if>
+			 </@colum_typeList>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="sorting wrap pt_55">
+	<div class="data_top_right fr">
+		<input class="fnt_14" type="text" id="titles" value="" placeholder="请输入文字" />
+		<input type="submit" id="find" name="" value=" "  />
+	</div>
+	
+	<a class="fl time" href="javascript:;" id="time">
+		<div class="icon_w fl"></div>
+		<p class="fl">按发布时间</p>
+		<div class="clear"></div>
+	</a>
+	<a class="fl bt" href="javascript:;" id="name">
+		<div class="icon_w fl"></div>
+		<p class="fl">按标题名称</p>
+		<div class="clear"></div>
+	</a>
+	<div class="clear"></div>
+</div>
+<div class="data_list wrap pt_30">
+	<ul id="dow1">
+	
+		
+	</ul>
+</div>
+	<div id="page" class="page_div"></div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<div class="down_xuan">
+	<div class="zz"></div>
+		<div class="data_x">
+		<p class="bt">请选择文档语言</p>
+		<div class="data_n" id="dow2">
+			
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+
+
+<script type="text/javascript">
+var dowId;
+	//文档选择弹窗
+	$(document).on('click','.dow',function(){
+		var dow1Id = $(this).data("id");
+		var dow2Id = $(this).data("name");
+		var fileName = $(this).attr("fileName");
+		var fileNameEl = $(this).attr("fileNameEl");
+		dowId = $(this).attr("dowId");
+		$("#dow2").empty();
+		if(dow1Id != null && dow1Id != ''){
+			$("#dow2").append('<a class="fnt_16 dowNum" href="${filePath}'+dow1Id+'" download="'+fileName+'">中文文档</a>');
+		}
+		if(dow2Id != null && dow2Id != ''){
+			$("#dow2").append('<a class="fnt_16 dowNum" href="${filePath}'+dow2Id+'" download="'+fileNameEl+'">英文文档</a>');
+		}
+		$("#dow2").append('<a class="fnt_16 close" href="javascript:;">取消下载</a>');
+		
+		$('.down_xuan').show();
+	})
+    $(document).on('click','.down_xuan .zz',function(){
+    	$('.down_xuan').hide();
+    })
+    $(document).on('click','.down_xuan .data_x .data_n a.close',function(){
+    	$('.down_xuan').hide()
+    })
+	
+    $(document).on('click','.dowNum',function(){
+    	$.ajax({
+			url:'/fileresource/updateDownloadcount.do',
+			type:'post',
+			data:{"id":dowId},
+			dataType: "json",
+			success:function(result){
+				
+			}
+		});
+    })
+	
+	function dow(num,name,time,find,typeId){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getDowList",
+			data:{
+				"columnId" : '${template.columId!}',
+				"typeId" : typeId,
+				"time"	: time,
+				"name" : name,
+				"find" : find,
+				"currentPage" : num,
+				"showCount" : 12
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				$("#dow1").empty();
+				var d = data.data;
+				$("#page").show();
+				if(d.data == null || d.data == ''){
+					$("#page").hide();
+					return;
+				} 
+				if(d != null){
+					$(d.data).each(function(){
+						
+						var dow1T = $("#dow1T").html();
+						dow1T = dow1T.replace("{time}",this.update_time);
+						dow1T = dow1T.replace("{title}",this.title);
+						dow1T = dow1T.replace("{dowId}",this.fileid);
+						if(this.files.length == 1){
+							dow1T = dow1T.replace("{size}",this.files[0].size);
+							if(this.files[0].mark == '0'){
+								dow1T = dow1T.replace("{dow1Id}",this.files[0].filepach);
+								dow1T = dow1T.replace("{fileName}",this.files[0].name);
+								dow1T = dow1T.replace("{dow2Id}","");
+								dow1T = dow1T.replace("{fileNameEl}","");
+							}else{
+								dow1T = dow1T.replace("{dow1Id}","");
+								dow1T = dow1T.replace("{fileName}","");
+								dow1T = dow1T.replace("{dow2Id}",this.files[0].filepach);
+								dow1T = dow1T.replace("{fileNameEl}",this.files[0].name);
+							}
+						}
+						
+						if(this.files.length == 2){
+							dow1T = dow1T.replace("{size}",this.files[0].size);
+							for(var i = 0;i < this.files.length; i++){
+								if(this.files[i].mark == '0'){
+									dow1T = dow1T.replace("{dow1Id}",this.files[i].filepach);
+									dow1T = dow1T.replace("{fileName}",this.files[i].name);
+								}else{
+									dow1T = dow1T.replace("{dow2Id}",this.files[i].filepach);
+									dow1T = dow1T.replace("{fileNameEl}",this.files[i].name);
+								}
+							}
+							
+						}
+						
+						if(this.files == null){
+							dow1T = dow1T.replace("{size}","0 KB");
+							dow1T = dow1T.replace("{dow1Id}","");
+							dow1T = dow1T.replace("{dow2Id}","");
+						}
+						
+						$("#dow1").append(dow1T);
+					});
+					
+				}
+				$("#dow1").append($("#clear").html());
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						dow(num,null,null,null)
+					}
+				})
+			}// end success
+			
+			
+		});//ajax end
+	}
+	
+	
+	$(function(){
+		
+		dow(1,null,null,null,null);
+		
+		$('.fl.fnt_18.time a').click(function(){
+			var $box = $(this).closest('.fnt_18.time');
+			$('.data_list_top a.on').removeClass('on');
+			$box.find('>a').addClass('on');
+			
+			
+		})
+		
+		$(".types").click(function(){
+			var typeId = $(this).data("id");
+			//console.log(typeId);
+			$("#types").val(typeId);
+			$("#titles").val("");
+			dow(1,null,null,null,typeId);
+		});
+		
+		$("#name").click(function(){
+			var typeId = $("#types").val();
+			var title = $("#titles").val();
+			dow(1,1,null,title,typeId);
+		});
+		$("#time").click(function(){
+			var typeId = $("#types").val();
+			var title = $("#titles").val();
+			dow(1,null,1,title,typeId);
+		});
+		$("#find").click(function(){
+			var title = $("#titles").val();
+			
+			var typeId = $("#types").val();
+			
+			dow(1,null,null,title,typeId);
+		});
+	})
+</script>
+<!--<script type="text/javascript">
+	$('.sorting a').click(function(){
+		$(this).addClass('on').siblings().removeClass('on');
+	})
+	$('.data_list li a').click(function(){
+		$(this).addClass('on').parent().siblings().find('a').removeClass('on');
+		
+	})
+	$('.data_list li a').click(function(){
+		$(this).parent().find('.switch').toggle();
+		$(this).parent().siblings().find('.switch').hide();
+	})
+</script>-->
+</body>
+</html>          

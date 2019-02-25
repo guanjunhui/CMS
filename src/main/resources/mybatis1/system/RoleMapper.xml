@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleMapper">
+	
+	<resultMap type="Role" id="roleResultMap">
+		<id column="ROLE_ID" property="ROLE_ID"/>
+		<result column="ROLE_NAME" property="ROLE_NAME"/>
+		<result column="RIGHTS" property="RIGHTS"/>
+		<result column="DESCRIPTION" property="DESCRIPTION"/>
+		<result column="STATE" property="STATE"/>
+	</resultMap>
+	
+	<resultMap type="Role" id="roleAndMenuResultMap">
+		<id column="ROLE_ID" property="ROLE_ID"/>
+		<result column="ROLE_NAME" property="ROLE_NAME"/>
+		<result column="RIGHTS" property="RIGHTS"/>
+		<result column="DESCRIPTION" property="DESCRIPTION"/>
+		<result column="STATE" property="STATE"/>
+		<collection property="menuList" ofType="cn.cebest.entity.system.Menu" javaType="ArrayList" resultMap="menuResultMap"/>
+		<collection property="siteList" ofType="cn.cebest.entity.web.WebSite" javaType="ArrayList" resultMap="siteResultMap"/>
+	</resultMap>
+	
+	<resultMap type="cn.cebest.entity.system.RolePermission" id="rolePermissiontMap">
+		<id column="ROLE_ID" property="roleId"/>
+		<id column="SITE_ID" property="siteId"/>
+		<id column="MENU_ID" property="menuId"/>
+		<id column="TYPE" property="type"/>
+	</resultMap>
+	
+	<resultMap type="cn.cebest.entity.bo.SiteMain" id="siteMainMap">
+		<id column="ID" property="id"/>
+		<id column="SITE_NAME" property="siteName"/>
+		<id column="SITE_LANGUAGE" property="siteLanguage"/>
+		<id column="SITE_DOMIAN" property="siteDomian"/>
+	</resultMap>
+	
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ROLE_ID,
+		ROLE_NAME,
+		RIGHTS,
+		PARENT_ID,
+		ADD_QX,
+		DEL_QX,
+		EDIT_QX,
+		CHA_QX,
+		DESCRIPTION,
+		STATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ROLE_ID},
+		#{ROLE_NAME},
+		#{RIGHTS},
+		#{PARENT_ID},
+		#{ADD_QX},
+		#{DEL_QX},
+		#{EDIT_QX},
+		#{CHA_QX},
+		#{DESCRIPTION},
+		#{STATE}
+	</sql>
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_ROLE
+	</sql>
+	
+	<!-- 列出此组下的角色 -->
+	<select id="listAllRolesByPId" resultMap="roleResultMap">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+			PARENT_ID = #{ROLE_ID}
+		ORDER BY ROLE_ID
+	</select>
+	<!-- 列出所有角色 -->
+	<select id="listPageAllRoles" resultMap="roleResultMap">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+	<select id="getAllRoles" resultMap="roleResultMap">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+	</select>
+	
+	
+	<!-- 通过id查找 -->
+	<select id="findObjectById" parameterType="pd" resultType="pd">
+		select  
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where ROLE_ID = #{ROLE_ID}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insert" parameterType="pd">
+		insert into SYS_ROLE
+		(ROLE_ID,ROLE_NAME,DESCRIPTION,STATE) values 
+		(#{ROLE_ID},#{ROLE_NAME},#{DESCRIPTION},#{STATE})
+	</insert>
+	
+	<!-- 保存修改 -->
+	<update id="edit" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set ROLE_NAME = #{ROLE_NAME},
+			STATE = #{STATE},
+			DESCRIPTION = #{DESCRIPTION}
+		where ROLE_ID = #{ROLE_ID}
+	</update>
+	
+	<!-- 删除角色  -->
+	<delete id="deleteRoleById" parameterType="String">
+		delete from 
+		<include refid="tableName"></include>
+		where ROLE_ID=#{ROLE_ID}
+	</delete>
+	
+	<!-- 给当前角色附加菜单权限  -->
+	<update id="updateRoleRights" parameterType="Role">
+		update
+		<include refid="tableName"></include>
+		set RIGHTS=#{RIGHTS} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 通过id查找 -->
+	<select id="getRoleById" parameterType="String" resultMap="roleResultMap">
+		select * from 
+		<include refid="tableName"></include>
+		where ROLE_ID=#{ROLE_ID}
+	</select>
+	
+	<!-- 给全部子角色加菜单权限 -->
+	<update id="setAllRights" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set RIGHTS=#{rights} 
+		where PARENT_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 新增权限 -->
+	<update id="add_qx" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set ADD_QX=#{value} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 删除权限 -->
+	<update id="del_qx" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set DEL_QX=#{value} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 修改权限 -->
+	<update id="edit_qx" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set EDIT_QX=#{value} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 查看权限 -->
+	<update id="cha_qx" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set CHA_QX=#{value} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 中企高呈 -->
+	
+	<!-- 批量插入角色-站点-菜单映射 -->
+	<delete id="deleteRolePermission" parameterType="java.lang.String" >
+    	delete from SYS_ROLE_PERMISSION
+    	where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  	</delete>
+	
+	<insert id="batchSaveRolePermission" parameterType="java.util.List">  
+	    insert into SYS_ROLE_PERMISSION (ROLE_ID,SITE_ID,MENU_ID,TYPE)
+	    values
+	    <foreach collection="list" item="roleitem01" index="index" separator=",">  
+	        (#{roleitem01.roleId},#{roleitem01.siteId},#{roleitem01.menuId},#{roleitem01.type})
+	    </foreach>  
+	</insert>
+	
+	<!-- 切换状态 -->
+	<update id="changeStatus" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set STATE=#{STATE} 
+		where ROLE_ID=#{ROLE_ID}
+	</update>
+	
+	<!-- 查询角色对应的权限映射关系  -->
+	<select id="getSiteIdsByRoleId" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT DISTINCT p.SITE_ID
+		FROM SYS_USER_ROLE ur
+		inner JOIN SYS_ROLE_PERMISSION p on ur.ROLE_ID=p.ROLE_ID 
+		WHERE
+			ur.USER_ID = #{userId}
+	</select>
+	
+	<!-- 通过用户ID获取菜单permCode集合 -->
+	<select id="getMenuPerCodesById" parameterType="pd" resultType="java.lang.String">
+		SELECT DISTINCT m.PERMISSION_CODE
+		FROM SYS_USER_ROLE ur
+		inner JOIN SYS_ROLE_PERMISSION p on ur.ROLE_ID=p.ROLE_ID 
+		inner JOIN SYS_MENU m on p.MENU_ID=m.MENU_ID
+		WHERE
+			ur.USER_ID = #{USER_ID} and p.SITE_ID = #{SITE_ID}
+	</select>
+	
+	<!-- 通过用户ID获取用户对应权限的站点 -->
+	<select id="getSitesByUserId" parameterType="java.lang.String" resultMap="siteMainMap">
+		SELECT DISTINCT s.ID,s.SITE_NAME,s.SITE_LANGUAGE,s.SITE_DOMIAN
+		FROM SYS_USER_ROLE ur
+		inner JOIN SYS_ROLE_PERMISSION p on ur.ROLE_ID=p.ROLE_ID 
+		inner JOIN WEB_SITE s on p.SITE_ID=s.ID
+		WHERE
+			ur.USER_ID = #{userId} AND s.SITE_STATUS='1'
+	</select>
+	
+	<!-- 通过用户ID获取用户对应权限的站点(排除当前站点) -->
+	<select id="getNoCurentSitesByUserId" parameterType="pd" resultMap="siteMainMap">
+		SELECT DISTINCT s.ID,s.SITE_NAME,s.SITE_LANGUAGE,s.SITE_DOMIAN
+		FROM SYS_USER_ROLE ur
+		inner JOIN SYS_ROLE_PERMISSION p on ur.ROLE_ID=p.ROLE_ID 
+		inner JOIN WEB_SITE s on p.SITE_ID=s.ID
+		WHERE
+			ur.USER_ID = #{userId} AND s.SITE_STATUS='1' AND s.ID != #{currentSiteId}
+	</select>
+	
+	
+	<!-- 查询角色对应的权限CODE -->
+	<select id="getByRoleId" resultMap="rolePermissiontMap">
+		select
+			ROLE_ID,SITE_ID,MENU_ID
+		from SYS_ROLE_PERMISSION perm,SYS_MENU menu
+		where
+			perm.ROLE_ID = #{roleId} AND perm.SITE_ID = #{siteId} AND perm.MENU_ID=menu.MENU_ID
+	</select>
+	
+	<!-- 添加用户-角色对应关系 -->
+	<insert id="batchsaveUserRole" parameterType="java.util.List">
+		insert into SYS_USER_ROLE
+		(USER_ID,ROLE_ID) values 
+	    <foreach collection="list" item="roleitem02" index="index" separator=",">  
+	        (#{roleitem02.userId},#{roleitem02.roleId})
+	    </foreach>  
+	</insert>
+	
+	<delete id="deleteUserRole" parameterType="java.lang.String" >
+    	delete from SYS_USER_ROLE
+    	where USER_ID = #{userId,jdbcType=VARCHAR}
+  	</delete>
+	
+	<select id="getRoleIdsByUserId" resultType="java.lang.String">
+		select ROLE_ID from SYS_USER_ROLE where USER_ID=#{userId}
+	</select>
+	
+	<!-- 查询角色对应的权限映射关系  -->
+	<select id="getPermissionByRoleId" resultMap="rolePermissiontMap">
+		select
+			ROLE_ID,SITE_ID,MENU_ID,TYPE
+		from SYS_ROLE_PERMISSION
+		where
+			ROLE_ID = #{roleId}
+	</select>
+	
+</mapper>

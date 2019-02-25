@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ExtendFiledMapper">
+	<insert id="insertExtendFiled" parameterType="pd">
+		INSERT INTO WEB_CONTENT_DAYNAMIC_PROPERTY(ID,NAME,PID,TYPE,COLUM_ID,FIELDTYPE,SITEID)
+		VALUES(#{ID},#{NAME},#{PID},#{TYPE},#{COLUM_ID},#{FIELDTYPE},#{SITEID})
+	</insert>
+	<update id="updateExtendFiled" parameterType="pd">
+		UPDATE WEB_CONTENT_DAYNAMIC_PROPERTY
+		SET NAME=#{NAME},
+		TYPE=#{TYPE},
+		<if test="COLUM_ID !=null and COLUM_ID !=''">
+		    COLUM_ID=#{COLUM_ID},
+		</if>
+		PID=#{PID},
+		FIELDTYPE=#{FIELDTYPE}
+		WHERE ID=#{ID}
+	</update>
+	<select id="selectExtendFiled" parameterType="pd" resultType="pd">
+		select ID,NAME,PID,TYPE,COLUM_ID,FIELDTYPE,SORT
+		from WEB_CONTENT_DAYNAMIC_PROPERTY
+		<where>
+		
+		1=1
+			<if test="TYPE != null and TYPE != ''">
+				AND  TYPE = #{TYPE}
+			</if>
+		
+			<if test="COLUM_ID !=null and COLUM_ID !=''">
+			    AND	COLUM_ID=#{COLUM_ID}
+			</if>
+			<if test="SITEID !=null and SITEID !=''">
+			    AND	SITEID=#{SITEID}
+			</if>
+			<if test="ID !=null and ID !=''">
+				AND ID=#{ID}
+		    </if>
+		</where>
+		ORDER BY SORT
+	</select>
+	
+	<delete id="deleteExtendFiled">
+		delete from WEB_CONTENT_DAYNAMIC_PROPERTY
+		where id in 
+		<foreach collection="array" close=")" open="(" item="extendid01" separator=",">
+			#{extendid01}
+		</foreach>
+	</delete>
+	
+	<select id="selectExtendFiledCount" parameterType="pd" resultType="Integer">
+		select count(1)
+		from WEB_CONTENT_DAYNAMIC_PROPERTY
+		<where>
+		  1=1
+		  <if test="SITEID !=null and SITEID !=''">
+		   AND	SITEID=#{SITEID}
+		</if>
+			<if test="TYPE !=null and TYPE !=''">
+			and TYPE=#{TYPE}
+		   </if>
+		   <if test="NAME !=null and NAME !=''">
+			and NAME=#{NAME}
+		   </if>
+		   <if test="ID !=null and ID !=''">
+			and ID!=#{ID}
+		   </if>
+		</where>
+	</select>
+	
+	<select id="selectExtendFiledlistPage" parameterType="page" resultType="pd">
+		select ID,NAME,PID,TYPE,COLUM_ID,FIELDTYPE,SORT
+		from WEB_CONTENT_DAYNAMIC_PROPERTY
+		<where>
+			TYPE=#{pd.TYPE}
+		<if test="pd.columId !=null and pd.columId !=''">
+			    AND	COLUM_ID=#{pd.columId}
+		</if>
+		<if test="pd.SITEID !=null and pd.SITEID !=''">
+		   AND	SITEID=#{pd.SITEID}
+		</if>
+		<if test="pd.ID !=null and pd.ID !=''">
+			AND ID=#{pd.ID}
+	    </if>
+		</where>
+		ORDER BY SORT
+	</select>
+	
+	<update id="updateSortById" parameterType="HashMap">
+		UPDATE
+		WEB_CONTENT_DAYNAMIC_PROPERTY
+		SET
+		SORT= #{sort}
+		WHERE ID =#{id}
+	</update>
+	<!--根据栏目id和分类名称查询分类id  -->
+	<select id="findIdByName"  parameterType="pd" resultType="HashMap">
+		SELECT
+			ID,
+			NAME,
+			PID,
+			TYPE,
+			COLUM_ID,
+			FIELDTYPE,
+			SORT
+		FROM
+			WEB_CONTENT_DAYNAMIC_PROPERTY CD
+		WHERE CD.NAME = #{typeName} AND CD.COLUM_ID = #{COLUM_ID} 
+	</select>
+	
+	
+</mapper>

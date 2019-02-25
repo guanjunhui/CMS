@@ -1,0 +1,16 @@
+
+<@colum_detail columId="${template.columId!}">
+	<#if out_bean??>
+		<div class="innerBanner prz">
+			<img src="${imgPath}${out_bean.PIC_PATH!}" alt="">
+			<div class="innerBox pra">
+				<div class="wrap">
+					<p class="chTil fnt_32 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_NAME!}</p>
+					<p class="line wow fadeInUp" data-wow-duration="1.5s"><span></span></p>
+					<p class="enTil fnt_22 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_SUBNAME!}</p>
+				</div>
+			</div>
+		</div>
+	</#if>
+</@colum_detail>
+

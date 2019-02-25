@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>搜索结果</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/search.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="./js/html5.js"></script>
+<script src="./js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<div class="search_list wrap pt_85 pb_75">
+	<div class="list_num pt_75">
+		<p class="fnt_16 p1 res_count"></p>
+		<@searchResult_list keyword="${keyword}" currentPage="${currentPage}" showCount="5">
+			<p class="fnt_24 p2">${keyword}</p>
+		</@searchResult_list>
+		<i></i>
+	</div>
+	<@searchResult_list keyword="${keyword}" currentPage="${currentPage}" showCount="5">
+		<input type="hidden" value="${out_list.recordCount!}" id="search_count">
+		<#if (out_list.dataList)?? && out_list.dataList?size gt 0>
+			<ul>
+				<#list out_list.dataList as out>
+					<li class="search_list_inx pt_75 pb_40">
+						<#if out.type == '2'>
+							<@newmessage_details currentId="${out.id!}" columId="${out.columnId!}">
+								<#if message??>
+									<#if message.link?? && message.link != ""> 
+										<#if message.link?contains("https")>
+											<a href="${message.link!}">
+												<@colum_detail columId="${out.columnId!}">
+													<#if out_bean??>
+														<p class="p1 fnt_16">${out_bean.COLUM_NAME!}</p>
+													</#if>	
+												</@colum_detail>
+												<p class="p2 fnt_24 mt_15">${out.name!}</p>
+												<p class="p3 fnt_14 mt_15">${out.des!}
+												</p>
+												<#if out.time?? && out.time!="">
+													<p class="p4 fnt_14">${out.time?date}</p>
+												</#if>
+											</a>
+										<#else>
+											<a href="https://${message.link!}">
+												<@colum_detail columId="${out.columnId!}">
+													<#if out_bean??>
+														<p class="p1 fnt_16">${out_bean.COLUM_NAME!}</p>
+													</#if>	
+												</@colum_detail>
+												<p class="p2 fnt_24 mt_15">${out.name!}</p>
+												<p class="p3 fnt_14 mt_15">${out.des!}
+												</p>
+												<#if out.time?? && out.time!="">
+													<p class="p4 fnt_14">${out.time?date}</p>
+												</#if>
+											</a>
+										</#if>
+									<#else>
+										<a href="${autoPath}/content/${out.id!}.html?type=${out.type!}&columnId=${out.columnId!}">
+											<@colum_detail columId="${out.columnId!}">
+												<#if out_bean??>
+													<p class="p1 fnt_16">${out_bean.COLUM_NAME!}</p>
+												</#if>	
+											</@colum_detail>
+											<p class="p2 fnt_24 mt_15">${out.name!}</p>
+											<p class="p3 fnt_14 mt_15">${out.des!}
+											</p>
+											<#if out.time?? && out.time!="">
+												<p class="p4 fnt_14">${out.time?date}</p>
+											</#if>
+										</a>
+									</#if>
+								</#if>
+							</@newmessage_details>
+						<#elseif out.type == '5'>
+							<a href="${autoPath}/channel/download">
+								<@colum_detail columId="${out.columnId!}">
+									<#if out_bean??>
+										<p class="p1 fnt_16">${out_bean.COLUM_NAME!}</p>
+									</#if>	
+								</@colum_detail>
+								<p class="p2 fnt_24 mt_15">${out.name!}</p>
+								<p class="p3 fnt_14 mt_15">${out.des!}
+								</p>
+								<#if out.time?? && out.time!="">
+									<p class="p4 fnt_14">${out.time?date}</p>
+								</#if>
+							</a>
+						<#else>
+							<a href="${autoPath}/content/${out.id!}.html?type=${out.type!}&columnId=${out.columnId!}">
+								<@colum_detail columId="${out.columnId!}">
+									<#if out_bean??>
+										<p class="p1 fnt_16">${out_bean.COLUM_NAME!}</p>
+									</#if>	
+								</@colum_detail>
+								<p class="p2 fnt_24 mt_15">${out.name!}</p>
+								<p class="p3 fnt_14 mt_15">${out.des!}
+								</p>
+								<#if out.time?? && out.time!="">
+									<p class="p4 fnt_14">${out.time?date}</p>
+								</#if>
+							</a>
+						</#if>
+					</li>
+				</#list>
+			<#else>
+				<div class="no_search wrap pt_110 pb_30">
+					<img class="search_no_l fl" src="${autoPath}/staticRelease/img/search_no.png"/>
+					<div class="search_no_r fl">
+						<p class="p1 fnt_26">很抱歉，没有找到与"${keyword}"相关的内容</p >
+						<div class="no_down pt_55">
+							<p class="p2 fnt_14">建议您：</p >
+							<p class="p2 fnt_14">1.检查关键字填写是否有误</p >
+							<p class="p2 fnt_14">2.请尽量使用简洁的关键字</p >
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</ul>
+		</#if>
+	</@searchResult_list>
+</div>
+<@page_clude pageStyle="1"></@page_clude>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript">
+	var totalCount = $("#search_count").val();
+	if(totalCount != null ){
+		$('.res_count').text(totalCount);
+	}else{
+		$('.res_count').text(0);
+	}
+	$('.res_count').append("个结果");  
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+<script type="text/javascript">
+	$(function(){
+		var win_hei = $(window).height();
+		var fot_hei = $('.footer').outerHeight();
+		var lit_pt = parseInt($('.search_list').css('padding-top'));
+		var lit_pb = parseInt($('.search_list').css('padding-bottom'));
+		
+		if($(window).width()>1024){
+			$('.search_list').css('min-height',win_hei-fot_hei-lit_pt-lit_pb);
+		}else if($(window).width()<=1024){
+			$('.search_list').css('min-height',win_hei-fot_hei);
+		}
+		
+	})
+</script>
+</body>
+</html>          

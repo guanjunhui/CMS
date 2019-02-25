@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="WebSiteMapper" >
+  <resultMap id="BaseResultMap" type="cn.cebest.entity.web.WebSite" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="SITE_NAME" property="siteName" jdbcType="VARCHAR" />
+    <result column="SITE_LANGUAGE" property="siteLanguage" jdbcType="VARCHAR" />
+    <result column="SITE_STATUS" property="siteStatus" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="SITE_DOMIAN" property="siteDomian" jdbcType="VARCHAR" />
+    <result column="SITE_TYPE" property="siteType" jdbcType="VARCHAR" />
+    <result column="SITE_INDEX" property="siteIndex" jdbcType="VARCHAR" />
+    <result column="IF_STATIC" jdbcType="VARCHAR" property="ifStatic" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SITE_NAME, SITE_LANGUAGE, SITE_STATUS, CREATED_TIME, SITE_DOMIAN, SITE_TYPE,SITE_INDEX,IF_STATIC
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WEB_SITE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cebest.entity.web.WebSite" >
+    insert into WEB_SITE (ID, SITE_NAME, SITE_LANGUAGE, 
+      SITE_STATUS, CREATED_TIME, SITE_DOMIAN, 
+      SITE_TYPE)
+    values (#{id,jdbcType=VARCHAR}, #{siteName,jdbcType=VARCHAR}, #{siteLanguage,jdbcType=VARCHAR}, 
+      #{siteStatus,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{siteDomian,jdbcType=VARCHAR}, 
+      #{siteType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cebest.entity.web.WebSite" >
+    insert into WEB_SITE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="siteName != null" >
+        SITE_NAME,
+      </if>
+      <if test="siteLanguage != null" >
+        SITE_LANGUAGE,
+      </if>
+      <if test="siteStatus != null" >
+        SITE_STATUS,
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME,
+      </if>
+      <if test="siteDomian != null" >
+        SITE_DOMIAN,
+      </if>
+      <if test="siteType != null" >
+        SITE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="siteName != null" >
+        #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="siteLanguage != null" >
+        #{siteLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStatus != null" >
+        #{siteStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="siteDomian != null" >
+        #{siteDomian,jdbcType=VARCHAR},
+      </if>
+      <if test="siteType != null" >
+        #{siteType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cebest.entity.web.WebSite" >
+    update WEB_SITE
+    <set >
+      <if test="siteName != null" >
+        SITE_NAME = #{siteName,jdbcType=VARCHAR},
+      </if>
+      <if test="siteLanguage != null" >
+        SITE_LANGUAGE = #{siteLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="siteStatus != null" >
+        SITE_STATUS = #{siteStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="siteDomian != null" >
+        SITE_DOMIAN = #{siteDomian,jdbcType=VARCHAR},
+      </if>
+      <if test="siteType != null" >
+        SITE_TYPE = #{siteType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cebest.entity.web.WebSite" >
+    update WEB_SITE
+    set SITE_NAME = #{siteName,jdbcType=VARCHAR},
+      SITE_LANGUAGE = #{siteLanguage,jdbcType=VARCHAR},
+      SITE_STATUS = #{siteStatus,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      SITE_DOMIAN = #{siteDomian,jdbcType=VARCHAR},
+      SITE_TYPE = #{siteType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 取得所有站点信息 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_SITE
+    where SITE_STATUS='1'
+  </select>
+  
+  <!-- 根据站点ID取得站点信息 -->
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_SITE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

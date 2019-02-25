@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/solution-index.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 解决方案模板 -->
+	<template id="solutionT" style="display:none">
+		<li class="solution_inx fl pb_55">
+			<a href="${autoPath}/skippath/{contentUrl}">
+				<div class="img_w">
+					<img class="scale" src="${imgPath}{imageUrl}"/>
+				</div>
+				<div class="solution_bt">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_16 mt_15">{contentSummary}</p>
+				</div>
+				<img class="mt_20 next" src="${autoPath}/staticRelease/img/next.png"/>
+			</a>
+		</li>
+  	</template>
+	<!-- 敬请期待模板模板 -->
+	<template id="expect" style="display:none">
+		<div class="no_list pb_55">
+			<p class="fnt_26">敬请期待</p >
+			<img src="${autoPath}/staticRelease/img/no_list.png"/>
+		</div>
+	</template>
+</head>
+<body>
+<#include "../htmlFront/include/header.html"/>
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+<div class="screening">
+	<div class="wrap">
+	<p class="qing fnt_14 pt_30 bold">*按标签筛选</p>
+	 <@colum_typeList columId="0ac6d48dc93b42a499ef8ab9732e78b8">
+		<#if out_list?? && out_list?size gt 0>
+			<#list out_list as list>
+				<div class="screening_inx">
+					<p class="fl fnt_14 screening_bt bold">${list.name!}：
+						<img src="${autoPath}/staticRelease/img/more.png"/>
+					</p>
+					<div class="screening_r fl type_${list_index+1}">
+					<p class="fnt_14 both all on" data-id="0">全部</p>
+					<#if list.childList ?? && list.childList? size gt 0 >
+						<#list  list.childList as childData>
+								<a class="fnt_14 types" data-id="${childData.id!}" href="javascript:;">${childData.name!}</a>
+						</#list>
+					</#if>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</#list>
+		</#if>
+	 </@colum_typeList>
+	 	<div class="yixuan">
+			<p class="fnt_14 bold yixuan_bt fl">已选条件：</p>
+			<div class="yixuan_r fl clearfix"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div class="solution_list wrap pt_75">
+	<ul id="solution" class="clearfix">
+	
+		<div class="clear"></div>
+	</ul>
+</div>
+<div id="page" class="page_div"></div>
+<div class="liability wrap pb_60">
+	<p class="fnt_16 mb10" style="color: #666;">免责声明</p>
+	<p style="color: #666;">本网站所列之第三方解决方案仅作为应用英飞凌科技器件的提示，不应被视为对英飞凌科技器件的某些功能，条件或质量的任何说明或保证。各第三方解决方案仅为应用英飞凌科技器件的可选方案之一。英飞凌科技特此声明不对本网站上所提供的任何及所有信息给予任何及所有形式之保证或负任何及所有形式之责任(包括但不局限于没有侵犯任何第三方的知识产权)。 英飞凌科技声明不对第三方解决方案拥有任何形式的所有权。所有第三方解决方案是由各设计公司所拥有。</p>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+	
+</script>
+<script type="text/javascript">
+	$('.screening .screening_inx .screening_bt').click(function(){
+		$(this).parent().toggleClass("on").siblings().removeClass("on");
+	});
+	var relevantId = window.location.search.split("contentId=")[1];
+	var typeId = window.location.search.split("typeId=")[1];
+	$(".screening_r a").each(function(){
+		if(typeId != null  && typeId != "" &&  $(this).data("id") == typeId){
+			$(this).toggleClass('on');
+			$(".all").removeClass('on');
+		}
+	});
+	var type1_size=$('.type_1 a.on').size();
+	var type2_size=$('.type_2 a.on').size();
+	var type3_size=$('.type_3 a.on').size();
+	if(type1_size==0){
+		$('.type_1').find('.all').addClass('on')
+	}
+	if(type2_size==0){
+		$('.type_2').find('.all').addClass('on')
+	}
+	if(type3_size==0){
+		$('.type_3').find('.all').addClass('on')
+	}
+	//切换选中
+	/* $(".screening_r a").on('click',function(){
+		$(this).toggleClass('on');
+		solution(1);
+	}); */
+	
+	function solution(num){
+		var typeIds1 = [];
+		var typeIds2 = [];
+		var typeIds3 = [];
+		$(".type_1 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds1[i] =$(this).data("id");
+			}
+			
+        });
+		$(".type_2 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds2[i] =$(this).data("id");
+			}
+			
+        });
+		$(".type_3 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds3[i] =$(this).data("id");
+			}
+			
+        });
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getContentList",
+			data:{
+				"columId" : '${template.columId!}',
+				"typeIds1":typeIds1.join(','),
+				"typeIds2":typeIds2.join(','),
+				"typeIds3":typeIds3.join(','),
+				"relevantId" : relevantId,
+				"currentPage" : num,
+				"showCount" : 6
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				$("#solution").empty();
+				var d = data.data;
+				$("#page").show();
+				if(d.data == null || d.data == ''){
+					$("#page").hide();
+					$("#solution").append($("#expect").html());
+					return;
+				}
+				$(d.data).each(function(){
+					var solutionT = $("#solutionT").html();
+					solutionT = solutionT.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+					solutionT = solutionT.replace("{columId}",'${template.columId!}');
+					solutionT = solutionT.replace("{title}",this.contentTitle);
+					solutionT = solutionT.replace("{contentSummary}",this.contentSummary);
+					solutionT = solutionT.replace("{imageUrl}",this.surface_imageurl);
+					$("#solution").append(solutionT);
+				});
+				if(d.page.currentPage != 1){
+					$("html,body").animate({ scrollTop: $('.innerBanner').offset().top+$('.innerBanner').outerHeight() }, 500);
+				}
+				
+				$('img.scale').imageScale();
+				new WOW().init();
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						solution(num)
+					}
+				})
+			}// end success
+			
+			
+		});//ajax end
+	};
+	
+	$(function(){
+		solution(1);
+	});
+	
+</script>
+<script type="text/javascript">
+	$('.screening .screening_inx .screening_r a').click(function(){
+		
+		var dataId = $(this).attr('data-id');
+		var _txt = $(this).text();
+		var p_len = $('.screening .yixuan .yixuan_r p').length;
+		if (p_len!=0) {
+			if ($(this).hasClass('on')) {
+				return false;
+			} else{
+				$('.screening .yixuan .yixuan_r p:last-child').after('<p class="fnt_14 fl" data-id=""></p>');
+				$('.screening .yixuan .yixuan_r p:last-child').text(_txt).append('<i></i>');
+				$('.screening .yixuan .yixuan_r p:last-child').attr('data-id',dataId);
+			}
+		} else{
+			$('.screening .yixuan .yixuan_r').append('<p class="fnt_14 fl"></p>');
+				$('.screening .yixuan .yixuan_r p').text(_txt).append('<i></i>');
+				$('.screening .yixuan .yixuan_r p').attr('data-id',dataId);
+		}
+		
+		$(this).siblings('.both').removeClass('on');
+		
+	});
+	$('.screening .screening_inx .screening_r a,p').click(function(){
+		$(this).addClass('on');
+		
+	});
+	
+	
+
+	$(document).on('click','.screening .yixuan .yixuan_r p i',function(){
+		 var dataId2 = $(this).parent('p').attr('data-id');
+		$(this).parent('p').remove();
+		$('.screening .screening_inx').each(function(){
+			$(this).children('.screening_r').children('a,p').each(function(){
+				if($(this).data('id')==dataId2){
+					$(this).removeClass('on');
+				}
+			})
+		})
+		solution(1);
+	})
+	
+	$(document).on('click','.screening .screening_inx .screening_r .both',function(){
+		 $(this).parent('.screening_r').children('a').each(function(){
+		 	var dataId3 = $(this).data('id');
+		 		$('.screening .yixuan .yixuan_r p').each(function(){
+		 			if ($(this).data('id')==dataId3) {
+		 				$(this).remove();
+		 			}
+		 		})
+		 })
+	})
+	
+	$('.screening .screening_inx .screening_r p.both').click(function(){
+		$(this).siblings().removeClass('on');
+		$(this).addClass('on');
+		solution(1);
+	})
+	
+	$(".types").click(function(){
+		solution(1);
+	});
+</script>
+</body>
+</html>          

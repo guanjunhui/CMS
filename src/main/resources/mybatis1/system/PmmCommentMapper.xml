@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PmmCommentMapper">
+	
+	<resultMap type="cn.cebest.entity.system.infineon.SolutionCommentVO" id="BaseResultMap">
+		<id column="ID" property="id"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="RESOURCE_ID" property="resourceId"/>
+		<result column="PARENT_ID" property="parentId"/>
+		<result column="CONTENT" property="content"/>
+		<result column="TO_USER_ID" property="toUserId"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="status" property="status"/>
+		<result column="likeNum" property="likeNum"/>
+		<result column="replyNum" property="replyNum"/>
+		<result column="title" property="resouceTitle"/>
+		<result column="keyWords" property="keyWords"/>
+	</resultMap>
+	
+	<select id="findPmmImagelistPage" parameterType="cn.cebest.entity.Page" resultType="pd">
+		SELECT 
+			BZ,COLOR,TITLE ,SUBHEAD ,IMGURL
+		FROM
+			WEB_IMAGE
+		WHERE 
+			MASTER_ID = #{pd.colum_id}
+		ORDER BY FORDER
+	</select>
+	
+	<select id="getCommentlistPage" parameterType="cn.cebest.entity.Page" resultMap="BaseResultMap">
+		SELECT 
+			C.ID, C.RESOURCE_ID, C.PARENT_ID, C.USER_ID, C.CONTENT, C.TO_USER_ID,
+			DATE_FORMAT(C.CREATE_TIME,'%Y-%m-%d %h:%i:%s') CREATE_TIME,
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT_LIKE WHERE CONTENT_ID=C.ID) likeNum,
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT WHERE PARENT_ID=C.ID) replyNum
+		FROM WEB_SOLUTION_COMMENT C
+		WHERE 
+			C.STATUS = '1' AND RESOURCE_ID = #{pd.resouceId}
+			
+			ORDER BY C.PARENT_ID ASC,C.CREATE_TIME DESC
+	</select>
+	
+	<select id="getReviewlistPage" parameterType="cn.cebest.entity.Page" resultMap="BaseResultMap">
+		SELECT 
+			C.ID,C.USER_ID, C.CONTENT, C.TO_USER_ID,C.STATUS,
+			DATE_FORMAT(C.CREATE_TIME,'%Y-%m-%d %h:%i:%s') CREATE_TIME,
+			(
+				SELECT
+					GROUP_CONCAT(KW.KEY_WORDS) 
+				FROM WEB_KEY_WORDS KW 
+				LEFT JOIN WEB_KEYWORDS_COMMENT KC ON KW.ID = KC.KEYWORDS_ID
+				WHERE 
+					KC.COMMENT_ID = C.ID
+			) keyWords
+		FROM WEB_SOLUTION_COMMENT C
+		WHERE 
+		C.STATUS = '0'
+		ORDER BY C.PARENT_ID ASC,C.CREATE_TIME DESC
+	</select>
+	
+	<select id="getCommentById" parameterType="pd" resultMap="BaseResultMap">
+		SELECT 
+			C.ID, C.RESOURCE_ID, C.PARENT_ID, C.USER_ID, C.CONTENT, C.TO_USER_ID,
+			DATE_FORMAT(C.CREATE_TIME,'%Y-%m-%d %h:%i:%s') CREATE_TIME,
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT_LIKE WHERE CONTENT_ID=C.ID) likeNum,
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT WHERE PARENT_ID=C.ID) replyNum
+		FROM WEB_SOLUTION_COMMENT C
+		WHERE C.ID = #{id}
+	</select>
+	
+	<select id="getContentlistPage" parameterType="page" resultType="java.util.HashMap">
+		SELECT 
+		DISTINCT(C.ID) id,C.CONTENT_TITLE title,
+		(SELECT COUNT(ID) FROM WEB_SOLUTION_COMMENT WHERE RESOURCE_ID=C.ID) num,
+		DATE_FORMAT(C.CREATED_TIME,'%Y-%m-%d') createTime
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON C.ID = CC.CONTENTID
+		WHERE 
+		CC.COLUMNID = '0ac6d48dc93b42a499ef8ab9732e78b8'
+		<if test="pd.title != null and pd.title != ''">
+			AND C.CONTENT_TITLE like CONCAT('%',#{pd.title},'%')
+		</if>
+		ORDER BY C.SORT
+	</select>
+	
+	<delete id="deleteComment" parameterType="pd">
+		DELETE FROM 
+			WEB_SOLUTION_COMMENT
+		WHERE ID IN
+		<foreach collection="array" item="item" index="index" open="("  separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteCommentLike" parameterType="pd">
+		DELETE FROM 
+			WEB_SOLUTION_COMMENT_LIKE
+		WHERE CONTENT_ID IN
+		<foreach collection="array" item="item" index="index" open="("  separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

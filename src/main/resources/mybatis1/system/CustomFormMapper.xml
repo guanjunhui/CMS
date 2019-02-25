@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustomFormMapper">
+  <resultMap id="BaseResultMap" type="cn.cebest.entity.system.customForm.CustomForm">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="FORM_NAME" jdbcType="VARCHAR" property="formName" />
+    <result column="FORM_TEMPLATE" jdbcType="VARCHAR" property="formTemplate" />
+    <result column="FORM_DESCRIPTION" jdbcType="VARCHAR" property="formDescription" />
+    <result column="SITE_ID" jdbcType="VARCHAR" property="siteId" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+   </resultMap>
+   <!-- 表单级联resultMap -->
+   <resultMap id="FormAndAttributetResultMap" type="cn.cebest.entity.system.customForm.CustomForm">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="FORM_NAME" jdbcType="VARCHAR" property="formName" />
+    <result column="FORM_TEMPLATE" jdbcType="VARCHAR" property="formTemplate" />
+    <result column="FORM_DESCRIPTION" jdbcType="VARCHAR" property="formDescription" />
+    <result column="SITE_ID" jdbcType="VARCHAR" property="siteId" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <collection property="attributeList" column="ID"
+    	ofType="cn.cebest.entity.system.customForm.CustomFormAttribute" 
+    	javaType="ArrayList" 
+    	select="CustomFormAttributeMapper.getAttributeListByFormID"/>
+   </resultMap>
+   
+  <sql id="Base_Column_List">
+    ID, FORM_NAME, FORM_TEMPLATE, FORM_DESCRIPTION, SITE_ID,CREATED_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOM_FORM
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询所有表单项 -->
+  <select id="selectAllFormAttribue" parameterType="pd" resultMap="FormAndAttributetResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOM_FORM
+    where SITE_ID = #{siteId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有表单项分页-->
+  <select id="selectlistPageAllFormAttribue" parameterType="page" resultMap="FormAndAttributetResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from WEB_CUSTOM_FORM
+    where SITE_ID = #{pd.siteId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from WEB_CUSTOM_FORM
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="saveForm" parameterType="cn.cebest.entity.system.customForm.CustomForm">
+    insert into WEB_CUSTOM_FORM (ID, FORM_NAME, FORM_TEMPLATE, 
+      FORM_DESCRIPTION, SITE_ID,CREATED_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{formName,jdbcType=VARCHAR}, #{formTemplate,jdbcType=VARCHAR}, 
+      #{formDescription,jdbcType=VARCHAR}, #{siteId,jdbcType=VARCHAR},#{createdTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateForm" parameterType="cn.cebest.entity.system.customForm.CustomForm">
+    update WEB_CUSTOM_FORM
+    <set>
+      <if test="formName != null">
+        FORM_NAME = #{formName,jdbcType=VARCHAR},
+      </if>
+      <if test="formTemplate != null">
+        FORM_TEMPLATE = #{formTemplate,jdbcType=VARCHAR},
+      </if>
+      <if test="formDescription != null">
+        FORM_DESCRIPTION = #{formDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="siteId != null">
+        SITE_ID = #{siteId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContentTypeMapper">
+
+	<resultMap type="cn.cebest.entity.system.content.ContentType" id="BaseResultContentType">
+		<id property="id" column="ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="siteId" column="SITEID" />
+		<result property="imageId" column="IMAGEID" />
+		<result property="title" column="TITLE" />
+		<result property="imgurl" column="IMGURL" />
+		<result property="typeStatus" column="TYPE_STATUS" />
+		<result property="typeTxt" column="TXT" />
+		<result property="typeKeywords" column="TYPE_KEYWORDS" />
+		<result property="typeDescription" column="TYPE_DESCRIPTION" />
+		<result property="typeSummary" column="TYPE_SUMMARY" />
+		<result property="pId" column="PID" />
+		<result property="pName" column="PNAME" />
+		<result property="columnId" column="COLUMNID" />
+		<result property="typeWburl" column="TYPE_WBURL" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="deleteTime" column="DELETE_TIME" />
+		<result property="count" column="COUNT" />
+		<result property="templateId" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<association property="template" resultMap="TemplateMap" />
+	</resultMap>
+	
+	<resultMap type="cn.cebest.entity.system.content.ContentType"
+			   id="resultContentType">
+		<id property="id" column="ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="siteId" column="SITEID" />
+		<result property="imageId" column="IMAGEID" />
+		<result property="title" column="TITLE" />
+		<result property="imgurl" column="IMGURL" />
+		<result property="typeStatus" column="TYPE_STATUS" />
+		<result property="typeTxt" column="TXT" />
+		<result property="typeKeywords" column="TYPE_KEYWORDS" />
+		<result property="typeDescription" column="TYPE_DESCRIPTION" />
+		<result property="typeSummary" column="TYPE_SUMMARY" />
+		<result property="pId" column="PID" />
+		<result property="pName" column="PNAME" />
+		<result property="columnId" column="COLUMNID" />
+		<result property="typeWburl" column="TYPE_WBURL" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="count" column="COUNT" />
+		<result property="templateId" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<result property="typeUrlName" column="typeUrlName" />
+		<association property="template" resultMap="TemplateMap" />
+		<collection property="childList"
+					ofType="cn.cebest.entity.system.content.ContentType">
+			<id property="id" column="ID_" />
+			<result property="typeName" column="TYPE_NAME_" />
+			<result property="siteId" column="SITEID_" />
+			<result property="imageId" column="IMAGEID_" />
+			<result property="typeStatus" column="TYPE_STATUS_" />
+			<result property="typeTxt" column="TXT_" />
+			<result property="typeKeywords" column="TYPE_KEYWORDS_" />
+			<result property="typeSummary" column="TYPE_SUMMARY_" />
+			<result property="pId" column="PID_" />
+			<result property="typeWburl" column="TYPE_WBURL_" />
+			<result property="createTime" column="CREATE_TIME_" />
+			<result property="updateTime" column="UPDATE_TIME_" />
+		</collection>
+		<collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="CID_" />
+			<result property="columName" column="COLUMNAME_" />
+		</collection>
+		<collection property="imageList" ofType="cn.cebest.entity.system.Image">
+			<result column="imgurl_" property="imgurl" />
+		</collection>
+	</resultMap>
+	
+	<resultMap type="cn.cebest.entity.system.content.ContentType"
+			   id="resultStyleContentType">
+		<id property="id" column="ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="siteId" column="SITEID" />
+		<result property="imageId" column="IMAGEID" />
+		<result property="title" column="TITLE" />
+		<result property="imgurl" column="IMGURL" />
+		<result property="typeStatus" column="TYPE_STATUS" />
+		<result property="typeTxt" column="TXT" />
+		<result property="typeKeywords" column="TYPE_KEYWORDS" />
+		<result property="typeDescription" column="TYPE_DESCRIPTION" />
+		<result property="typeSummary" column="TYPE_SUMMARY" />
+		<result property="pId" column="PID" />
+		<result property="pName" column="PNAME" />
+		<result property="columnId" column="COLUMNID" />
+		<result property="typeWburl" column="TYPE_WBURL" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="count" column="COUNT" />
+		<result property="templateId" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<result property="typeIp" column="TYPEIP" />
+		<result property="typePosition" column="TYPEPOSITION" />
+		<result property="typeUrlName" column="typeUrlName" />
+		<association property="template" resultMap="TemplateMap" />
+		<collection property="childList"
+					ofType="cn.cebest.entity.system.content.ContentType">
+			<id property="id" column="ID_" />
+			<result property="typeName" column="TYPE_NAME_" />
+			<result property="siteId" column="SITEID_" />
+			<result property="imageId" column="IMAGEID_" />
+			<result property="typeStatus" column="TYPE_STATUS_" />
+			<result property="typeTxt" column="TXT_" />
+			<result property="typeKeywords" column="TYPE_KEYWORDS_" />
+			<result property="typeSummary" column="TYPE_SUMMARY_" />
+			<result property="pId" column="PID_" />
+			<result property="typeWburl" column="TYPE_WBURL_" />
+			<result property="createTime" column="CREATE_TIME_" />
+			<result property="updateTime" column="UPDATE_TIME_" />
+		</collection>
+		<collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="CID_" />
+			<result property="columName" column="COLUMNAME_" />
+		</collection>
+		<collection property="imageList" ofType="cn.cebest.entity.system.Image">
+			<result column="imgurl_" property="imgurl" />
+		</collection>
+	</resultMap>
+
+	<resultMap id="TemplateMap" type="cn.cebest.entity.system.Template">
+		<id column="T_ID" jdbcType="VARCHAR" property="id" />
+		<result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+		<result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+		<result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+		<result column="T_CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+		<result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+	</resultMap>
+
+	<!-- 展示顶级的查询 -->
+	<select id="selectListTop" resultMap="resultContentType"
+			parameterType="map">
+		SELECT CT.TYPE_NAME,CT.PID,(SELECT COUNT(*)
+		FROM WEB_CONTENT C
+		WHERE
+		C.ID IN (SELECT GROUP_CONCAT(TCR.ID)
+		FROM WEB_CONTENT TCR
+		WHERE
+		TCR.TYPEID=CT.ID)) AS COUNT ,CT.ID,C.COLUM_NAME as
+		COLUMNAME_,CT.TYPE_STATUS,C.ID AS CID_,I.IMGURL,CT.SORT
+		FROM
+		WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN
+		WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON
+		CT.IMAGEID=I.IMAGE_ID
+		<where>
+			CT.PID='0'
+			AND CT.SITEID=#{SITEID}
+			<if test="TYPE_KEYWORDS !=null and TYPE_KEYWORDS != ''">
+				AND CT.TYPE_NAME LIKE '%' #{TYPE_KEYWORDS} '%'
+			</if>
+		</where>
+	</select>
+
+	<!-- 展示所有的查询 -->
+	<select id="selectListAll" resultMap="resultContentType"
+			parameterType="map">
+		SELECT CT.TYPE_NAME,CT.PID,(SELECT COUNT(*)
+		FROM WEB_CONTENT C
+		WHERE
+		C.ID IN (SELECT TCR.ID
+		FROM WEB_CONTENT TCR
+		WHERE
+		TCR.TYPEID=CT.ID)) AS COUNT ,CT.ID,C.COLUM_NAME as
+		COLUMNAME_,CT.TYPE_STATUS,C.ID AS CID_,I.IMGURL,CT.SORT
+		FROM
+		WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN
+		WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON
+		CT.IMAGEID=I.IMAGE_ID
+		<where>
+			CT.SITEID=#{SITEID}
+			<if test="TYPE_KEYWORDS !=null and TYPE_KEYWORDS != ''">
+				AND CT.TYPE_NAME LIKE '%' #{TYPE_KEYWORDS} '%'
+			</if>
+		</where>
+	</select>
+	<!-- 展示页面分页查询 -->
+	<select id="selectproductTypeListPage" parameterType="map"
+			resultMap="resultContentType">
+		SELECT CT.TYPE_NAME,(SELECT COUNT(*)
+		FROM WEB_CONTENT C
+		WHERE C.ID IN
+		(SELECT 
+		FROM WEB_CONTENT TCR
+		WHERE
+		TCR.TYPEID=CT.ID)) AS COUNT ,CT.ID,C.COLUM_NAME as
+		COLUMNAME_,CT.TYPE_STATUS,C.ID AS CID_,I.IMGURL
+		FROM WEB_CONTENTTYPE
+		CT
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN
+		WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON
+		CT.IMAGEID=I.IMAGE_ID
+		<where>
+			CT.SITEID=#{SITEID}
+			<if test="TYPE_KEYWORDS !=null and TYPE_KEYWORDS != ''">
+				AND CT.TYPE_KEYWORDS LIKE '%' #{TYPE_KEYWORDS} '%'
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 展示顶级的查询 -->
+	<select id="selectTop" parameterType="map" resultType="cn.cebest.entity.system.content.ContentType">
+		SELECT 
+		ID,TYPE_NAME,SITEID,IMAGEID,TYPE_STATUS,TYPE_KEYWORDS,TYPE_SUMMARY,PID,TYPE_WBURL,CREATE_TIME,UPDATE_TIME
+		
+		<!-- ID AS id,TYPE_NAME AS typeName,SITEID AS siteId,IMAGEID AS imageId,TYPE_STATUS AS typeStatus,TYPE_KEYWORDS AS typeKeywords,
+		TYPE_SUMMARY AS typeSummary,PID AS pId,TYPE_WBURL AS typeWburl,CREATE_TIME AS createTime,UPDATE_TIME AS updateTime -->
+		FROM WEB_CONTENTTYPE
+		WHERE PID='0'
+		AND SITEID=#{SITEID}
+		<if test="ID !=null and ID !=''">AND ID!=#{ID}</if>
+	</select>
+	
+	<select id="selectUpdateTop" parameterType="map" resultType="cn.cebest.entity.system.content.ContentType">
+		SELECT 
+		C.ID,C.TYPE_NAME AS typeName,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON
+		CC.CONTENTTYPEID=C.ID
+		<where>
+			C.PID='0'
+			<if test="SITEID !=null and SITEID !=''">AND C.SITEID=#{SITEID}</if>
+			<if test="ID !=null and ID !=''">AND C.ID=#{ID}</if>
+			<if test="columId !=null and columId !=''">AND CC.COLUMNID=#{columId}</if>
+		</where>
+	</select>
+
+	
+	<!-- 展示所有的查询 -->
+	<select id="selectAll" parameterType="map" resultType="cn.cebest.entity.system.content.ContentType">
+		SELECT
+		ID,TYPE_NAME,SITEID,IMAGEID,TYPE_STATUS,TYPE_KEYWORDS,TYPE_SUMMARY,PID,TYPE_WBURL,CREATE_TIME,UPDATE_TIME
+		<!-- ID AS id,TYPE_NAME AS typeName,SITEID AS siteId,IMAGEID AS imageId,TYPE_STATUS AS typeStatus,TYPE_KEYWORDS AS typeKeywords,
+		TYPE_SUMMARY AS typeSummary,PID AS pId,TYPE_WBURL AS typeWburl,CREATE_TIME AS createTime,UPDATE_TIME AS updateTime -->
+		FROM WEB_CONTENTTYPE
+		<where>
+			<if test="SITEID !=null and SITEID !=''">AND SITEID=#{SITEID}</if>
+			<if test="ID !=null and ID !=''">AND ID!=#{ID}</if>
+		</where>
+	</select>
+	
+	<!-- 展示所有的查询 -->
+	<select id="selectUpdateAll" parameterType="map" resultType="cn.cebest.entity.system.content.ContentType">
+		SELECT
+		C.ID,C.TYPE_NAME AS typeName,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON
+		CC.CONTENTTYPEID=C.ID
+		<where>
+			<if test="SITEID !=null and SITEID !=''">AND C.SITEID=#{SITEID}</if>
+			<if test="ID !=null and ID !=''">AND C.ID=#{ID}</if>
+			<if test="columId !=null and columId !=''">AND CC.COLUMNID=#{columId}</if>
+		</where>
+	</select>
+
+	
+	<!-- 展示所有的查询 -->
+	<select id="selectContentTypeByColumnIdTop" resultMap="resultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,C.TEMPLATEID,C.SORT,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,I.IMGURL,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON
+		CC.CONTENTTYPEID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		CC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_IMAGE I ON
+		C.IMAGEID = I.IMAGE_ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=C.TEMPLATEID
+		WHERE CC.COLUMNID=#{id} ORDER BY C.SORT
+	</select>
+	
+	<!-- 展示顶级的查询(分页) -->
+	<select id="findTypelistPageByColumnIds" parameterType="page" resultMap="resultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,C.TEMPLATEID,C.SORT,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,I.IMGURL,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON
+		CC.CONTENTTYPEID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		CC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_IMAGE I ON
+		C.IMAGEID = I.IMAGE_ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=C.TEMPLATEID
+		WHERE CC.COLUMNID=#{pd.ID} AND C.PID='0' ORDER BY C.SORT
+	</select>
+	
+	<!-- 展示不是顶级的查询(分页) -->
+	<select id="findTypeChildByColumnIds" parameterType="page" resultMap="resultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,C.TEMPLATEID,C.SORT,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,I.IMGURL,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON
+		CC.CONTENTTYPEID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON
+		CC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_IMAGE I ON
+		C.IMAGEID = I.IMAGE_ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=C.TEMPLATEID
+		WHERE CC.COLUMNID=#{pd.ID} AND C.PID != '0' ORDER BY C.SORT
+	</select>
+	<!-- 保存富文本 -->
+	<insert id="insertTXT" parameterType="cn.cebest.entity.system.content.ContentType">
+		INSERT INTO
+		WEB_TXT(CONTENT_ID,TXT)
+		VALUES(#{id},#{typeTxt})
+	</insert>
+	<!-- 修改富文本 -->
+	<update id="updateTXT" parameterType="cn.cebest.entity.system.content.ContentType">
+		update WEB_TXT 
+		<set>
+			TXT=#{typeTxt},
+			<!-- <if test="txt_ext !=null and txt_ext !=''">TXT_EXT=#{txt_ext},</if> -->
+		</set>
+		where CONTENT_ID=#{id}
+	</update>
+	<!-- 删除富文本 -->
+	<delete id="deleteTXT">
+		DELETE FROM WEB_TXT
+		WHERE CONTENT_ID IN
+		<foreach collection="array" item="typeid01" close=")" open="("
+				 separator=",">
+			#{typeid01}
+		</foreach>
+	</delete>
+	<!-- 保存产品类型 -->
+	<insert id="insertContentType" parameterType="cn.cebest.entity.system.content.ContentType">
+		INSERT INTO
+		WEB_CONTENTTYPE(
+				ID
+				,TYPE_NAME
+				,SITEID
+				,IMAGEID
+				,TYPE_STATUS
+				,TYPE_KEYWORDS
+				,TYPE_SUMMARY
+				,PID
+				,TYPE_WBURL
+				,CREATE_TIME
+				,TEMPLATEID
+				<if test="typeIp !=null and typeIp !=''">,TYPEIP</if>
+				<if test="typePosition !=null and typePosition !=''">,TYPEPOSITION</if>
+				)
+		VALUES
+		(
+			#{id}
+			,#{typeName}
+			,#{siteId}
+			,#{imageId}
+			,#{typeStatus}
+			,#{typeKeywords}
+			,#{typeSummary}
+			,#{pId}
+			,#{typeWburl}
+			,#{createTime}
+			,#{templateId}
+			<if test="typeIp !=null and typeIp !=''">,#{typeIp}</if>
+			<if test="typePosition !=null and typePosition !=''">,#{typePosition}</if>
+		)
+	</insert>
+	<!--保存相关联栏目关系 -->
+	<insert id="insertContenttype_column" parameterType="cn.cebest.entity.system.content.ContentType">
+		INSERT INTO WEB_CONTENTTYPE_COLUMN(COLUMNID,CONTENTTYPEID) VALUES
+		<!-- <foreach collection="columnids" item="columnid" open=""
+				 separator="," close="">-->
+			(#{columnId},#{id})
+		<!-- </foreach> -->
+	</insert>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentTypeUrlNameList" parameterType="cn.cebest.entity.system.content.ContentType" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH_COLUMN 
+		WHERE TYPEID = #{id}
+	</select>
+	
+	<!-- 保存分类url信息 -->
+	<insert id="saveContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.content.ContentType">
+		insert into WEB_SKIPPATH_COLUMN (
+			COLUMNID,TYPEID,TYPE,ISCHANNEL,SKIPPATH,ISSELECT
+		) values (
+			#{columnId},#{id},1,0,#{typeUrlName},1
+		)
+	</insert>
+	
+	<!-- 修改栏目url信息 -->
+	<update id="editContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.content.ContentType" >
+		UPDATE WEB_SKIPPATH_COLUMN
+		<set>
+			TYPE				= 1
+			,ISCHANNEL			= 0
+			,ISSELECT			= 1
+		<if test="typeUrlName!=null and typeUrlName!=''">
+			,SKIPPATH			= #{typeUrlName}
+		</if>
+		<if test="columnId!=null and columnId!=''">
+			,COLUMNID			= #{columnId}
+		</if>
+		</set>
+		WHERE 
+			TYPEID 			= #{id}
+	</update>
+	
+	<!-- 删除相关联栏目关系 -->
+	<delete id="deleteContenttype_column">
+		DELETE FROM WEB_CONTENTTYPE_COLUMN
+		WHERE CONTENTTYPEID IN
+		<foreach collection="array" item="typeid02" close=")" open="("
+				 separator=",">
+			#{typeid02}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除栏目url信息 -->
+ 	<delete id="delUrlNmaeAll" parameterType="String">
+ 		DELETE FROM WEB_SKIPPATH_COLUMN WHERE TYPEID in
+ 		<foreach item="item33" index="index" collection="array" open="(" separator="," close=")">
+        	#{item33}
+        </foreach>
+ 	</delete>
+	
+	<!-- 批量删除内容url信息 -->
+ 	<delete id="delContentUrlNmaeAll" parameterType="String">
+ 		DELETE FROM WEB_SKIPPATH WHERE TYPEID in
+ 		<foreach item="item34" index="index" collection="array" open="(" separator="," close=")">
+        	#{item34}
+        </foreach>
+ 	</delete>
+	
+	<!-- 根据id查询产品类型 -->
+	<select id="selectContentTypeById" resultMap="resultContentType">
+		SELECT
+		CT.ID,CT.TYPE_NAME,CT.SITEID,CT.IMAGEID,CT.TYPE_STATUS,CT.TYPE_KEYWORDS,CT.TYPE_SUMMARY,CT.PID,CT.TYPE_WBURL,CT.CREATE_TIME,CT.UPDATE_TIME,
+		T.TXT,I.TITLE,C.COLUM_NAME AS COLUMNAME_,C2.TYPE_NAME AS PNAME,
+		C.ID AS CID_,CT.TEMPLATEID,I.IMGURL,CT.IMAGEID,WSC.SKIPPATH AS typeUrlName
+		FROM WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_TXT T ON CT.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=CT.IMAGEID
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_CONTENTTYPE C2 ON CT.PID=C2.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC CT.ID=WSC.TYPEID
+		WHERE CT.ID=#{id}
+	</select>
+	
+	<!-- 根据id查询产品类型 -->
+	<select id="selectStyleContentTypeById" resultMap="resultStyleContentType">
+		SELECT
+		CT.ID,CT.TYPE_NAME,CT.SITEID,CT.IMAGEID,CT.TYPE_STATUS,CT.TYPE_KEYWORDS,CT.TYPE_SUMMARY,CT.PID,CT.TYPE_WBURL,CT.CREATE_TIME,CT.UPDATE_TIME,
+		T.TXT,I.TITLE,C.COLUM_NAME AS COLUMNAME_,C2.TYPE_NAME AS PNAME,
+		C.ID AS CID_,CT.TEMPLATEID,I.IMGURL,CT.IMAGEID,CT.TYPEIP,CT.TYPEPOSITION,WSC.SKIPPATH AS typeUrlName
+		FROM WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_TXT T ON CT.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=CT.IMAGEID
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_CONTENTTYPE C2 ON CT.PID=C2.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON CT.ID=WSC.TYPEID
+		WHERE CT.ID=#{id}
+	</select>
+
+	<!-- 根据产品类型的id查询图片的路径 -->
+	<select id="selectImagePach" resultType="map">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_CONTENTTYPE C
+		INNER JOIN WEB_IMAGE I
+		ON C.IMAGEID=I.IMAGE_ID
+		WHERE C.ID IN
+		<foreach collection="array" item="typeid03" open="(" close=")"
+				 separator=",">
+			<if test="typeid03 !=null and typeid03 != ''">
+				#{typeid03}
+			</if>
+		</foreach>
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteByIds">
+		DELETE FROM WEB_CONTENTTYPE WHERE ID in
+		<foreach collection="array" item="typeid04" close=")" open="("
+				 separator=",">
+			#{typeid04}
+		</foreach>
+	</delete>
+	<!-- 根据栏目ids查询分类ids -->
+	<select id="selectIdsByColumnIds" resultType="String">
+		SELECT CONTENTTYPEID
+		FROM WEB_CONTENTTYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="typeid05" close=")" open="("
+				 separator=",">
+			#{typeid05}
+		</foreach>
+	</select>
+	<!-- 查询类型对应的栏目数 -->
+	<select id="selectCountByIds" resultType="HashMap">
+		SELECT COUNT(*),CONTENTTYPEID
+		FROM WEB_CONTENTTYPE_COLUMN
+		WHERE
+		CONTENTTYPEID IN
+		<foreach collection="array" item="typeid06" close=")" open="("
+				 separator=",">
+			#{typeid06}
+		</foreach>
+		GROUP BY CONTENTTYPEID
+	</select>
+	<!-- 根据栏目ids删除和栏目的关联关系 -->
+	<delete id="deleteByColumnIds">
+		DELETE FROM WEB_CONTENTTYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="typeid07" close=")" open="("
+				 separator=",">
+			#{typeid07}
+		</foreach>
+	</delete>
+	<update id="updateById" parameterType="cn.cebest.entity.system.content.ContentType">
+		update WEB_CONTENTTYPE
+		<set>
+			<if test="typeName !=null and typeName !='' ">type_name=#{typeName},</if>
+			<if test="siteId !=null and siteId !='' ">siteid=#{siteId},</if>
+			<if test="imageId !=null and imageId !='' ">imageid=#{imageId},</if>
+			<if test="typeStatus !=null and typeStatus !='' ">type_status=#{typeStatus},</if>
+			PID=#{pId},
+			TYPE_SUMMARY=#{typeSummary},
+			TYPE_KEYWORDS=#{typeKeywords},
+			TYPE_WBURL=#{typeWburl},
+			UPDATE_TIME=#{updateTime},
+			TEMPLATEID=#{templateId},
+			<if test="typeIp !=null and typeIp !=''">,TYPEIP=#{typeIp}</if>
+			<if test="typePosition !=null and typePosition !=''">,TYPEPOSITION=#{typePosition}</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 查询类型下的内容id -->
+	<select id="selectContentIds" resultType="String">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		LEFT JOIN
+		WEB_CONTENTTYPE CT ON CT.ID=C.TYPEID
+		WHERE CT.ID IN
+		<foreach collection="array" item="typeid08" close=")" open="("
+				 separator=",">
+			#{typeid08}
+		</foreach>
+	</select>
+
+	<update id="updateStatusByIds" parameterType="HashMap">
+		update WEB_CONTENTTYPE
+		SET
+		TYPE_STATUS= #{STATUS}
+		WHERE ID IN
+		<foreach collection="ids" item="typeid09" close=")" open="("
+				 separator=",">
+			#{typeid09}
+		</foreach>
+	</update>
+	<update id="updateSortById" parameterType="HashMap">
+		update
+		WEB_CONTENTTYPE
+		SET
+		SORT= #{sort}
+		WHERE ID =#{id}
+	</update>
+	<update id="updateContentStatusByIds" parameterType="HashMap">
+		update WEB_CONTENT C1
+		SET C1.CONTENT_STATUS= #{STATUS}
+		WHERE C1.ID IN
+		(SELECT TCR.ID
+		FROM WEB_CONTENT TCR
+		WHERE TCR.TYPEID IN
+		<foreach collection="ids" item="typeid10" close=")" open="("
+				 separator=",">
+			#{typeid10}
+		</foreach>
+		)
+	</update>
+
+	<select id="selectAllIdPiD" parameterType="map" resultType="HashMap">
+		SELECT ID,PID
+		FROM WEB_CONTENTTYPE
+	</select>
+
+	<!-- 根据条件查询文件类型 -->
+	<select id="selectAllByAll" parameterType="HashMap"
+			resultType="cn.cebest.entity.system.content.ContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.TYPE_WBURL,
+		T.TXT,C.TYPE_SUMMARY
+		FROM
+		WEB_CONTENTTYPE C
+		LEFT JOIN WEB_TXT T ON C.ID=T.CONTENT_ID
+		<where>
+			<if test="SITEID !null and SITEID !=''">and SITEID=#{SITEID}</if>
+		</where>
+	</select>
+
+	<!-- 通过ID查询信息 -->
+	<select id="findTypeInfoById" parameterType="String"
+			resultMap="BaseResultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,
+		T.ID AS T_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH
+		FROM WEB_CONTENTTYPE C,WEB_TEMPLATE T
+		WHERE C.ID=#{id} AND
+		C.TEMPLATEID=T.ID
+	</select>
+	<!-- 重复性验证 -->
+	<select id="selectCount" parameterType="HashMap" resultType="Integer">
+		SELECT count(1)
+		FROM WEB_CONTENTTYPE
+		<where>
+			TYPE_NAME=#{typeName}
+			<if test="id !=null and id !=''">and id!=#{id}</if>
+			<if test="SITEID !=null and SITEID !=''">and SITEID=#{SITEID}</if>
+		</where>
+	</select>
+	<!-- 重复性验证 -->
+	<select id="selectBrandcountCount" parameterType="HashMap"
+			resultType="Integer">
+		SELECT count(1)
+		FROM WEB_BRAND
+		<where>
+			name=#{name}
+			and SITEID=#{SITEID}
+			<if test="id !=null and id !=''">and id!=#{id}</if>
+		</where>
+	</select>
+	<!-- 重复性验证 -->
+	<select id="selectPropertycountCount" parameterType="HashMap"
+			resultType="Integer">
+		SELECT count(1)
+		FROM WEB_CONTENT_VALUETYPE
+		<where>
+			NAME=#{name}
+			<if test="id !=null and id !=''">and id!=#{id}</if>
+		</where>
+	</select>
+	<!-- 查询分类全部列表 -->
+	<select id="selectContentTypeByCloumnId" parameterType="map"
+			resultMap="resultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,
+		CTC.COLUMNID AS CID_
+		FROM WEB_CONTENTTYPE C
+		JOIN WEB_CONTENTTYPE_COLUMN
+		CTC ON CTC.CONTENTTYPEID=C.ID
+		<where>
+			<if test="SITEID !=null and SITEID != ''">C.SITEID=#{SITEID}</if>
+			AND CTC.COLUMNID IN
+			<foreach collection="columnids" close=")" item="columnid"
+					 open="(" separator=",">
+				#{columnid}
+			</foreach>
+		</where>
+	</select>
+
+	<!-- 根据栏目Id查询分类全部列表 liu-->
+	<select id="findContentTypeByCloumnId" parameterType="map"
+			resultMap="resultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_SUMMARY,C.PID,C.TYPE_WBURL,C.CREATE_TIME,C.UPDATE_TIME,
+		CTC.COLUMNID AS CID_,IMG.IMGURL AS imgurl_,IMG.IMGURL AS imgurl,T.TXT
+		FROM WEB_CONTENTTYPE C
+		JOIN WEB_CONTENTTYPE_COLUMN
+		CTC ON CTC.CONTENTTYPEID=C.ID
+		JOIN WEB_IMAGE IMG
+		ON IMG.ID=C.IMAGEID
+		JOIN WEB_TXT T ON T.CONTENT_ID = C.ID
+		<where>
+			<if test="SITEID !=null and SITEID != ''">C.SITEID=#{SITEID}</if>
+			AND CTC.COLUMNID = #{columId} AND C.PID = '0'
+		</where>
+		ORDER BY C.SORT
+	</select>
+	<!-- 根据栏目查询分类对应的产品数量 -->
+	<select id="selectCountByTypeAndColumID" parameterType="java.lang.String" resultType="map">
+		SELECT
+		TYPEID as typeId,COUNT(*) as count
+		FROM WEB_CONTENT C
+		JOIN WEB_CONTENTTYPE_COLUMN
+		CTC ON CTC.CONTENTTYPEID=C.TYPEID
+		WHERE CTC.COLUMNID=#{columnId}
+		GROUP BY TYPEID
+	</select>
+
+
+
+
+
+
+	<!-- 后台接口,内容列表 -->
+	<select id="contentTypelistPage" resultType="pd" parameterType="page">
+		SELECT
+			WCTY.ID AS typeId,
+			WCTY.TYPE_NAME AS typeName,
+			WCTY.TYPE_CODE AS typeCode,
+			WCTY.TYPE_STATES AS typeStates
+		FROM
+			WEB_CONTENTTYPE WCTY
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+				WCTY.TYPE_STATES !='2'
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				AND WCTY.TYPE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+			</if>
+			<if test="pd.status!=null and pd.status!=''">
+				AND WCTY.TYPE_STATES = #{pd.status}
+			</if>
+		</trim>
+	</select>
+	<!-- 更新内容详情的状态 -->
+	<update id="updateContentType" parameterType="pd">
+		<if test="typeId!=null and typeId!=''">
+			UPDATE WEB_CONTENTTYPE WCTY
+				SET WCTY.TYPE_STATES = '2'
+			WHERE
+				WCTY.ID = #{typeId}
+		</if>
+	</update>
+	<!-- 批量更新内容详情的状态 -->
+	<update id="updateAllContentType" parameterType="String">
+		UPDATE WEB_CONTENTTYPE WCTY
+			SET WCTY.TYPE_STATES = '2'
+			WHERE WCTY.ID in
+	 	<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+	</update>
+	<!-- 保存内容详情 -->
+	<insert id="saveContentType" parameterType="pd">
+		insert into WEB_CONTENTTYPE (
+			ID,SITEID,TYPE_NAME,TYPE_CODE,TYPE_STATES,TYPE_TEMPLATEID
+		) values (
+			#{typeId},#{siteId},#{typeName},#{typeCode},#{typeStates},#{typeTemplateId}
+		)
+	</insert>
+	<!-- 通过detailId获取数据 -->
+	<select id="findContentTypeById" parameterType="pd" resultType="pd" >
+		SELECT
+			WCTY.ID AS typeId,
+			WCTY.TYPE_NAME AS typeName,
+			WCTY.TYPE_CODE AS typeCode,
+			WCTY.TYPE_STATES AS typeStates,
+			WCTY.TYPE_TEMPLATEID AS typeTemplateId
+		FROM
+			WEB_CONTENTTYPE WCTY
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="typeId!=null and typeId!=''">
+				WCTY.ID=#{typeId}
+			</if>
+		</trim>
+	</select>
+	<!-- 修改内容详情 -->
+	<update id="editContentType" parameterType="pd" >
+		UPDATE WEB_CONTENTTYPE WCTY
+		SET TYPE_NAME 			= #{typeName},
+			TYPE_CODE			= #{typeCode},
+			TYPE_STATES			= #{typeStates},
+			TYPE_TEMPLATEID		= #{typeTemplateId}
+		WHERE 
+			ID = #{typeId}
+	</update>
+	<!-- 修改状态 -->
+	<update id="auditContentType" parameterType="pd">
+		<if test="typeStates!=null and typeStates!=''">
+			UPDATE WEB_CONTENTTYPE WCTY
+			SET WCTY.TYPE_STATES = #{typeStates}
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+					1=1
+				<if test="typeId!=null and typeId!=''">
+					AND WCTY.ID = #{typeId}
+				</if>
+			</trim>
+		</if>
+	</update>
+	
+	<!-- 显示与隐藏 -->
+	<update id="updateTypeStatusByIds" parameterType="pd">
+		UPDATE WEB_CONTENTTYPE
+		SET TYPE_STATUS = ${status}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="typeid11" close=")" open="("
+			separator=",">
+			#{typeid11}
+		</foreach>
+	</update>
+	
+	<!-- 重复性验证 -->
+	<select id="findContentTypeList" parameterType="pd" resultMap="resultContentType">
+		SELECT
+		CT.ID,CT.TYPE_NAME,CT.SITEID,CT.IMAGEID,CT.TYPE_STATUS,CT.TYPE_KEYWORDS,CT.TYPE_SUMMARY,CT.PID,CT.TYPE_WBURL,CT.CREATE_TIME,CT.UPDATE_TIME,
+		T.TXT,I.TITLE,C.COLUM_NAME AS COLUMNAME_,C2.TYPE_NAME AS PNAME,
+		C.ID AS CID_,CT.TEMPLATEID,I.IMGURL,CT.IMAGEID
+		FROM WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_TXT T ON CT.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=CT.IMAGEID
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_CONTENTTYPE C2 ON CT.PID=C2.ID
+		WHERE CC.COLUMNID=#{currentId}
+		ORDER BY CT.SORT
+	</select>
+	
+	<!-- 重复性验证 -->
+	<select id="findStyleContentTypeList" parameterType="pd" resultMap="resultStyleContentType">
+		SELECT
+		CT.ID,CT.TYPE_NAME,CT.SITEID,CT.IMAGEID,CT.TYPE_STATUS,CT.TYPE_KEYWORDS,CT.TYPE_SUMMARY,CT.PID,CT.TYPE_WBURL,CT.CREATE_TIME,CT.UPDATE_TIME,
+		T.TXT,I.TITLE,C.COLUM_NAME AS COLUMNAME_,C2.TYPE_NAME AS PNAME,
+		C.ID AS CID_,CT.TEMPLATEID,I.IMGURL,CT.IMAGEID,CT.TYPEIP,CT.TYPEPOSITION
+		FROM WEB_CONTENTTYPE CT
+		LEFT JOIN WEB_TXT T ON CT.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=CT.IMAGEID
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CC ON CC.CONTENTTYPEID=CT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=CC.COLUMNID
+		LEFT JOIN WEB_CONTENTTYPE C2 ON CT.PID=C2.ID
+		WHERE CC.COLUMNID=#{currentId}
+		<if test="pid!=null and pid!=''">
+			AND CT.PID=#{pid}
+		</if>
+		ORDER BY CT.SORT
+	</select>
+	
+	<!-- 判断数据库字段是否存在 -->
+	<select id="selectContentTypeNotStyle" resultType="pd">
+		SELECT
+			COLUMN_NAME,
+			DATA_TYPE,
+			IS_NULLABLE,
+			COLUMN_DEFAULT
+		FROM
+			INFORMATION_SCHEMA. COLUMNS
+		WHERE
+			table_name = 'WEB_CONTENTTYPE'
+		AND table_schema = #{jdbc}
+		AND COLUMN_NAME IN ('TYPEIP', 'TYPEPOSITION')
+	</select>
+	
+	<select id="selectContentTypeListByColumnIdOrPid" resultMap="resultContentType" parameterType="pd">
+		SELECT C.ID,C.TYPE_NAME,C.TYPE_SUMMARY,I.IMGURL AS IMGURL
+		FROM WEB_CONTENTTYPE C
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.IMAGEID
+		<if test="COLUMNID !=null and COLUMNID !=''">
+		LEFT JOIN WEB_CONTENTTYPE_COLUMN CT ON CT.CONTENTTYPEID=C.ID
+		</if>
+		<where>
+			<if test="COLUMNID !=null and COLUMNID !=''">AND CT.COLUMNID=#{COLUMNID}</if>
+			<if test="PID !=null and PID !=''">AND C.PID=#{PID}</if>
+		</where>
+		ORDER BY C.SORT ASC
+	</select>
+</mapper>

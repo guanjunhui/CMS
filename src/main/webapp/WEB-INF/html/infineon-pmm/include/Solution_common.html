@@ -1,0 +1,87 @@
+<div class="solution_fix">
+	<div class="SolutionDetail_btn">
+		<a href="javascript:;">
+			<img src="img/kefu.png">
+			<p class="fnt_14">联系该方案</p>
+		</a>
+	</div>
+	<div class="SolutionCollection_btn">
+		<a href="javascript:;">
+			<div class="img_w">
+				<img src="img/shoucang.png">
+			</div>
+			<p class="fnt_14">收藏该方案</p>
+		</a>
+	</div>
+</div>
+<div class="SolutionForm">
+	<div class="SolutionFormBox pra">
+		<div class="SolutionFormBoxes">
+			<img src="img/fromLogo.png" alt="">
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">姓名</p>
+				<input type="text" class="fl username" name="username" placeholder="请输入您的姓名">
+			</div>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">手机号码</p>
+				<input type="text" class="fl phone" name="phone" placeholder="请输入您的手机号码">
+			</div>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">您的邮箱</p>
+				<input type="text" class="fl email" name="email" placeholder="请输入您的邮箱">
+			</div>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">您的单位</p>
+				<input type="text" class="fl company" name="company" placeholder="请输入您的单位">
+			</div>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">方案名称</p>
+				<input type="text" class="fl fangan" name="planName" placeholder="请输入方案名称">
+			</div>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">联系理由</p>
+				<textarea  class="fl" name="contactReason" placeholder="请输入您的联系理由"></textarea>
+			</div>
+			<p class="SolutionForm_btn"><a href="javascript:;" class="fnt_18">提交</a></p>
+		</div>
+		<a href="javascript:;" class="pra SolutionForm_close"><img src="img/close.png" alt=""></a>
+	</div>
+</div>
+
+<div class="fixBox">
+	<div class="content pra"></div>
+</div>
+<script>
+	$(function(){
+		//表单内容
+		$('.SolutionFormBox').click(function(){
+			return false;
+		});
+		
+		//表单外盒子
+		$('.SolutionForm').click(function(){
+			$('.SolutionForm').fadeOut();
+		})
+		
+		//关闭
+		$('.SolutionForm_close').click(function(){
+			$('.SolutionForm').fadeOut();
+		});
+		$(".fixBox").click(function(){
+			$(this).hide();
+		})
+		$(window).resize(function(){
+			if($(window).height()<768){
+				$('.SolutionForm .SolutionFormBox').css({
+					'height':680
+				})
+				$('.SolutionFormBox').mCustomScrollbar()
+			}
+		}).resize();
+	})
+</script>
+<script type="text/javascript">
+	$('.SolutionCollection_btn').click(function(){
+		$(this).toggleClass('on');
+	})
+</script>

@@ -1,0 +1,107 @@
+@charset "UTF-8";
+.partner_list{}
+.partner_list .bt{color: #928285;}
+.partner_list ul li.partner_inx{width: 100%;border-bottom: 1px solid #f2f2f2;}
+.partner_list ul li.partner_inx .partner_img{height: 180px;overflow: hidden;width: 320px;border: 0px solid #f2f2f2; margin: 0px auto; text-align: center; }
+.partner_list ul li.partner_inx .partner_img img{vertical-align: middle; max-width: 280px; max-height: 110px;}
+.partner_list ul li.partner_inx .partner_img span{ width: 0; height: 100%; overflow: hidden; display: inline-block; vertical-align: middle; }
+
+.partner_list ul li.partner_inx .partner_txt{width: 835px;}
+.partner_list ul li.partner_inx .partner_txt .p1{color: #000;}
+.partner_list ul li.partner_inx .partner_txt .p2{color: #928285;
+-webkit-line-clamp: 3; 
+display: -webkit-box;
+-webkit-box-orient: vertical;
+text-overflow: ellipsis;
+overflow: hidden;
+line-height: 1.7em;
+height:5.1em; /*瀹瑰櫒楂樺害锛堣鏁�琛岄棿璺濓級*/
+}
+.partner_list ul li.partner_inx .partner_txt .next_ico{margin-left: 0px;opacity: 0.5;}
+.partner_list ul li.partner_inx:hover .partner_txt .next_ico{margin-left: 20px;opacity: 1;}
+
+/*.gopage{text-align: right;}*/
+.gopage2{width: 100%;text-align: center;}
+.gopage2 a{}
+.gopage2 a p{display: inline-block;color: #000;
+transition: 0.5s;
+-moz-transition: 0.5s; /* Firefox 4 */
+-webkit-transition: 0.5s; /* Safari 鍜�Chrome */
+-o-transition: 0.5s;
+}
+.gopage2 a .more_down{display: inline-block;width: 14px;height: 10px;background-image: url(../img/more2.png);background-repeat: no-repeat;background-position: top;
+transition: 0.5s;
+-moz-transition: 0.5s; /* Firefox 4 */
+-webkit-transition: 0.5s; /* Safari 鍜�Chrome */
+-o-transition: 0.5s;
+}
+
+.gopage2 a:hover p{display: inline-block;color: #9bc3b7;}
+.gopage2 a:hover .more_down{display: inline-block;width: 14px;height: 10px;background-image: url(../img/more.png);background-repeat: no-repeat;background-position: top;}
+
+
+
+
+
+.learn_more{background-size: cover;background-position: center;overflow: hidden;}
+.learn_more_n{position: relative;padding-bottom: 21%;}
+.learn_more_n p{}
+.learn_more_n .p1{position: absolute;width: 60%;padding: 0 20%;text-align: center;color: #fff;top: 25%;}
+.learn_more_n .p2{position: absolute;width: 60%;padding: 0 20%;text-align: center; color: #fff;top: 40%;
+-webkit-line-clamp: 2;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+text-overflow: ellipsis;
+overflow: hidden;
+line-height: 1.7em;
+height:3.4em; /*瀹瑰櫒楂樺害锛堣鏁�琛岄棿璺濓級*/
+}
+.learn_more_n .more_w{position: absolute;width: 100%;text-align: center;top: 60%;}
+.learn_more_n .more_w a{display: inline-block;width: 145px;height: 45px;line-height: 45px;color: #9bc3b7;background: #fff;}
+.learn_more_n .more_w a:hover{background: #9bc3b7;color: #fff;}
+
+
+
+@media only screen and (max-width: 1200px) {
+.partner_list ul li.partner_inx .partner_img{height: 160px;width: 300px;}
+.partner_list ul li.partner_inx .partner_img img{max-width: 250px; max-height: 100px;}
+.partner_list ul li.partner_inx .partner_txt{width: 65%;}
+}
+@media only screen and (max-width: 1024px) {
+.partner_list ul li.partner_inx .partner_txt .next_ico{margin-left: 0px;opacity: 1;}
+.partner_list ul li.partner_inx:hover .partner_txt .next_ico{margin-left: 0px;opacity: 1;}
+.learn_more_n{position: relative;padding-bottom: 200px;}
+.learn_more_n .p1{top: 20%;width: 70%;padding: 0 15%;}
+.learn_more_n .p2{top: 35%;width: 70%;padding: 0 15%;}
+.learn_more_n .more_w{top: 65%;}
+}
+@media only screen and (max-width: 960px) {
+/*.mypartner ul li.partner_inx .partner_img{padding-bottom: 150px;width: 300px;}*/
+.partner_list ul li.partner_inx .partner_txt{width: 60%;}
+}
+@media only screen and (max-width: 860px) {
+.mypartner ul li.partner_inx .partner_txt{width: 55%;}
+}
+@media only screen and (max-width: 768px) {
+	.partner_list ul li.partner_inx .partner_img{height: 155px;width: 280px;}
+	.partner_list ul li.partner_inx .partner_txt{width: 55%;}
+	.learn_more_n .p1{top: 20%;width: 90%;padding: 0 5%;}
+	.learn_more_n .p2{top: 35%;width: 90%;padding: 0 5%;
+	-webkit-line-clamp: 3;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	line-height: 1.7em;
+	height:5.1em; /*瀹瑰櫒楂樺害锛堣鏁�琛岄棿璺濓級*/
+	}
+	.learn_more_n .more_w{top: 70%;}
+	.learn_more_n .more_w a{height: 30px;line-height: 30px;}
+}
+@media only screen and (max-width: 720px) {
+	.partner_list ul li.partner_inx{margin-bottom: 10px;}
+}
+@media only screen and (max-width: 680px) {
+	.partner_list ul li.partner_inx .partner_img{height: 150px;width: 100%;}
+	.partner_list ul li.partner_inx .partner_txt{width: 100%;margin-top: 20px;}
+}

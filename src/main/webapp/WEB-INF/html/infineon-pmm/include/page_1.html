@@ -1,0 +1,111 @@
+
+
+<#--
+栏目翻页样式
+1 2 3 4 5 ... 10 <1-3>
+1 ..2 3 4 5 6 ... 10 <4>
+1 ..3 4 5 6 7... 10  <5>
+-->
+
+<#assign n=3/>
+<#assign m=3/>
+<#assign b=2/>
+<#assign p=out_page/>
+
+<div id="page1" class="gopage pt_40 pb_75">
+
+<#if p.totalPage gt 1>
+<#if p.firstPage>
+<a class="fnt_16 on disabled"  href="javascript:void(0);">上一页</a>
+<#else>
+<a class="fnt_16 on" href="javascript:goPage(${p.prevPage});">上一页</a>
+</#if>
+</#if>
+<#if p.totalPage gte n><!-- totalPage 每页显示记录数 -->
+		<#if p.currentPage lte m><!--currentPage 当前页  -->
+			<#list 1..n as page>
+			<a <#if page==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(${page});">${page!}</a>
+			</#list>
+			<#if p.totalPage gt 4>
+				<a href="javascript:;">...</a>
+			</#if>
+			<a <#if p.totalPage==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(${p.totalPage});">${p.totalPage!}</a>
+		<#elseif p.currentPage gt p.totalPage-m><!-- 之前是>，页面有问题 -->
+			<a <#if 1==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(1)">1</a>
+			<a href="javascript:;">...</a>
+			<#list p.totalPage-n+1..p.totalPage as page>
+				<a <#if page==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(${page});">${page!}</a>
+			</#list>
+		<#else>
+			<a <#if 1==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(1);">1</a>
+			<a href="javascript:;" >...</a>
+			<#list p.currentPage-b..p.currentPage+b as page>
+				<a <#if page==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(${page});">${page!}</a>
+			</#list>
+			<#if (p.totalPage-p.currentPage) gt m>
+				<a href="javascript:;">...</a>
+			</#if>
+			<a <#if p.totalPage==p.currentPage>class="on"<#else>class="fnt_14 trans"</#if> href="javascript:void(0);" onclick="javascript:goPage(${p.totalPage});">${p.totalPage!}</a>
+		</#if>
+<#elseif p.totalPage gt 1>
+	<#list 1..p.totalPage as page>
+		<a <#if page==p.currentPage>class="on"<#else></#if> href="javascript:void(0);" onclick="javascript:goPage(${page});">${page!}</a>
+	</#list>
+</#if>
+<#if p.totalPage gt 1>
+<#if p.lastPage>
+<a class="fnt_16 on disabled"  href="javascript:void(0);">下一页</a>
+<#else>
+<a class="fnt_16 on" href="javascript:void(0);" onclick="javascript:goPage(${p.nextPage});">下一页</a>
+</#if>
+</#if>
+</div> 
+<script type="text/javascript">
+var ischannel="${isChannel!}";
+var isSelect="${isSelect!}";
+var type="${type!}";
+var typeId="${typeId!}";
+var url="${pageHref!}";
+var isSerach="${isSerach!}";
+var keyword="${keyword!}";
+function goPage(page){
+	var params={};
+	params["isChannel"]=ischannel;
+	params["isSelect"]=isSelect;
+	params["type"]=type;
+	params["typeId"]=typeId;
+	params["currentPage"]=page;
+	if(isSerach=='1'){
+		params["keyword"]=keyword;
+	}
+	doPost(url,params);
+}
+function doPost(to, p) {
+    var myForm = document.createElement("form");
+    myForm.method = "post";  
+    myForm.action = to;
+    for (var i in p){
+       var myInput = document.createElement("input");       
+       myInput.setAttribute("name", i);  // 为input对象设置name  
+       myInput.setAttribute("value", p[i]);  // 为input对象设置value  
+       myForm.appendChild(myInput);  
+   }     
+   document.body.appendChild(myForm);     
+   myForm.submit();
+   document.body.removeChild(myForm);  // 提交后移除创建的form  
+}
+function go(){
+	if($("#go").val().length==0){
+		return;
+	}
+	if($("#go").val()>${p.totalPage}){
+		goPage(${p.totalPage});
+		return;
+	}
+	if($("#go").val()<=0){
+		goPage(1);
+		return;
+	}
+	goPage($("#go").val());
+}
+</script>

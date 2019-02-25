@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="PhoneMapper" >
+  <resultMap id="PhoneMap" type="cn.cebest.entity.system.Phone" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result property="createTime" column="CREATED_TIME" jdbcType="VARCHAR"/>
+	<result property="updateTime" column="UPDATE_TIME" jdbcType="VARCHAR"/>
+  </resultMap>
+ 
+ 	<!-- 保存个人信息 -->
+	 <insert id="save" parameterType="cn.cebest.entity.system.Phone">
+		INSERT INTO WEB_PHONE (
+			ID,
+			USERNAME,
+			PHONE,
+			PASSWORD,
+			CREATE_TIME,
+			UPDATE_TIME
+		)
+		VALUES
+			(#{id},#{username},#{phone},#{password},#{createTime},#{updateTime})
+	</insert> 
+  
+  	<!-- 查询个人信息列表 -->
+  	<!-- <select id="selectPersonagelistPage" resultMap="PersonageMap" parameterType="page">
+		SELECT ID,NAME,PHONE,PASSWORD,EMAIL,PROVINCE,CITY,COUNTY,FLAG,CREATED_TIME
+		FROM WEB_PERSONAGE
+		ORDER BY CREATED_TIME
+	</select> -->
+  		<!-- 批量删除 -->
+  	<!-- <delete id="deleteByIds">
+    delete from WEB_PERSONAGE
+    where ID in 
+   	<foreach collection="array" item="item" index="index" open="(" separator="," close=")">  
+        #{item}
+    </foreach>
+  	</delete> -->
+  	<!-- 通过手机号查询 -->
+   <select id="findPersonageByPhone" resultMap="PhoneMap" parameterType="pd">
+		SELECT
+			P. PASSWORD,
+			P.PHONE,
+			P.USERNAME
+		FROM
+			WEB_PHONE P
+		WHERE P.PHONE = #{phone} AND P.USERNAME= #{username}
+	</select>
+  	
+  	<!-- 修改密码 -->
+  	<!-- <update id="updatePersonageById" parameterType="cn.cebest.entity.system.personage.Personage">
+		UPDATE WEB_PERSONAGE
+		<set>
+			<if test="name !=null and name !='' ">NAME=#{name},</if>
+			<if test="phone !=null and phone !='' ">PHONE=#{phone},</if>
+			<if test="password !=null and password !='' ">PASSWORD=#{password},</if>
+			<if test="email !=null and email !='' ">EMAIL=#{email},</if>
+			<if test="province !=null and province !='' ">PROVINCE=#{province},</if>
+			<if test="city !=null and city !='' ">CITY=#{city},</if>
+			<if test="county !=null and county !='' ">COUNTY=#{county},</if>
+			UPDATE_TIME=#{update_time},
+			FLAG=#{flag}
+		</set>
+		WHERE ID=#{id}
+	</update> -->
+  	<!-- 根据手机号去修改密码 -->
+   	<update id="updatePassword" parameterType="pd">
+		UPDATE WEB_PHONE
+		
+		set PASSWORD=#{password},UPDATE_TIME=#{updateTime}
+		
+		WHERE PHONE=#{phone}
+	</update>
+  	 
+  	
+  	
+  	<!-- 查看原密码 -->
+  	<!-- <select id="selectOldPass" parameterType="pd" resultMap="PersonageMap">
+  		SELECT ID,NAME,PHONE,PASSWORD,EMAIL,PROVINCE,CITY,COUNTY,FLAG,CREATED_TIME
+		FROM WEB_PERSONAGE WHERE ID=#{id} AND PASSWORD=#{password}
+  	</select> -->
+  	
+  	<!-- 登录 -->
+  	<select id="login" parameterType="pd" resultMap="PhoneMap">
+  		SELECT
+			P.ID,
+			P.USERNAME,
+			P.PHONE,
+			P. PASSWORD
+		FROM
+			WEB_PHONE P
+		WHERE
+			PHONE = #{phone}
+		AND PASSWORD = #{password}
+  	</select>
+  	
+</mapper>

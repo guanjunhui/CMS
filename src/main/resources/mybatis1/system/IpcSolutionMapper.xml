@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="IpcSolutionMapper">
+	<!-- 根据userId查询站内信列表 -->	<select id="getSolutionByCondationlistPage" parameterType="pd" resultType="hashmap">		SELECT			WI.IMGURL AS surfaceImageUrl,			WCT.CONTENT_SUMMARY contentSummary,			WCT.CONTENT_TITLE contentTitle,			WCT.SUBTITLE subTitle,			WS.ID AS contentUrlName		FROM 			WEB_COLUMCONFIG WC		LEFT JOIN WEB_CONTENT_COLUM WCC ON WC.ID=WCC.COLUMNID		LEFT JOIN WEB_CONTENT WCT ON WCC.CONTENTID=WCT.ID		LEFT JOIN WEB_IMAGE WI ON WI.IMAGE_ID=WCT.SURFACE_IMAGEID		LEFT JOIN WEB_SKIPPATH WS ON WCT.ID=WS.CONTENTID		WHERE			WC.ID = #{userId}			<if test="queryKey!=null and queryKey != ''">				AND WCT.CONTENT_TITLE like concat('%','${queryKey}','%')			</if>		ORDER BY 			WCT.RELEASE_TIME DESC	</select>	</mapper>

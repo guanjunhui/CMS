@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AnswerMapper">
+	<delete id="delete" parameterType="pd">
+		delete from
+		EASYAPP_SURVEY_ANSWER
+		where ANSWER_ID = #{ANSWER_ID}
+	</delete>
+	<insert id="insert" parameterType="pd">
+		insert into EASYAPP_SURVEY_ANSWER
+		(CONTENT,UUID,USER_ID,QUESTION_ID,SURVEY_ID,CREAT_TIME,STATUS)
+		values
+		(#{CONTENT},#{UUID},#{USER_ID},#{QUESTION_ID},#{SURVEY_ID},#{CREAT_TIME},#{STATUS})
+	</insert>
+	<update id="edit" parameterType="pd">
+		update
+		EASYAPP_SURVEY_ANSWER
+		<set>
+			<if test="CONTENT !=null">
+		    set CONTENT = #{CONTENT},
+			</if>
+			<if test="UUID !=null">
+			  set UUID = #{UUID},
+			</if>
+			<if test="CREAT_TIME !=null">
+		    set CREAT_TIME = #{CREAT_TIME},
+			</if>
+			<if test="STATUS !=null">
+			  set STATUS = #{STATUS},
+			</if>
+		</set>
+		where ANSWER_ID = #{ANSWER_ID}
+	</update>
+	<select id="findById" parameterType="pd" resultType="pd">
+		select ANSWER_ID,CONTENT,UUID,USER_ID,QUESTION_ID,SURVEY_ID,CREAT_TIME,STATUS
+		from EASYAPP_SURVEY_ANSWER
+		where ANSWER_ID = #{ANSWER_ID}
+	</select>
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select ANSWER_ID,CONTENT,UUID,USER_ID,QUESTION_ID,SURVEY_ID,CREAT_TIME,STATUS
+		from EASYAPP_SURVEY_ANSWER
+	</select>
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT ANSWER_ID,CONTENT,UUID,USER_ID,QUESTION_ID,SURVEY_ID,CREAT_TIME,STATUS
+		FROM
+		EASYAPP_SURVEY_ANSWER
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and (
+					QUESTION_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+			</if>
+		</where>
+	</select>
+		<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		EASYAPP_SURVEY_ANSWER
+		where 
+			ANSWER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+   <insert id="batchSave" parameterType="list">
+		insert into EASYAPP_SURVEY_ANSWER (CONTENT,UUID,USER_ID,QUESTION_ID,SURVEY_ID,CREAT_TIME)
+		values
+		<foreach collection="list" item="answer" separator=",">
+			(#{content},#{uuid},#{user_id},#{question_id},#{survey_id},#{create_time})
+		</foreach>
+	</insert> 
+</mapper>

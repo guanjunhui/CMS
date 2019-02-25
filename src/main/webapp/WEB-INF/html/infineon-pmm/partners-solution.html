@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/partners-solution.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<@colum_detail columId="fb65fe99fc574aa4844646d83bc428a0">
+	<#if out_bean??>
+		<div class="innerBanner prz">
+			<img src="${imgPath}${out_bean.PIC_PATH!}" alt="">
+			<div class="innerBox pra">
+				<div class="wrap">
+					<p class="chTil fnt_32 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_NAME!}</p>
+					<p class="line wow fadeInUp" data-wow-duration="1.5s"><span></span></p>
+					<p class="enTil fnt_22 wow fadeInUp" data-wow-duration="1.5s">${out_bean.COLUM_SUBNAME!}</p>
+				</div>
+			</div>
+		</div>
+	</#if>
+</@colum_detail>
+
+	<div class="positionBox">
+		<div class="wrap">
+			<a href="${autoPath}" class="fnt_14">首页 > </a>
+			<#if columConfigTop?? && columConfigTop?size gt 0>
+				<a href="${autoPath}/channel/${columConfigTop.columUrlName}.html" class="fnt_14">${columConfigTop.columName!} > </a>
+			</#if>
+			<a href="javascript:;" class="fnt_14 active">加入我们</a>
+		</div>
+	</div>
+
+
+<div class="partner_solu wrap pt_55 pb_85">
+<@content_list currentId="${template.columId!}" sort="sort">
+	<#if out_list?? && out_list?size gt 0>
+		<div class="partner_solu1">
+			<p class="fnt_32 bt wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">${out_list[0].contentTitle!}</p>
+			<p class="partner_solu1_txt mt_40 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1s">${out_list[0].contentSummary!}</p>
+			<img class="mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s" src="${imgPath}${out_list[0].surface_imageurl!}"/>
+		</div>
+		<div class="partner_solu2 pt_75">
+			<p class="fnt_32 bt wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">加入生态圈您将可以获得</p>
+			<div class="partner_solu2_list pt_40 pb_60">
+				<#if out_list[1]?? && out_list[1]?size gt 0>
+					<#list out_list[1].fileds as filed>
+						<div class="partner_solu2_inx pt_30 pb_40 fl wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">
+							<img src="${autoPath}/staticRelease/img/right2.png"/>
+							<p class="fnt_16 mt_30 p1">${filed.name}</p>
+							<p class="fnt_14 mt_10 p2">${filed.value}</p>
+						</div>
+					</#list>
+				</#if>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</#if>
+</@content_list>
+	<div class="partner_solu3">
+		<p class="fnt_32 bt">加入生态圈的流程</p>
+		<div class="partner_solu3_b pt_40">
+			<div class="partner_solu3_inx fl pt_30 pb_40 fl wow fadeInLeft" data-wow-delay="0.5s" data-wow-duration="1s">
+				<p class="p1 fnt_20">发布解决方案的流程：</p>
+				<p class="p2 fnt_16">
+					1.注册成为英飞凌电源与传感社区会员<br />
+					2.成为英飞凌合作伙伴
+				</p>
+				<div class="p3_w">
+					<p class="p3 fnt_14">1. 联系我们 PMMCOM@Infineon.com，提供公司基本信息</p>
+					<p class="p3 fnt_14">2. 签约成为合作伙伴</p>
+				</div>
+				<p class="moreBtn mt_45">
+					<a href="#" class="fnt_14">加入我们</a>
+				</p>
+			</div>
+			<div class="partner_solu3_inx fl pt_30 pb_40 fl wow fadeInRight" data-wow-delay="0.5s" data-wow-duration="1s">
+				<p class="p1 fnt_20">寻找解决方案的流程：</p>
+				<p class="p2 fnt_16">
+					1.注册成为英飞凌电源与传感社区会员<br />
+					2.在英飞凌电源与传感社区找到满足的成熟方案
+				</p>
+				<div class="p3_w">
+					<p class="p3 fnt_14"></p>
+					<p class="p3 fnt_14"></p>
+				</div>
+				<p class="moreBtn mt_45">
+					<a href="#" class="fnt_14">加入我们</a>
+				</p>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+<@form_itemsList formId='2b54d18edace4b3c8e0c99cf9ce543f1'>
+	<#if out_list2??>
+		<#assign itemList=out_list2/>
+	</#if>
+</@form_itemsList>
+<form id="form">
+<div class="SolutionForm">
+	<div class="SolutionFormBox pra">
+		<div class="SolutionFormBoxes">
+			<img src="${autoPath}/staticRelease/img/fromLogo.png" alt="">
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[0].attrName)!}</p>
+				<input type="text" class="fl username" id="company" name="${(itemList[0].id)!}" placeholder="请输入您的公司名称">
+			</div>
+			<em style="color:red" id="company1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[1].attrName)!}</p>
+				<input type="text" class="fl phone" id="position" name="${(itemList[1].id)!}" placeholder="请输入您的职务">
+			</div>
+			<em style="color:red" id="position1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[2].attrName)!}</p>
+				<input type="text" class="fl email" id="username" name="${(itemList[2].id)!}" placeholder="请输入您的姓名">
+			</div>
+			<em style="color:red" id="username1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[3].attrName)!}</p>
+				<input type="text" class="fl company" id="email" name="${(itemList[3].id)!}" placeholder="请输入您的邮箱">
+			</div>
+			<em style="color:red" id="email1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[4].attrName)!}</p>
+				<input type="text" class="fl fangan" id="phone" name="${(itemList[4].id)!}" placeholder="请输入您的手机号码">
+			</div>
+			<em style="color:red" id="phone1"></em>
+			<div class="SolutionForm_inputBox clearfix">
+				<p class="fl SolutionForm_inputTil fnt_16">${(itemList[5].attrName)!}</p>
+				<textarea  class="fl" name="${(itemList[5].id)!}" id="reason" placeholder="请简要说明参加此活动的理由"></textarea>
+			</div>
+			<em style="color:red" id="reason1"></em>
+			<p class="SolutionForm_btn"><a href="javascript:;" id="save" class="fnt_18">提交</a></p>
+		</div>
+		<a href="javascript:;" class="pra SolutionForm_close"><img src="${autoPath}/staticRelease/img/close.png" alt=""></a>
+	</div>
+</div>
+</form>
+
+<div class="fixBox">
+	<div class="content pra"></div>
+</div>
+
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/baseData.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/jquery-util.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+<script type="text/javascript">
+var userId = "${((_const_cas_assertion_.principal.attributes.id))!}"
+	var aClick = $('.partner_solu3 .partner_solu3_b .partner_solu3_inx .moreBtn a');
+	aClick.click(function(){
+		if(userId == null || userId == ''){
+			var path = window.location.href;
+			window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/channel/join"
+			return false;
+		}
+		$('.SolutionForm').toggle();
+		$("#username1").text('');
+		$("#email1").text('');
+		$("#phone1").text('');
+		$("#company1").text('');
+		$("#reason1").text('');
+		$("#position1").text('');
+	})
+	$('.SolutionForm .SolutionFormBox .SolutionForm_close').click(function(){
+		$('.SolutionForm').hide();
+	})
+	
+//获取输入框长度
+function length(obj){
+	var val = obj.val();
+	//获取字符长度
+	var len = 0;  		
+	for (var i=0; i<val.length; i++) {  
+		if (val[i].match( /^[\u4E00-\u9FA5]{1,}$/)) {  
+		 	len += 2;  
+		} else {  
+		    len ++;  
+		} 			
+	}  
+	return len;
+}
+$(function(){
+	$("#username").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len > 100){
+			$("#username1").text('您输入的姓名过长，请重新输入');
+			return;
+		}
+		if(len == 0){
+			$("#username1").text('姓名不能为空，请重新输入');
+			return;
+		}
+	}).focus(function(){
+		$("#username1").text('');
+	});
+	$("#phone").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len == 0){
+			$("#phone1").text('手机号不能为空，请重新输入');
+			return;
+		}
+		if(len > 17){
+			$("#phone1").text('您输入的手机号过长，请重新输入');
+			return;
+		}
+		
+	}).focus(function(){
+		$("#phone1").text('');
+	});
+	$("#email").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len == 0){
+			$("#email1").text('邮箱不能为空，请重新输入');
+			return;
+		}
+	}).focus(function(){
+		$("#email1").text('');
+	});
+	$("#company").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len == 0){
+			$("#company1").text('公司名不能为空，请重新输入');
+			return;
+		}
+		if(len > 150){
+			$("#company1").text('您输入的地址过长，请重新输入');
+			return;
+		}
+	}).focus(function(){
+		$("#company1").text('');
+	});
+	$("#position").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len == 0){
+			$("#position1").text('职务不能为空，请重新输入');
+			return;
+		}
+		if(len > 100){
+			$("#position1").text('您输入的职务过长，请重新输入');
+			return;
+		}
+	}).focus(function(){
+		$("#position1").text('');
+	});
+	$("#reason").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var len = length(_this);
+		if(len == 0){
+			$("#reason1").text('公司简介不能为空，请重新输入');
+			return;
+		}
+	}).focus(function(){
+		$("#reason1").text('');
+	});
+	
+	$("#save").click(function(){
+		
+		var username = $("#username");
+		var phone = $("#phone");
+		var email = $("#email");
+		var company = $("#company");
+		var position = $("#position");
+		var reason = $("#reason");
+		var flag = true;
+		if(length(username) == 0){
+			$("#username1").text('姓名不能为空，请重新输入');
+			flag = false;
+		}
+		if(length(phone) == 0){
+			$("#phone1").text('手机号不能为空，请重新输入');
+			flag = false;
+		}
+		if(length(email) == 0){
+			$("#email1").text('邮箱不能为空，请重新输入');
+			flag = false;
+		}
+		if(length(company) == 0){
+			$("#company1").text('公司名不能为空，请重新输入');
+			flag = false;
+		}
+		if(length(position) == 0){
+			$("#position1").text('职务不能为空，请重新输入');
+			flag = false;
+		}
+		if(length(reason) == 0){
+			$("#reason1").text('公司简介不能为空，请重新输入');
+			flag = false;
+		}
+		if(!flag){
+			return false;
+		}
+			var formJson={};
+			//表单信息
+			var formData = $("#form").jsonObject();
+			formJson.itemsData=formData;
+			 $.ajax({
+				type: "POST",
+				url:"/customformsubmit/beinengSave",
+				data:JSON.stringify(formJson),
+				dataType:'json',
+				contentType:'application/json;charset=utf-8',
+				success: function(result){
+					$('.SolutionForm').hide();
+					$("#form")[0].reset();
+				}
+			});
+			
+			
+			$.ajax({
+				type : "POST",
+				url : "/stationMessage/addMessage",
+				data:{
+					"toUserId" : userId,
+					"title" : ""
+				},
+				dataType : "json",
+				success : function(data) {
+					
+				}// end success
+			});//ajax end
+		
+		});
+
+});
+function bottomDivHeightResize() {
+	var h1=$(".partner_solu3_b .partner_solu3_inx:nth-child(1)").height();
+    var h2=$(".partner_solu3_b .partner_solu3_inx:nth-child(2)").height();
+    var h3=$(".partner_solu3_b").height();
+    if(h1!=h2){
+        $(".partner_solu3_b .partner_solu3_inx:nth-child(1)").height(h3-100)
+        $(".partner_solu3_b .partner_solu3_inx:nth-child(2)").height(h3-100)
+	}
+}
+
+$(document).ready(function(){
+    bottomDivHeightResize()
+});
+$(window).resize(function () {
+    bottomDivHeightResize()
+})
+
+</script>
+</body>
+</html>          

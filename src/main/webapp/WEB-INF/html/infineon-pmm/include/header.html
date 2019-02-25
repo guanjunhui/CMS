@@ -1,0 +1,310 @@
+<script type="text/javascript" src="/../staticRelease/js/baseData.js"></script>
+<div class="header trans">
+	<div class="wrap clearfix">
+		<div class="logo fl">
+			<a href="${autoPath}"><img src="${autoPath}/staticRelease/img/logo.png"></a>
+		</div>
+		<div class="headeRight fr clearfix">
+		
+		
+			<ul class="fl navBox clearfix">
+			<@colum_list groupId='88832e840bd44e77b7be88e2662cb32b'>
+            	<#if out_list?? && out_list?size gt 0>
+            		<#list out_list as out>
+					<#if out_index == 1 || out_index == 2>
+						<li class="fl navLi prz">
+							<a href="${autoPath}/channel/${out.columUrlName!}" class="fnt_16 trans">${out.columName!}</a>
+							<p class="navLine pra trans"></p>
+							<div class="second-nav-w">
+								<ol class="second-nav wrap">
+								<p class="p1 fnt_14" style="color: #666;width: 100%;font-weight: bold;">*按标签筛选</p>
+								<@colum_typeList columId="${out.id!}">
+									<#if out_list?? && out_list?size gt 0>
+										<#list out_list as list>
+											<li class="ol-li">
+												<p class="er_bt">${list.name!}</p>
+												<ul class="san_nav">
+												<#if list.childList ?? && list.childList? size gt 0 >
+													<#list  list.childList as childData>
+													<li class="fl"><a href="${autoPath}/channel/${out.columUrlName!}?typeId=${childData.id!}" title="${childData.name!}">${childData.name!}</a></li>
+													</#list>
+												</#if>
+												</ul>
+											</li>
+										</#list>
+											
+									</#if>
+								</@colum_typeList>
+									
+							 	</ol>
+							</div>
+						</li>
+					<#else>	
+						<li class="fl navLi prz">
+							<a href="${autoPath}/channel/${out.columUrlName}" class="fnt_16 trans">${out.columName!}</a>
+							<p class="navLine pra trans"></p>
+							<!--2级导航  -->
+							 <#if out.subConfigList?? && out.subConfigList?size gt 0>
+							 		<div class="second-nav-w">
+										<ol class="second-nav wrap second-nav2">
+											<li class="ol-li">
+												<ul class="san_nav">
+								 					<#list out.subConfigList as sub>
+														<a class="fl" href="${autoPath}/channel/${sub.columUrlName}">${sub.columName!}</a>
+												 	</#list>
+													<div class="clear"></div>
+												</ul>
+											</li>
+									 	</ol>
+									</div>
+							 </#if>
+						</li>
+					</#if>
+					
+				</#list>
+				
+            	</#if>
+            </@colum_list>
+			</ul>
+			
+			<div class="rightBtn fl clearfix pcBtn">
+				<a href="javascript:;" class="fl searchBox prz">
+					<img src="${autoPath}/staticRelease/img/searchBg.png"/>
+				</a>
+				<#if (_const_cas_assertion_.principal.attributes.id)??>
+					
+					<p class="userBtn fl">
+						<a href="javascript:;" class="on"></a>
+						<span class="pc_hasLogin">
+							<a href="${autoPath}/channel/center">个人中心</a>
+							<a href="javascript:;" class="logOut">退出登录</a>
+						</span>
+					</p>
+				<#else>
+					<p class="fl loginBtn cleargap">
+						<a href=""+baseData.loginUrl+"" class="fnt_16 casloginurl">登录</a>
+						<a href="${autoPath}/jump/register.html" class="fnt_16">注册</a>
+					</p>
+				</#if>
+			</div>
+			<div class="wapBtn fl clearfix">
+				<div class="userBtn fl prz">
+					<a href="javascript:;"></a>
+					<div class="wapLoginBox pra">
+						
+						<#if (_const_cas_assertion_.principal.attributes.id)??>
+							<div class="noLogin">
+								<p><a href="${autoPath}/channel/center" class="fnt_16">个人中心</a></p>
+								<p><a href="javascript:;" class="fnt_16 logOut">退出登录</a></p>
+							</div>
+						<#else>
+							<div class="noLogin">
+								<p><a href=""+baseData.loginUrl+"" class="fnt_16 casloginurl">登录</a></p>
+								<p><a href="${autoPath}/jump/register.html" class="fnt_16">注册</a></p>
+							</div>
+						</#if>
+					</div>
+				</div>
+				<p class="fl searchBox prz">
+					<input type="text" >
+					<a href="javascript:;" class="searchBtn pra"></a>
+				</p>
+			</div>
+			<div class="search_down pt_30 pb_30">
+				<form class="clearfix" id="searchForm" action="${autoPath}/search/tosearchResult" method="post">
+					<div class="search_w">
+						<input class="fl fnt_16 search_button" type="text" name="keyword" id="keywords" value="" placeholder="请输入关键词"/>
+						<input class="fl" type="submit" name=""  value="" onclick="javascript:tosearch()"/>
+					</div>
+				</form>
+			</div>
+			<div class="nav_btn pra">
+				<span></span>
+			</div>
+		</div>
+
+	</div>
+	
+	<script type="text/javascript">
+		//初始化登出路径
+		$(".logOut").attr("href",baseData.logoutUrl + "?service=https://power-sensor.infineon.cn:443/");
+		$(".casloginurl").attr("href",baseData.loginUrl + "?service=https://power-sensor.infineon.cn:443/");
+	
+		$('.header .searchBox').click(function(){
+			$('.search_down').slideToggle(200);
+		})
+		$(window).scroll(function(){
+			$('.search_down').slideUp(200);
+		})
+		//图标点击显示/隐藏登录注册或退出和个人中心
+		$(".pcBtn .userBtn").hover(function(){
+			$(this).find('a').siblings('span.pc_hasLogin').css({
+				'display':"block"
+			});
+			
+			
+		},function(){
+			$(this).find('a').siblings('span.pc_hasLogin').css({
+				'display':"none"
+			});
+		})
+		var tagger = null;
+		$('.header .navBox .navLi').hover(function(){
+			tagger=setTimeout(function(){
+				$('.search_down').slideUp(200);
+			},300);
+		},function(){
+			clearTimeout(tagger);
+		})
+		function tosearch(){
+			var keyword = $("#keywords").val();
+			if(keyword.length==0){
+				return;
+			}else{
+				$("#searchForm").submit();
+				//window.location.href="${autoPath}/search/tosearchResult?keyword="+encodeURI(encodeURI(keyword));
+			}
+		}
+		 $('.search_button').keydown(function(e){
+			if(e.keyCode == 13){
+				tosearch();
+			}
+		}); 
+		 
+	</script>
+	<!-- 响应式导航 -->
+	<div class="wapNav">
+		<ul class="wapNavFrist">
+		<@colum_list groupId='88832e840bd44e77b7be88e2662cb32b'>
+            	<#if out_list?? && out_list?size gt 0>
+            		<#list out_list as out>
+					<#if out_index == 1 || out_index == 2>
+					
+					<li class="wapNavFrist-li">
+						<a href="${autoPath}/channel/${out.columUrlName!}" class="fnt_20">${out.columName!}</a>
+						<ul class="wapNavSecond-ul">
+					
+							<@colum_typeList columId="${out.id!}">
+								<#if out_list?? && out_list?size gt 0>
+									<#list out_list as list>
+									<li class="wapNavSecond-li">
+										<p class="er_bt">${list.name!}</p>
+										<ul class="md_san_nav">
+											<#if list.childList ?? && list.childList? size gt 0 >
+												<#list  list.childList as childData>
+												<li>
+													<a href="${autoPath}/channel/${out.columUrlName}" class="fnt_16">${childData.name!}</a>
+												</li>
+												</#list>
+											</#if>
+										</ul>
+									</li>
+									</#list>
+								</#if>
+							</@colum_typeList>
+									
+						</ul>
+					</li>
+					<#else>	
+						<li class="wapNavFrist-li">
+							<a href="${autoPath}/channel/${out.columUrlName}" class="fnt_20">${out.columName!}</a>
+							
+							<!--2级导航  -->
+							 <#if out.subConfigList?? && out.subConfigList?size gt 0>
+							 	<ul class="wapNavSecond-ul">
+								 	<#list out.subConfigList as sub>
+										<li class="wapNavSecond-li wapNavSecond-li2"><a href="${autoPath}/channel/${sub.columUrlName}" class="fnt_16">${sub.columName!}</a></li>
+									</#list>
+								</ul>
+							 </#if>
+						</li>
+					</#if>
+				</#list>
+            	</#if>
+            </@colum_list>
+		</ul>
+	</div>
+</div>
+<script>
+//手机导航
+$('.header .wapNavSecond-li .er_bt').click(function(){
+	$(this).parent().find('.md_san_nav').toggle();
+	$(this).parent().siblings().find('.er_bt').removeClass("on");
+	$(this).parent().siblings().find('.md_san_nav').hide();
+	$(this).toggleClass('on');
+})
+$(function(){
+	$(window).resize(function(){
+        if($(window).width()>1200){
+            $('.wapNav').hide();
+        }
+    }).resize()
+	$('.nav_btn').click(function(){
+        $('.header').toggleClass('btn_click');
+        if($('.header').hasClass('btn_click')){
+            $('.wapNav').fadeIn();
+        }else{
+            $('.wapNav').fadeOut();
+        }
+    });
+    var headerNavLis=$('.header .navBox .navLi');
+	headerNavLis.hover(function(){
+		$(this).addClass('active').find('.second-nav').slideDown();
+	},function(){
+		$(this).removeClass('active').find('.second-nav').stop().slideUp();
+	});
+
+	$('.wapNavFrist-li').each(function(){
+        if($(this).find('.wapNavSecond-li').size()>0){
+            $(this).addClass('hasSecond')
+        }
+    })
+    $('.wapNavSecond-li').each(function(){
+        if($(this).find('.wapNavThi-li').size()>0){
+            $(this).addClass('hasSecond')
+        }
+    })
+
+    $('.wapNavFrist-li').on('click',function(){
+        if($(this).find('.wapNavSecond-ul').find('li').size()>0){
+            if($(this).find('.wapNavSecond-ul').css('display')=='none'){
+                $('.wapNavFrist-li').removeClass('active');
+                $('.wapNavFrist-li').find('.wapNavSecond-ul').hide();
+                $('.wapNavSecond-li').removeClass('active');
+                $('.wapNavSecond-li').find('.wapNavThi-ul').hide();
+                $(this).addClass('active');
+                $(this).find('.wapNavSecond-ul').show();
+
+                return false;
+            }else{
+                // $(this).removeClass('active');
+                // $(this).find('.wapNavSecond-ul').hide();
+                // return false;
+            }
+        }
+    });
+})
+</script>
+<script type="text/javascript">
+$(function(){
+	var this_li = $('.header .navBox .navLi ol.second-nav li.ol-li .san_nav li');
+	var i;
+		for (i=0;i<this_li.length;i++) {
+			
+			var str = this_li.eq(i).find('a').text();
+			var l = str.length; 
+			var blen = 0; 
+				for(z=0; z<l; z++) { 
+				if ((str.charCodeAt(z) & 0xff00) != 0) { 
+					blen ++; 
+				} 
+				blen ++; 
+				}
+
+			if(blen<16){
+				this_li.eq(i).find('a').attr("title","");
+			}
+			
+		}
+	})
+</script>

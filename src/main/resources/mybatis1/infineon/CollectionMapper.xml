@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CollectionMapper">
+	
+	<resultMap type="cn.cebest.entity.system.infineon.Collection" id="BaseResultMap">
+		<id column="ID" property="id"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="RESOURCE_ID" property="resourceId"/>
+		<result column="RESOURCE_TYPE" property="resourceType"/>
+		<result column="columUrlName" property="columUrlName"/>
+		<result column="contentUrlName" property="contentUrlName"/>
+		<result column="CREATE_TIME" property="createTime"/>
+	</resultMap>
+	
+	
+	
+	<select id="getSolutionlistPage" parameterType="page" resultType="java.util.HashMap">
+		SELECT
+			C.ID,C.CONTENT_TITLE,C.CONTENT_SUMMARY,
+			DATE_FORMAT(C.CREATED_TIME,'%Y-%m-%d') CREATE_TIME,
+			I.IMGURL AS SURFACE_IMAGEURL,WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_COLLECTION WC ON WC.RESOURCE_ID = C.ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID = CCT.COLUMNID
+		WHERE 
+			WC.USER_ID = #{pd.userId} AND WC.RESOURCE_TYPE = '1'
+			GROUP BY ID
+			ORDER BY C.CREATED_TIME DESC
+	</select>
+	
+	<select id="getPartnerlistPage" parameterType="page" resultType="java.util.HashMap">
+		SELECT
+			C.ID,C.CONTENT_TITLE,C.CONTENT_SUMMARY,
+			DATE_FORMAT(C.CREATED_TIME,'%Y-%m-%d') CREATE_TIME,
+			I.IMGURL AS SURFACE_IMAGEURL,WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_COLLECTION WC ON WC.RESOURCE_ID = C.ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID = CCT.COLUMNID
+		WHERE 
+			WC.USER_ID = #{pd.userId} AND WC.RESOURCE_TYPE = '2'
+			GROUP BY ID
+			ORDER BY C.CREATED_TIME DESC
+	</select>
+	
+	<select id="getVideolistPage" parameterType="pd" resultType="java.util.HashMap">
+		SELECT
+			C.ID,C.CONTENT_TITLE,C.CONTENT_SUMMARY,
+			DATE_FORMAT(C.CREATED_TIME,'%Y-%m-%d') CREATE_TIME,
+			I.IMGURL AS SURFACE_IMAGEURL,WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_COLLECTION WC ON WC.RESOURCE_ID = C.ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID = CCT.COLUMNID
+		WHERE 
+			WC.USER_ID = #{pd.userId} AND WC.RESOURCE_TYPE = '3'
+			GROUP BY ID
+			ORDER BY C.CREATED_TIME DESC
+	</select>
+	
+	<select id="getColl" parameterType="cn.cebest.entity.system.infineon.Collection" resultType="string">
+		SELECT ID FROM WEB_COLLECTION 
+		WHERE USER_ID=#{userId} AND RESOURCE_ID=#{resourceId} AND RESOURCE_TYPE=#{resourceType}
+	</select>
+	
+	<insert id="saveCollection" parameterType="cn.cebest.entity.system.infineon.Collection">
+		INSERT INTO WEB_COLLECTION
+			(ID,USER_ID,RESOURCE_ID,RESOURCE_TYPE,CREATE_TIME)
+		VALUES
+			(#{id},#{userId},#{resourceId},#{resourceType},NOW())
+	</insert>
+	
+	<!-- 取消收藏 -->
+	<delete id="delColl" parameterType="string">
+		DELETE FROM WEB_COLLECTION WHERE ID=#{id}
+	</delete>
+	
+	
+	<!-- 批量删除收藏 -->
+	<delete id="deleteMore">
+		DELETE FROM WEB_COLLECTION
+		WHERE RESOURCE_ID IN
+		<foreach collection="array" close=")" item="id13" open="("
+			separator=",">
+			#{id13}
+		</foreach>
+	</delete>
+	
+</mapper>

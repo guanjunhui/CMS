@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+		<style type="text/css">
+			*{
+				margin:0;
+				padding:0;
+				list-style: none;
+			}
+			a{
+				text-decoration: none;
+			}
+			
+		    /* .login_right{
+				width: 100%;
+				float: right;
+				padding-bottom: 100vh;
+				position: relative;
+				height: 0;
+				overflow: hidden;
+			} */
+			/* .login_right>div{
+				width: 70%;
+				position: absolute;
+				top:50%;
+				left:50%;
+				transform: translate(-50%,-50%);
+			} */
+			.login_right h2{
+				color: #9bc3b7;
+				margin-bottom: 3%;
+			}
+			.login_right li{
+				padding:35px 0 20px;
+				border-bottom: 1px solid #dedede;
+				position: relative;
+			}
+			.login_right li em{
+				position: absolute;
+				left:0;
+				bottom: 4px;
+				font-size: 12px;
+				font-style: normal;
+				color:#e30034;
+				height: 16px;
+				display: block;
+			}
+			.login_right .error{
+				font-size: 16px;
+				color:#ec3857;
+			}
+			.login_right input {
+				width: 70%;
+				height: 32px;
+				line-height: 32px;
+				border:0 none;
+				outline: none;
+			}
+			.login_right li:nth-child(3) div{
+				position: absolute;
+				right:0;
+				bottom: 20px;
+				line-height: 32px;
+				height: 32px;
+				vertical-align: middle;
+			}
+			.login_right li:nth-child(3) img{
+				float: left;		
+				margin-top:3px;
+			}
+			.login_right li:nth-child(3) div span{
+				cursor: pointer;
+				float: left;
+				text-indent: 0.5em;
+			}
+			.login_right li:nth-child(4){
+				border-bottom: 0 none;
+			}
+			.login_right li:nth-child(4) a{
+				float: left;
+				color: #9bc3b7;
+			} 
+			.login_right li:nth-child(4) a:nth-child(2){
+				float: right;
+			}
+			.login_right li:nth-child(4) a:hover{
+				text-decoration: underline;
+			}
+			.login_right li:nth-child(5){
+				border:0 none;
+			}
+			.login_right li:nth-child(5) input{
+				width: 100%;
+				height: 48px;
+				line-height: 48px;
+				border: 1px solid #9bc3b7;
+				color:#9bc3b7;
+				background: transparent;
+				border-radius: 3px;
+				text-align: center;
+			}
+			.login_right li:nth-child(5) input:hover{
+				background-color:#9bc3b7;
+				color:#fff;
+			}
+			.login_right li:nth-child(5) em{
+				bottom: -10px;
+			}
+			body{
+				height: 354px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="login_right">
+			<div id="box">
+				<h2 class="fnt_32">您好，请登录!</h2>
+				<form action="" method="post" id="loginFormId" onsubmit="return loginValidate();">
+					<ul>
+						<li>
+							<input type="text" name="username" placeholder="电子邮箱或手机号码" autocomplete="off" value=""/>
+							<em></em>	
+						</li>
+						<li>
+							<input type="password" name="password" placeholder="密码" value=""/>
+							<em></em>
+						</li>
+						<li>
+							<input type="text" name="code" placeholder="验证码" />
+							<div class="valid clearfix">
+								<img src=""/>
+								<span class="huan">换一张</span>
+							</div>
+							<em></em>
+						</li>
+						<li class="clearfix">
+							<a href="/jump/register.html" target="_blank">注册账号</a>
+							<a href="/jump/passwordForget.html" target="_blank">忘记密码</a>
+						</li>
+						<li><input type="submit" name="button" value="登录" id="loginId"/><em></em></li>
+					</ul>
+					<input type="hidden" name="isajax" value="true" id="isajaxId"/>
+			        <input type="hidden" name="isframe" value="true" id="isframeId"/>
+			        <input type="hidden" name="lt" value="" id="cas_loginTicket"/>
+			        <input type="hidden" name="execution" value="" id="cas_execution"/>
+			        <input type="hidden" name="_eventId" value="submit" id="_eventId"/>
+			        <input type="hidden" name="login-at" value ="" id="login_at"/>
+				</form>	
+			</div>
+		</div>
+		<script>
+			window.onload = function(){
+				var screenWidth =window.screen.width;
+				var box =document.getElementById('box');
+				var login_right=document.getElementsByClassName('login_right')[0];
+				var li=login_right.getElementsByTagName('li');
+				if(screenWidth<=1366){
+					login_right.style.cssText='float: inherit;height: inherit;padding-bottom: 0;padding-top:5%';
+					box.style.cssText='position: inherit;left:inherit;top:inherit;transform: inherit;padding-left: 15%;';
+					for(var i=0;i<li.length;i++){
+						li[i].style.cssText='padding:20px 0 10px'
+					}
+				}				
+			}
+			
+		</script>
+	</body>
+	<script type="text/javascript" src="/../staticRelease/js/base64.js"></script>
+	<script type="text/javascript" src="/../staticRelease/js/baseData.js"></script>
+	<script>
+var dress = baseData.member_base_url;
+var tk = new Date().getTime();
+	$(function(){
+		console.log("==========="+'${login_error_msg!}')
+		$("#loginFormId").attr("action",baseData.serverUrl)
+		
+		//初始化登录信息
+		if('${login_error_msg!}' == '1'){
+			$("input[name=username]").next().text("用户不存在");
+			$("input[name=username]").val('')
+		}
+		if('${login_error_msg!}' == '2'){
+			$("input[name=password]").next().text("密码不正确");
+		}
+		if('${login_error_msg!}' == '3'){
+			$("input[name=username]").next().text("账户未激活");
+		}
+		
+		//初始化验证码
+		$(".huan").prev().attr("src",dress+'/pub/getCode?tk='+tk)
+		
+		initData();
+		
+		//更换验证码
+		$(".huan").click(function(){
+			tk+=1;
+			$(".huan").prev().attr("src",dress+'/pub/getCode?tk='+tk)
+		});
+	});
+	var flag = true;
+	
+
+	//校验非空
+	function checkSpace(_this,val,tips){
+		if (val.length === 0) {
+ 			_this.siblings('em').text(tips);
+ 			return false;
+ 		}else{
+ 			_this.siblings('em').text('');
+ 		}
+ 		return true;
+	}
+	
+	//校验验证码
+	$( "input[name=code]").blur(function(){
+		checkCode($(this));
+	});
+	//校验验证码
+	function checkCode(_this){
+		var This = _this;
+		inputText=This.val();
+		$.ajax({
+			url: dress+'/pub/verifyCode',
+			type:'GET',
+			async:false,
+			data:{
+				code:inputText,
+				tk:tk
+			},
+			xhrFields:{
+			    withCredentials:true
+			},
+			success:function(data){	
+				
+				if(data.code!=200){
+					This.siblings('em').text('验证码不正确');
+					flag=false;
+				} else {
+					This.siblings('em').text('');
+					flag=true;
+				}
+			}
+		})
+	}
+	
+	
+	 // 登录验证函数, 由 onsubmit 事件触发  
+	 var loginValidate = function() {
+			var username = $( ".z-login" ).find( "input[name=username]").val();
+			var passWord = base64encode($( "input[name=password]").val());			
+			var code = $( "input[name=code]").val();
+			if(username==''){
+				$( "input[name=username]").siblings('em').text('请输入电子邮箱或手机号')
+				return false;
+				//checkUsername($( "input[name=username]"),$( "input[name=username]").val(),'请输入电子邮箱或手机号');
+			}
+			if(passWord==''){
+				$( "input[name=password]").siblings('em').text('请输入密码')
+				return false;
+				//checkPassword($( "input[name=password]"),$( "input[name=password]").val(),'请输入密码');
+			}
+			if(code==''){
+				/* $( "input[name=code]").siblings('em').text('请输入验证码')
+				return false; */
+				checkCode($( "input[name=code]"));
+			}
+			if(flag){
+				$("input[name=password]").val(base64encode($("input[name=password]").val()));
+			}
+			
+	        return flag;
+	 };
+	
+	//初始化数据
+	function initData() {
+	    //$.get('conf/url.json').done(function (data) {
+	      //  baseData = eval('(' + data + ')');
+	        $("#login_at").val(baseData.serverUrl); 
+	        flushLoginTicket();
+	    //});
+	}
+	var flushLoginTicket = function () {
+	    var _service = 'service=' + encodeURIComponent(baseData._service);
+	    var urlOfGetLt = baseData.serverUrl + '?' + _service + '&get-lt=true&n=' + new Date().getTime();
+	    $.ajax({
+	        type: 'get',
+	        async: false,
+	        url: urlOfGetLt,
+	        dataType: 'jsonp',
+	        jsonp: 'callback',
+	        jsonpCallback: 'flightHandler',
+	        success: function (data) {
+	            $("#cas_loginTicket").val(data.lt);
+	            $("#cas_execution").val(data.execution);
+	            //$('#sss').submit();
+	           // document.getElementById("loginFrm").submit();
+	        },
+	        error: function () {
+	            console.log("ERROR")
+	        }
+	    });
+	}
+</script>
+</html>          

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SerialCodeMapper">
+
+	<insert id="inserts">		
+		insert into SYS_SERIAL_CODE
+			(CODE)
+		values			<foreach collection="list" separator="," item="item">				(#{item})
+			</foreach>
+	</insert>		<!-- 保存导入数据结果状态信息 -->	<insert id="insertImportExcelMsg" parameterType="hashmap">		INSERT INTO			SYS_IMPORTEXCEL_MSG(MSG,CODE,CREATE_TIME)		VALUES			(#{msg},#{code},now())	</insert>		<!-- 保存导入数据结果状态信息  -->	<select id="getImportExcelMsg" resultType="hashmap">		SELECT			MSG msg,			CODE code,			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %H:%i:%s') AS createTime		FROM 			SYS_IMPORTEXCEL_MSG		ORDER BY			CREATE_TIME DESC		LIMIT 0,1	</select>
+</mapper>

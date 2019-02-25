@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.new_con{}
+.new_con .bt{color: #928285;}
+.new_con .fbt{color: #928285;}
+.new_txt{}
+.new_txt p{margin: 10px 0;}
+.new_txt img{max-width: 100%;}
+.new_txt_b .bt{color: #928285;}
+
+
+.join_spt{}
+.join_spt a{display: block;height: 42px;width: 143px;line-height: 42px;text-align: center;background: #fff;color: #9bc3b7;border: 1px solid #9bc3b7;}
+.join_spt a:hover{background: #9bc3b7;color: #fff;}

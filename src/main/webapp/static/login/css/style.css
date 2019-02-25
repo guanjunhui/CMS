@@ -1,0 +1,134 @@
+@charset "utf-8";
+/*登录页*/
+.container-fluid-full .w1200{
+	height:100%;
+}
+.container-title{
+	font-size: 30px;
+}
+.login{
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size:cover;
+}
+.login .w1200{
+	text-align: right
+}
+/*
+.login-bar{
+	width:558px;
+	height:546px;
+	background:url(../images/login-bar-bg.png);
+	border:1px solid #304a61;
+	border-radius:8px;
+}*/
+.login-bar .login-inner{
+	padding:78px 86px;
+}
+.login .container-title{
+	color:#fff;
+	text-align: left
+}
+.login-bar .input-outer{
+	padding:0 0 5px 3px;
+	border-bottom: 1px solid #6e8aa2
+}
+.login-bar .login-icon-box{
+	width:38px;
+	height:43px;
+	border-right:1px solid #8e9296;
+	text-align: center
+}
+.login-bar .login-input{
+	width:315px;
+	font-size: 14px;
+	height:43px;
+	line-height: 43px;
+	padding:0 10px 0 18px;
+	color:#b2b2b2;
+}
+.login-bar .input-tip{
+	visibility: hidden;
+	font-size: 14px;
+	color:#ff6600;
+	padding-left: 58px;
+	height:15px;
+	text-align: left
+}
+.login-bar .input-error{
+	top:143px;
+	left:0;
+}
+.login-bar .verif{
+	width:386px;
+	height:74px;
+}
+.login-bar .verif .login-input{
+	width:124px;
+}
+.login-bar .info-item.error .input-outer{
+	border-bottom: 1px solid #ff6600
+}
+.login-bar .info-item.error .input-tip{
+	visibility: visible;
+}
+.login-bar .login-btn{
+	width:100%;
+	height:48px;
+	line-height: 48px;
+	color:#fff;
+	font-size: 20px;
+	text-align: center;
+	background:#ff8d40;
+	border-radius: 5px;
+	cursor:pointer;
+	-webkit-transition:all 0.4s;
+	-moz-transition:all 0.4s;
+	-o-transition:all 0.4s;
+	-ms-transition:all 0.4s;
+	transition:all 0.4s;
+}
+.login-bar .login-btn:hover{
+	background:#ff6600;
+
+}
+.login .copyright{
+	color:#999;
+	font-size: 14px;
+	bottom:30px;
+	width:100%;
+	text-align: center;
+	letter-spacing: normal
+}
+.login .copyright a{
+	color:#999;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	transition: all 0.3s
+}
+.login .copyright a:hover{
+	color:#fff;
+}
+/*1440px ~ 1280px*/
+@media screen and (max-width:1440px){
+	.container-title{
+		font-size: 26px;
+	}
+    .login-bar{
+    	width:502px;
+    	height:490px;
+    }
+    .login-bar .login-inner{
+    	padding:60px 82px;
+    }
+    .login-bar .login-input{
+    	width:268px;
+    }
+    .login-bar .login-btn{
+		height:42px;
+		height:42px;
+		font-size: 18px;
+    }
+}

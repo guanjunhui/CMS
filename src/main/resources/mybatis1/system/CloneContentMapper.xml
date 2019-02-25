@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CloneContentMapper">
+	<resultMap type="cn.cebest.entity.system.content.ContentType" id="BaseResultContentType">
+		<id property="id" column="ID" />
+		<result property="typeName" column="TYPE_NAME" />
+		<result property="siteId" column="SITEID" />
+		<result property="imageId" column="IMAGEID" />
+		<result property="typeStatus" column="TYPE_STATUS" />
+		<result property="typeKeywords" column="TYPE_KEYWORDS" />
+		<result property="typeDescription" column="TYPE_DESCRIPTION" />
+		<result property="typeSummary" column="TYPE_SUMMARY" />
+		<result property="pId" column="PID" />
+		<result property="typeWburl" column="TYPE_WBURL" />
+		<result property="columnId" column="COLUMNID" />
+		<result property="templateId" column="TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="deleteTime" column="DELETE_TIME" />		
+	</resultMap>
+		
+	<resultMap type="cn.cebest.entity.system.content.Contenttype_Column" id="BaseResultTC">
+		<result property="columnId" column="COLUMNID" />
+		<result property="contentTypeId" column="CONTENTTYPEID" />				
+	</resultMap>
+	
+	
+	<resultMap type="cn.cebest.entity.system.content.Content" id="BaseResultContent">
+		<id column="ID" property="id" />
+		<result column="FILEDJSON" property="filedJson" />
+		<result column="SITEID" property="siteId" />
+		<result column="CONTENT_TEMPLATEID" property="contentTemplateId" />
+		<result column="TYPEID" property="typeId" />		
+		<result column="CONTENT_TITLE" property="contentTitle" />
+		<result column="CONTENT_WBURL" property="contentWbUrl" />
+		<result column="CONTENT_SUMMARY" property="contentSummary" />
+		<result column="CONTENT_KEYWORDS" property="contentKeyWords" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="UPDATE_TIME" property="releaseTime" />		
+		<result column="CONTENT_STATUS" property="contentStatus" />
+		<result column="SOURCE" property="source" />
+		<result column="DETAIL_TITLE" property="detailTitle" />
+		<result column="PV" property="pv" />
+		<result column="SHARE_COUNT" property="shareCount" />
+		<result column="RELEASE_TIME" property="releaseTime" />
+		<result column="TOP_TIME" property="top_time" />		
+		<result column="TOP" property="top" />
+		<result column="RECOMMEND_TIME" property="recommend_time" />
+		<result column="RECOMMEND" property="recommend" />
+		<result column="SURFACE_IMAGEID" property="surface_imageid" />
+		<result column="AUTHOR" property="author" />
+		<result column="SORT" property="sort" />
+		<result column="HOT" property="hot" />		
+		<result column="HOT_TIME" property="hot_time" />
+		<result column="C.SOLR_STATUS" property="solrStatus" />
+	</resultMap>
+	
+	
+	<resultMap type="cn.cebest.entity.system.content.Content_Type_Colum" id="BaseResultCTC">
+		<result property="columnId" column="COLUMNID" />
+		<result property="contentId" column="CONTENTID" />
+		<result property="contentTypeId" column="TYPEID" />				
+	</resultMap>
+	
+	
+	<!-- 根据网站ID查询所有内容分类 -->
+	<select id="findTypeInfoBySiteId" parameterType="String"
+			resultMap="BaseResultContentType">
+		SELECT
+		C.ID,C.TYPE_NAME,C.SITEID,C.IMAGEID,C.TYPE_STATUS,C.TYPE_KEYWORDS,C.TYPE_DESCRIPTION,C.TYPE_SUMMARY,
+		C.PID,C.TYPE_WBURL,C.COLUMNID,C.TEMPLATEID,C.SORT,C.CREATE_TIME,C.UPDATE_TIME,C.DELETE_TIME
+		FROM WEB_CONTENTTYPE C
+		WHERE C.SITEID=#{siteID} 
+	</select>
+	
+	<!-- 根据网站ID查询所有内容分类 -->
+	<select id="findTypeColumnByTypeIDS" parameterType="String"
+			resultMap="BaseResultTC">
+		SELECT
+		CC.COLUMNID,CC.CONTENTTYPEID
+		FROM WEB_CONTENTTYPE_COLUMN CC
+		WHERE CC.CONTENTTYPEID in
+		<foreach collection="array" close=")" item="id0" open="("
+			separator=",">
+			#{id0}
+		</foreach>
+	</select>
+	
+	<!-- 根据网站ID查询所有内容 -->
+	<select id="findContentListBySiteId" parameterType="String"
+			resultMap="BaseResultContent">
+		SELECT
+		C.ID,C.FILEDJSON,C.SITEID,C.CONTENT_TEMPLATEID,C.TYPEID,C.CONTENT_TITLE,C.CONTENT_WBURL,
+		C.CONTENT_SUMMARY,C.CONTENT_KEYWORDS,C.CREATED_TIME,C.UPDATE_TIME,C.CONTENT_STATUS,C.SOURCE,
+		C.DETAIL_TITLE,C.PV,C.SHARE_COUNT,C.RELEASE_TIME,C.TOP_TIME,C.TOP,C.RECOMMEND_TIME,C.RECOMMEND,
+		C.SURFACE_IMAGEID,C.AUTHOR,C.SORT,C.HOT,C.HOT_TIME,C.SOLR_STATUS
+		FROM WEB_CONTENT C
+		WHERE C.SITEID=#{siteID} 
+	</select>
+	
+	
+	<!-- 根据内容ID查询所有内容与栏目及模板的关系数据 -->
+	<select id="findContentTypeColumnByIDS" parameterType="String"
+			resultMap="BaseResultCTC">
+		SELECT
+		CC.COLUMNID,CC.CONTENTID,CC.TYPEID
+		FROM WEB_CONTENT_COLUM CC
+		WHERE CC.CONTENTID in
+		<foreach collection="array" close=")" item="id1" open="("
+			separator=",">
+			#{id1}
+		</foreach>
+	</select>
+	
+	<!-- 复制内容分类，批量复制 -->
+	<insert id="insertBatchCType">
+		insert into WEB_CONTENTTYPE
+		 (	ID,
+			TYPE_NAME,
+			SITEID,
+			IMAGEID,
+			TYPE_STATUS,
+			TYPE_KEYWORDS,
+			TYPE_DESCRIPTION,
+			TYPE_SUMMARY,
+			PID,
+			TYPE_WBURL,
+			COLUMNID,
+			TEMPLATEID,
+			SORT,
+			CREATE_TIME,
+			UPDATE_TIME,
+			DELETE_TIME)
+		values
+		<foreach collection ="list" item="ctype" separator =",">
+         (	#{ctype.id}, 
+         	#{ctype.typeName}, 
+         	#{ctype.siteId},
+         	#{ctype.imageId},
+         	#{ctype.typeStatus},
+         	#{ctype.typeKeywords},
+         	#{ctype.typeDescription},
+         	#{ctype.typeSummary},
+         	#{ctype.pId},
+         	#{ctype.typeWburl},
+         	#{ctype.columnId},
+         	#{ctype.templateId},
+         	#{ctype.sort},
+         	#{ctype.createTime},
+         	#{ctype.updateTime},
+         	#{ctype.deleteTime})
+    	</foreach >		
+	</insert>
+	
+	
+	<!-- 复制内容分类栏目关系，批量复制 -->
+	<insert id="insertBatchCTC">
+		insert into WEB_CONTENT_COLUM
+		 (	CONTENTID,
+			COLUMNID,
+			TYPEID)
+		values
+		<foreach collection ="list" item="ctc" separator =",">
+         (	#{ctc.contentId}, 
+         	#{ctc.columnId}, 
+         	#{ctc.contentTypeId})
+    	</foreach >		
+	</insert>
+	
+	<!-- 复制分类栏目关系，批量复制 -->
+	<insert id="insertBatchTC">
+		insert into WEB_CONTENTTYPE_COLUMN
+		 (	COLUMNID,
+			CONTENTTYPEID)
+		values
+		<foreach collection ="list" item="ct" separator =",">
+         (	#{ct.columnId}, 
+         	#{ct.contentTypeId})
+    	</foreach >		
+	</insert>	
+	
+	<!-- 复制整站的内容数据，批量复制 -->
+	<insert id="insertBatchContent">
+		insert into WEB_CONTENT
+		 (	ID,
+			FILEDJSON,
+			SITEID,
+			CONTENT_TEMPLATEID,
+			TYPEID,
+			CONTENT_TITLE,
+			CONTENT_WBURL,
+			CONTENT_SUMMARY,
+			CONTENT_KEYWORDS,
+			CREATED_TIME,
+			UPDATE_TIME,
+			CONTENT_STATUS,
+			SOURCE,
+			DETAIL_TITLE,
+			PV,
+			SHARE_COUNT,
+			RELEASE_TIME,
+			TOP_TIME,TOP,
+			RECOMMEND_TIME,
+			RECOMMEND,
+			SURFACE_IMAGEID,
+			AUTHOR,
+			SORT,
+			HOT,
+			HOT_TIME,
+			SOLR_STATUS)
+		values
+		<foreach collection ="list" item="content" separator =",">
+         (	#{content.id}, 
+         	#{content.filedJson},
+         	#{content.siteId},
+         	#{content.contentTemplateId},
+         	#{content.typeId},
+         	#{content.contentTitle},
+         	#{content.contentWbUrl},
+         	#{content.contentSummary},
+         	#{content.contentKeyWords},
+         	#{content.createdTime},
+         	#{content.releaseTime},
+         	#{content.contentStatus},
+         	#{content.source},
+         	#{content.detailTitle},
+         	#{content.pv},
+         	#{content.shareCount},
+         	#{content.releaseTime},
+         	#{content.top_time},
+         	#{content.top},
+         	#{content.recommend_time},
+         	#{content.recommend},
+         	#{content.surface_imageid},
+         	#{content.author},
+         	#{content.sort},
+         	#{content.hot},
+         	#{content.hot_time},
+         	#{content.solrStatus})
+    	</foreach >		
+	</insert>
+	
+	<!--复制整站内容之前，如果执行过复制，再次执行需要先根据网站内容类型批量删除之前复制的内容分类关系-->
+	<delete id="deleteBeforCopyCTC" parameterType="String">
+		delete from WEB_CONTENTTYPE_COLUMN
+		where 
+			CONTENTTYPEID in			
+			<foreach collection="array" close=")" item="id2" open="("
+			separator=",">
+			#{id2}
+		</foreach>
+	</delete>
+	<!--复制整站内容之前，如果执行过复制，再次执行需要先根据网站内容类型批量删除之前复制的内容分类-->
+	<delete id="deleteBeforCopyCT" parameterType="String">
+		delete from WEB_CONTENTTYPE
+		where 
+			SITEID=#{siteID}
+	</delete>
+	<!--复制整站内容之前，如果执行过复制，再次执行需要先根据网站内容类型批量删除之前复制的内容分类-->
+	<delete id="deleteBeforCopyCC" parameterType="String">
+		delete from WEB_CONTENT_COLUM
+		where CONTENTID in
+		<foreach collection="array" close=")" item="id3" open="("
+			separator=",">
+			#{id3}
+		</foreach>
+	</delete>
+	
+	<!--复制整站内容之前，如果执行过复制，再次执行需要先根据网站内容类型批量删除之前复制的内容-->
+	<delete id="deleteBeforCopyC" parameterType="String">
+		delete from WEB_CONTENT
+		where 
+			SITEID=#{siteID}
+	</delete>
+</mapper>

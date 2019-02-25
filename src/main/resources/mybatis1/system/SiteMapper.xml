@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SiteMapper">
+    <sql id="Base_Column_List">
+	    ID, SITE_NAME, SITE_LANGUAGE, SITE_STATUS, CREATED_TIME, SITE_DOMIAN, SITE_TYPE, 
+	    SITE_INDEX, SITE_LOGO, SITE_SUBDOMIAN, SITE_RECORDNO, SITE_EMAIL_ADDR, SITE_EMAIL_PWD, 
+	    SITE_EMAIL_PREFIX, SITE_EMAIL_SMTP, SITE_KEYWORD, SITE_DESC, IF_STATIC
+  	</sql>
+    
+    <resultMap id="siteResultMap" type="cn.cebest.entity.web.WebSite" >
+	    <id column="SITE_ID" property="siteId" jdbcType="VARCHAR" />
+	    <result column="SITE_NAME" property="siteName" jdbcType="VARCHAR" />
+	    <result column="SITE_LANGUAGE" property="siteLanguage" jdbcType="VARCHAR" />
+	    <result column="SITE_STATUS" property="siteStatus" jdbcType="VARCHAR" />
+	    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+	    <result column="SITE_DOMIAN" property="siteDomian" jdbcType="VARCHAR" />
+	    <result column="SITE_TYPE" property="siteType" jdbcType="VARCHAR" />
+	    <result column="SITE_INDEX" property="siteIndex" jdbcType="VARCHAR" />
+	    <result column="SITE_LOGO" property="siteLogo" jdbcType="VARCHAR" />
+	    <result column="SITE_SUBDOMIAN" property="siteSubdomian" jdbcType="VARCHAR" />
+	    <result column="SITE_RECORDNO" property="siteRecordno" jdbcType="VARCHAR" />
+	    <result column="SITE_EMAIL_ADDR" property="siteEmailAddr" jdbcType="VARCHAR" />
+	    <result column="SITE_EMAIL_PWD" property="siteEmailPwd" jdbcType="VARCHAR" />
+	    <result column="SITE_EMAIL_PREFIX" property="siteEmailPrefix" jdbcType="VARCHAR" />
+	    <result column="SITE_EMAIL_SMTP" property="siteEmailSmtp" jdbcType="VARCHAR" />
+	    <result column="SITE_KEYWORD" property="siteKeyword" jdbcType="VARCHAR" />
+	    <result column="SITE_DESC" property="siteDesc" jdbcType="VARCHAR" />
+	    <result column="IF_STATIC" jdbcType="VARCHAR" property="ifStatic" />
+	    <result column="siteLogoPath" jdbcType="VARCHAR" property="siteLogoPath" />
+	    
+    </resultMap>
+	
+	<resultMap type="cn.cebest.entity.bo.SiteMain" id="siteMainMap">
+		<id column="ID" property="id"/>
+		<id column="SITE_NAME" property="siteName"/>
+		<id column="SITE_LANGUAGE" property="siteLanguage"/>
+		<id column="SITE_DOMIAN" property="siteDomian"/>
+	</resultMap>
+	
+	<!-- 后台接口,站点列表 -->
+	<select id="sitelistPage" resultType="pd" parameterType="page">
+		SELECT
+			WS.ID AS siteId,
+			WS.SITE_NAME AS siteName,
+			WS.SITE_LANGUAGE AS siteLanguage,
+			WS.SITE_STATUS AS siteStatus,
+			WS.CREATED_TIME AS createTime,
+			WS.SITE_DOMIAN AS siteDomain,
+			WS.SITE_TYPE AS siteType,
+			WS.SITE_INDEX AS siteIndex,
+			WS.SITE_LOGO AS siteLogo,
+			WS.SITE_SUBDOMIAN AS siteSubdomain,
+			WS.SITE_RECORDNO AS siteRecordno,
+			WS.SITE_KEYWORD AS siteKeyword,
+			WS.SITE_DESC AS siteDesc,
+			WS.SITE_EMAIL_ADDR AS siteEmailAddr,
+			WS.SITE_EMAIL_PWD AS siteEmailPwd,
+			WS.SITE_EMAIL_PREFIX AS siteEmailPrefix,
+			WS.SITE_EMAIL_SMTP AS siteEmailSmtp
+		FROM
+			WEB_SITE WS
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+				WS.SITE_STATUS !='2'
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				AND WS.SITE_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+			</if>
+			<if test="pd.status!=null and pd.status!=''">
+				AND WS.SITE_STATUS = #{pd.status}
+			</if>
+		</trim>
+	</select>
+	<!-- 更新站点的状态 -->
+	<update id="changeStatus" parameterType="pd">
+			UPDATE WEB_SITE WS
+				SET WS.SITE_STATUS = #{siteStatus}
+			WHERE
+				WS.ID = #{siteId}
+	</update>
+	
+	<!-- 更新site-index的状态 -->
+	<update id="updateSiteIndexStatus" parameterType="pd">
+			UPDATE WEB_SITE WS
+				SET WS.SITE_INDEX = #{ID}
+			WHERE
+				WS.ID = #{SITEID}
+	</update>
+	
+	<!-- 批量更新站点的状态 -->
+	<update id="updateAllSite" parameterType="String">
+		UPDATE WEB_SITE WS
+			SET WS.SITE_STATUS = '2'
+			WHERE WS.ID in
+	 	<foreach item="siteitem01" index="index" collection="array" open="(" separator="," close=")">
+        	#{siteitem01}
+        </foreach>
+	</update>
+	<!-- 保存站点 -->
+	<insert id="saveSite" parameterType="pd">
+		insert into WEB_SITE (
+			ID,SITE_NAME,SITE_LANGUAGE,SITE_STATUS,CREATED_TIME,SITE_DOMIAN,SITE_TYPE,SITE_INDEX,SITE_LOGO,
+			SITE_SUBDOMIAN,SITE_RECORDNO,SITE_EMAIL_ADDR,SITE_EMAIL_PWD,SITE_EMAIL_PREFIX,SITE_EMAIL_SMTP,SITE_KEYWORD,SITE_DESC,IF_STATIC
+		) values (
+			#{siteId},#{siteName},#{siteLanguage},#{siteStatus},#{createdTime},#{siteDomain},#{siteType},#{siteIndex},#{siteLogo},#{siteSubdomain},#{siteRecordno}
+			,#{siteEmailAddr},#{siteEmailPwd},#{siteEmailPrefix},#{siteEmailSmtp},#{siteKeyword},#{siteDesc},#{ifStatic}
+		)
+	</insert>
+	<!-- 通过Id获取数据 -->
+	<select id="findSiteById" parameterType="pd" resultType="pd" >
+		SELECT
+			WS.ID AS siteId,
+			WS.SITE_NAME AS siteName,
+			WS.SITE_LANGUAGE AS siteLanguage,
+			WS.SITE_STATUS AS siteStatus,
+			WS.CREATED_TIME AS createTime,
+			WS.SITE_DOMIAN AS siteDomain,
+			WS.SITE_TYPE AS siteType,
+			WS.SITE_INDEX AS siteIndex,
+			WS.SITE_LOGO AS siteLogo,
+			WS.SITE_SUBDOMIAN AS siteSubdomain,
+			WS.SITE_RECORDNO AS siteRecordno,
+			WS.SITE_EMAIL_ADDR AS siteEmailAddr,
+			WS.SITE_EMAIL_PWD AS siteEmailPwd,
+			WS.SITE_EMAIL_PREFIX AS siteEmailPrefix,
+			WS.SITE_EMAIL_SMTP AS siteEmailSmtp,
+			WS.SITE_KEYWORD AS siteKeyword,
+			WS.SITE_DESC AS siteDesc,
+			WS.IF_STATIC AS ifStatic,
+			TP.NAME AS siteLogoName,
+			TP.IMGURL AS sitePath
+		FROM
+			WEB_SITE WS
+		LEFT JOIN WEB_IMAGE TP ON WS.SITE_LOGO=TP.IMAGE_ID
+		WHERE WS.ID=#{siteId}
+	</select>
+	
+	<!-- 通过Id获取数据 -->
+	<select id="findSitePoById" parameterType="java.lang.String" resultMap="siteResultMap" >
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			WEB_SITE WS
+		WHERE WS.ID=#{siteId}
+	</select>
+	
+	<!-- 修改站点 -->
+	<update id="edit" parameterType="pd" >
+		UPDATE WEB_SITE WS
+		SET SITE_NAME 			= #{siteName},
+			SITE_LANGUAGE 		= #{siteLanguage},
+			<if test="siteStatus !=null and siteStatus !=''">
+			SITE_STATUS			= #{siteStatus},
+			</if>
+			SITE_DOMIAN			= #{siteDomain},
+			<if test="siteIndex !=null and siteIndex !=''">
+			SITE_INDEX			= #{siteIndex},
+			</if>
+			<if test="siteLogo !=null and siteLogo !=''">
+			SITE_LOGO			= #{siteLogo},
+			</if>
+			SITE_SUBDOMIAN		= #{siteSubdomain},
+			SITE_RECORDNO		= #{siteRecordno},
+			SITE_EMAIL_ADDR		= #{siteEmailAddr},
+			SITE_EMAIL_PWD		= #{siteEmailPwd},
+			SITE_EMAIL_PREFIX	= #{siteEmailPrefix},
+			SITE_EMAIL_SMTP		= #{siteEmailSmtp},
+			WS.SITE_KEYWORD 	= #{siteKeyword},
+			WS.SITE_DESC 		= #{siteDesc},
+			WS.IF_STATIC 		= #{ifStatic}
+		WHERE 
+			ID = #{siteId}
+	</update>
+	
+	<!-- 获取所有菜单 -->
+	<select id="findAllSiteByStatus" parameterType="java.lang.String" resultMap="siteResultMap" >
+		SELECT
+			site.ID, site.SITE_NAME, site.SITE_LANGUAGE, site.SITE_STATUS, site.CREATED_TIME, site.SITE_DOMIAN, 
+			site.SITE_TYPE, site.SITE_INDEX, site.SITE_LOGO, site.SITE_SUBDOMIAN, site.SITE_RECORDNO, site.SITE_EMAIL_ADDR,
+			site.SITE_EMAIL_PWD, site.SITE_EMAIL_PREFIX, site.SITE_EMAIL_SMTP, site.SITE_KEYWORD, site.SITE_DESC, 
+			site.IF_STATIC,TP.IMGURL as siteLogoPath
+		FROM
+			WEB_SITE site 
+			LEFT JOIN WEB_IMAGE TP ON site.SITE_LOGO=TP.IMAGE_ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="_parameter !=null and _parameter !=''">
+				AND SITE_STATUS	= #{_parameter}
+			</if>
+		</trim>
+	</select>
+	
+	<!-- 获取所有菜单主要信息 -->
+	<select id="findAllSiteMainInfo" resultMap="siteMainMap" >
+		SELECT
+			ID,
+			SITE_NAME,
+			SITE_LANGUAGE,
+			CREATED_TIME,
+			SITE_DOMIAN
+		FROM
+			WEB_SITE where SITE_STATUS='1'
+	</select>
+	
+</mapper>

@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+.con_404{padding-top: 200px;}
+.con_404 .txt_l{width: 30%;}
+.con_404 .txt_l .p1{font-size: 160px;color: #e1ede9;}
+.con_404 .txt_l .p2{color: rgba(146,130,133,.5);display: none;}
+
+
+
+
+.con_404 .txt_r{width: 70%;}
+.con_404 .txt_r .p1{color: rgba(146,130,133,.5);}
+.con_404 .txt_r .p2{color: #644f54;}
+.con_404 .txt_r .p3{color: #644f54;}
+.con_404 .txt_r .changshi{}
+.con_404 .txt_r .changshi .changshi_bt{}
+.con_404 .txt_r .changshi .changshi_list{display: block;padding-left: 40px;}
+.con_404 .txt_r .changshi li{list-style-type: disc;}
+
+
+.bot_404{width: 100%;}
+.bot_404 .bot_con{width: 100%;height: 410px;background-repeat: no-repeat;background-position:center top;}
+
+@media only screen and (max-width: 1280px) {
+	.con_404 .txt_l .p1{font-size: 140px;}
+}
+@media only screen and (max-width: 1024px) {
+	.con_404 .txt_l .p1{font-size: 120px;}
+}
+@media only screen and (max-width: 920px) {
+	.con_404 .txt_l .p1{font-size: 100px;}
+}
+@media only screen and (max-width: 768px) {
+	.con_404{padding-top: 120px;}
+	.con_404 .txt_l{width: 100%;text-align: center;}
+	.con_404 .txt_l .p1{font-size: 80px;}
+	.con_404 .txt_l .p2{display: block;}
+	.con_404 .txt_r{width: 100%;text-align: center;}
+	.con_404 .txt_r .p1{display: none;}
+	.con_404 .txt_r .changshi{text-align: left;padding-left: 10%;}
+	.bot_404 .bot_con{background-position: 70% top;}
+}
+@media only screen and (max-width: 500px) {
+	.con_404 .txt_r .changshi{padding-left: 0%;}
+}

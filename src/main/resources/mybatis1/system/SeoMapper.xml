@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SeoMapper">
+	<resultMap type="cn.cebest.entity.system.Seo" id="seoMap">
+		<result column="SEO_TITLE" property="seoTitle"></result>
+		<result column="SEO_KEYWORDS" property="seoKeywords"></result>
+		<result column="SEO_DESCRIPTION" property="seoDescription"></result>
+	</resultMap>
+	<insert id="insetSeo" parameterType="pd">
+		INSERT INTO WEB_SEO(ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID)
+		VALUES(#{ID},#{SEO_TITLE},#{SEO_KEYWORDS},#{SEO_DESCRIPTION},#{SEO_TYPE},#{CREATE_TIME},#{MASTER_ID})
+	</insert>
+	<insert id="insetSeoContent" parameterType="map">
+		INSERT INTO WEB_SEO(ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID)
+		VALUES(#{ID},#{SEO_TITLE},#{SEO_KEYWORDS},#{SEO_DESCRIPTION},#{SEO_TYPE},#{CREATE_TIME},#{MASTER_ID})
+	</insert>
+	<update id="updateSeo" parameterType="pd">
+		UPDATE WEB_SEO
+		SET 
+		SEO_TITLE=#{SEO_TITLE},
+		SEO_KEYWORDS=#{SEO_KEYWORDS},
+		SEO_DESCRIPTION=#{SEO_DESCRIPTION},
+		SEO_TYPE=#{SEO_TYPE}
+		WHERE MASTER_ID=#{MASTER_ID}
+	</update>
+	<update id="updateSeoContent" parameterType="map">
+		UPDATE WEB_SEO
+		SET 
+		SEO_TITLE=#{SEO_TITLE},
+		SEO_KEYWORDS=#{SEO_KEYWORDS},
+		SEO_DESCRIPTION=#{SEO_DESCRIPTION},
+		SEO_TYPE=#{SEO_TYPE}
+		WHERE MASTER_ID=#{MASTER_ID}
+	</update>
+	<select id="querySeoForObject" parameterType="pd" resultType="pd">
+		SELECT ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID
+		FROM WEB_SEO
+		<where>
+			1=1
+			<if test="MASTER_ID !=null and MASTER_ID !=''">
+		    and MASTER_ID =
+			#{MASTER_ID}
+		   </if>
+		   <if test="ID !=null and ID !=''">
+		    and ID =
+			#{ID}
+		   </if>
+		</where>
+	</select>
+	<select id="selectSeoForObject" parameterType="String" resultMap="seoMap">
+		SELECT ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID
+		FROM WEB_SEO
+		where MASTER_ID = #{masterId}
+	</select>
+	<select id="querySeoForContent" parameterType="map" resultType="map">
+		SELECT ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID
+		FROM WEB_SEO
+		<where>
+			1=1
+			<if test="MASTER_ID !=null and MASTER_ID !=''">
+		    and MASTER_ID =
+			#{MASTER_ID}
+		   </if>
+		   <if test="ID !=null and ID !=''">
+		    and ID =
+			#{ID}
+		   </if>
+		</where>
+	</select>
+	
+	<delete id="deleteSeo" parameterType="pd">
+		DELETE FROM WEB_SEO
+		where 
+		<if test="ID !=null and ID.length>0"><!-- 仅支持数组类型 -->
+		  ID in 
+			<foreach collection="ID" close=")" open="(" item="seoid01" separator=",">
+			#{seoid01}
+		    </foreach>
+		</if>
+		<if test="MASTER_ID !=null and MASTER_ID.length>0"><!-- 仅支持数组类型 -->
+		  MASTER_ID in
+			<foreach collection="MASTER_ID" close=")" open="(" item="seoid02" separator=",">
+			#{seoid02}
+		    </foreach>
+		</if>
+	</delete>
+	
+	<select id="querySeoForList" parameterType="pd" resultType="pd">
+		select ID,SEO_TITLE,SEO_KEYWORDS,SEO_DESCRIPTION,SEO_TYPE,CREATED_TIME,MASTER_ID
+		from WEB_SEO
+		<where>
+			1=1
+			<if test="MASTER_ID !=null and MASTER_ID.size > 0">
+		    and MASTER_ID in
+			<foreach collection="MASTER_ID" close=")" open="(" item="seoid03" separator=",">
+			#{seoid03}
+		    </foreach>
+		   </if>
+		   <if test="ID !=null and ID.size > 0">
+		    and ID in
+			<foreach collection="ID" close=")" open="(" item="seoid04" separator=",">
+			#{seoid04}
+		    </foreach>
+		   </if>
+		</where>
+	</select>
+	
+</mapper>

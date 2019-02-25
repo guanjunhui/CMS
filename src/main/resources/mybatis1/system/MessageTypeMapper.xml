@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessageTypeMapper">
+	<!--查询资讯类型列表  -->
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessageType" id="resultMessageType">
+		<id property="id" column="ID" />
+		<result property="type_id" column="TYPE_ID" />
+		<result property="type_name" column="TYPE_NAME" />
+		<result property="imageid" column="IMAGEID" />
+		<result property="type_status" column="TYPE_STATUS" />
+		<result property="type_detail" column="TYPE_DETAIL" />
+		<result property="type_keywords" column="TYPE_KEYWORDS" />
+		<result property="type_summary" column="TYPE_SUMMARY" />
+		<result property="type_wburl" column="TYPE_WBURL" />
+		<result property="columnid" column="COLUMNID" />
+		<result property="sort" column="SORT" />
+		<association property="template" resultMap="TemplateMap"/>
+	</resultMap>
+	<select id="findMessageTypelistPage"  parameterType="page"
+	resultMap="resultMessageType">
+		SELECT ID,TYPE_NAME,TYPE_ID,IMAGEID,TYPE_STATUS,TYPE_DETAIL,TYPE_KEYWORDS,TYPE_SUMMARY,TYPE_WBURL,COLUMNID,SORT
+		FROM WEB_NEWMESSAGE_TYPE
+		WHERE SITEID=#{pd.SITEID}
+	</select>
+	<!-- 查询资讯详情模板 -->
+	<select id="selectMessageTemplate" parameterType="pd"
+		resultType="pd">
+		SELECT TEM_NAME,ID
+		FROM WEB_TEMPLATE
+		WHERE TEM_TYPE=
+		#{TEMPLATE_TYPE_2}
+	</select>
+	<!-- 查询所有栏目的id和名字 -->
+	<select id="findAllColumconfig">
+		SELECT ID,COLUM_NAME
+		FROM WEB_COLUMCONFIG
+	</select>
+	<!-- 查询所有资讯类型 -->
+	<select id="findAllMessageType">
+		SELECT ID,TYPE_NAME
+		FROM WEB_NEWMESSAGE_TYPE
+	</select>
+	<!--根据id查询当前资讯类型的图片,主要用于在修改页面进行回显  -->
+	<select id="selectSurfaceImageById" resultType="cn.cebest.entity.system.Image">
+		SELECT M.TYPE_NAME,I.IMGURL,I.NAME,I.TITLE,I.IMAGE_ID
+		FROM WEB_NEWMESSAGE_TYPE M LEFT JOIN WEB_IMAGE I ON M.IMAGEID=I.IMAGE_ID
+		WHERE M.ID=#{ID}
+	</select>
+	<!--======================================================================================-->
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessageType"
+		id="resultMessage_Type">
+		<id property="id" column="id" />
+		<result property="type_name" column="TYPE_NAME" />
+		<result property="siteid" column="SITEID" />
+		<result property="imageid" column="IMAGEID" />
+		<result property="imgurl" column="IMGURL" />
+		<result property="type_status" column="TYPE_STATUS" />
+		<result property="type_detail" column="TYPE_DETAIL" />
+		<result property="type_keywords" column="TYPE_KEYWORDS" />
+		<result property="type_summary" column="TYPE_SUMMARY" />
+		<result property="pid" column="PID" />
+		<result property="txt" column="TXT" />
+		<result property="sort" column="SORT" />
+		<result property="columnid" column="COLUMNID" />
+		<result property="type_wburl" column="TYPE_WBURL" />
+		<result property="created_time" column="CREATED_TIME" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="count" column="COUNT" />
+		<result property="typeUrlName" column="typeUrlName" />
+		<association property="template" resultMap="TemplateMap"/>
+		<collection property="childList"
+			ofType="cn.cebest.entity.system.newMessage.NewMessageType">
+			<id property="id" column="ID_" />
+			<result property="type_name" column="TYPE_NAME_" />
+			<result property="siteid" column="SITEID_" />
+			<result property="imageid" column="IMAGEID_" />
+			<result property="type_status" column="TYPE_STATUS_" />
+			<result property="type_detail" column="TYPE_DETAIL_" />
+			<result property="type_keywords" column="TYPE_KEYWORDS_" />
+			<result property="type_summary" column="TYPE_SUMMARY_" />
+			<result property="pid" column="PID_" />
+			<result property="sort" column="SORT_" />
+			<result property="type_wburl" column="TYPE_WBURL_" />
+			<result property="created_time" column="CREATED_TIME_" />
+			<result property="update_time" column="UPDATE_TIME_" />
+		</collection>
+		<collection property="columConfigList"
+			ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="CID_" />
+			<result property="columName" column="COLUMNAME_" />
+		</collection>
+	</resultMap>
+	
+	<resultMap id="TemplateMap" type="cn.cebest.entity.system.Template">
+	    <id column="TEM_ID" jdbcType="VARCHAR" property="id" />
+	    <result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+	    <result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+	    <result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+	    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+	    <result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+	    <result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+   	 </resultMap>
+	<!-- 展示顶级的查询 -->
+	<select id="selectListTop" resultMap="resultMessage_Type" parameterType="pd">
+		SELECT MT.TYPE_NAME,MT.PID,(SELECT COUNT(*)
+		FROM WEB_NEWMESSAGE M
+		WHERE M.ID IN (SELECT TMR.MESSAGEID
+		FROM WEB_TYPE_MESSAGE_RELATION TMR
+		WHERE TMR.MESSAGETYPEID=MT.ID)) AS COUNT ,MT.ID,C.COLUM_NAME as COLUMNAME_,MT.TYPE_STATUS,MT.SORT,C.ID AS CID_,I.IMGURL
+		FROM WEB_NEWMESSAGE_TYPE MT
+    	LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=MC.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON MT.IMAGEID=I.IMAGE_ID
+		<where>
+			MT.PID='0'
+			AND MT.SITEID=#{SITEID}
+			<if test="type_keywords !=null and type_keywords != ''">
+				AND MT.TYPE_NAME LIKE '%' #{type_keywords} '%'
+			</if>
+		</where>
+		ORDER BY SORT
+	</select>
+
+	<!-- 展示所有的查询 -->
+	<select id="selectListAll" resultMap="resultMessage_Type" parameterType="pd">
+		SELECT MT.TYPE_NAME,MT.PID,(SELECT COUNT(*)
+		FROM WEB_NEWMESSAGE M
+		WHERE M.ID IN (SELECT TMR.MESSAGEID
+		FROM WEB_TYPE_MESSAGE_RELATION TMR
+		WHERE TMR.MESSAGETYPEID=MT.ID)) AS COUNT ,MT.ID,C.COLUM_NAME as COLUMNAME_,MT.TYPE_STATUS,MT.SORT,C.ID AS CID_,I.IMGURL
+		FROM WEB_NEWMESSAGE_TYPE MT
+    	LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=MC.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON MT.IMAGEID=I.IMAGE_ID
+		<where>
+		    MT.SITEID=#{SITEID}
+			<if test="type_keywords !=null and type_keywords != ''">
+				AND MT.TYPE_NAME LIKE '%' #{type_keywords} '%'
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 展示页面分页查询 -->
+	<select id="selectmessageTypeListPage" parameterType="pd"
+		resultMap="resultMessage_Type">
+		SELECT MT.TYPE_NAME,(SELECT COUNT(*)
+		FROM WEB_NEWMESSAGE M
+		WHERE M.ID=TMR.MESSAGEID) AS COUNT ,MT.ID,C.COLUM_NAME as COLUMNAME_,MT.TYPE_STATUS,C.ID AS CID_
+		FROM WEB_NEWMESSAGE_TYPE MT
+        LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=MC.COLUMNID
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGETYPEID=MT.ID
+		<where>
+			MT.SITEID=#{SITEID}
+			<if test="type_keywords !=null and type_keywords != ''">
+				AND MT.TYPE_KEYWORDS LIKE '%' #{type_keywords} '%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 展示顶级的查询-->
+	<select id="selectTop" resultType="cn.cebest.entity.system.newMessage.NewMessageType">
+		SELECT
+		MT.ID,MT.TYPE_NAME,MT.SITEID,MT.IMAGEID,MT.TYPE_STATUS,MT.TYPE_KEYWORDS,MT.TYPE_SUMMARY,MT.PID,MT.TYPE_WBURL,MT.CREATED_TIME,MT.UPDATE_TIME
+		FROM WEB_NEWMESSAGE_TYPE MT
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		WHERE MT.PID='0'
+		<if test="SITEID !=null and SITEID !=''"> AND MT.SITEID=#{SITEID}</if>
+		<if test="id !=null and id !=''"> and MT.ID=#{id}</if>
+		<if test="columId !=null and columId !=''"> and MC.COLUMNID=#{columId}</if>
+	</select>
+
+	<!-- 展示所有的查询 -->
+	<select id="selectAll" parameterType="pd" resultType="cn.cebest.entity.system.newMessage.NewMessageType">
+		SELECT
+		MT.ID,MT.TYPE_NAME,MT.SITEID,MT.IMAGEID,MT.TYPE_STATUS,MT.TYPE_KEYWORDS,MT.TYPE_SUMMARY,MT.PID,MT.TYPE_WBURL,MT.CREATED_TIME,MT.UPDATE_TIME
+		FROM WEB_NEWMESSAGE_TYPE MT
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		<where>
+			<if test="SITEID !=null and SITEID !=''"> and MT.SITEID=#{SITEID}</if>
+			<if test="id !=null and id !=''"> and MT.ID=#{id}</if>
+			<if test="columId !=null and columId !=''"> and MC.COLUMNID=#{columId}</if>
+		</where>
+	</select>
+	<!-- 保存资讯富文本 -->
+	<insert id="insertMessageTXT" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		INSERT INTO WEB_TXT(CONTENT_ID,TXT,TXT_EXT)
+		VALUES(#{id},#{type_detail},#{txt_ext})
+	</insert>
+	<!-- 修改资讯富文本 -->
+	<update id="updateMessageTXT" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		update WEB_TXT
+		<set>
+	        TXT=#{type_detail}
+			<if test="txt_ext !=null and txt_ext !=''">,TXT_EXT=#{txt_ext}</if>
+		</set>
+		where CONTENT_ID=#{id}
+	</update>
+	<!-- 删除资讯富文本 -->
+	<delete id="deleteMessageTXT">
+		DELETE FROM WEB_TXT
+		WHERE CONTENT_ID IN
+		<foreach collection="array" item="messagetypeid01" close=")" open="("
+			separator=",">
+			#{messagetypeid01}
+		</foreach>
+	</delete>
+	<!-- 保存资讯类型 -->
+	<insert id="insertMessageType" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		INSERT INTO
+		WEB_NEWMESSAGE_TYPE(ID,TYPE_NAME,SITEID,IMAGEID,TYPE_STATUS,TYPE_KEYWORDS,TYPE_DETAIL,TYPE_SUMMARY,PID,TYPE_WBURL,COLUMNID,CREATED_TIME,SORT)
+		VALUES
+		(#{id},#{type_name},#{siteid},#{imageid},#{type_status},#{type_keywords},#{type_detail},#{type_summary},#{pid},#{type_wburl},#{columnid},#{created_time},#{sort})
+	</insert>
+	<!--保存相关联栏目关系 -->
+	<insert id="insertMessagetype_column" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		<if test="columnids !=null and columnids.length>0">
+			INSERT INTO WEB_NEWMESSAGETYPE_COLUMN(COLUMNID,NEWMESSAGETYPEID) VALUES
+			<foreach collection="columnids" item="messagetypeid02" open=""
+				separator="," close="">
+				(#{messagetypeid02},#{id})
+			</foreach>
+		</if>
+	</insert>
+
+	<!-- 删除相关联栏目关系 -->
+	<delete id="deleteMessagetype_column">
+		DELETE FROM WEB_NEWMESSAGETYPE_COLUMN
+		WHERE NEWMESSAGETYPEID IN
+		<foreach collection="array" item="messagetypeid03" close=")" open="("
+			separator=",">
+			#{messagetypeid03}
+		</foreach>
+	</delete>
+<!-- 
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,
+		T.TXT
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_TXT T ON M.ID=T.CONTENT_ID
+		WHERE M.ID=#{ID} -->
+	<!-- 根据id查询资讯类型 -->
+	
+	<select id="selectMessageTypeById" resultType="pd">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,
+		T.TXT,I.TITLE,MC.COLUMNID,C.COLUM_NAME,M2.ID AS PID,M2.TYPE_NAME AS TYPE_NAME,WSC.SKIPPATH AS typeUrlName
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_TXT T ON M.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.IMAGEID
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=MC.COLUMNID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE M2 ON M.PID=M2.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON M.ID=WSC.TYPEID
+		WHERE M.ID=#{ID}
+	</select>
+	
+	
+	
+	<!-- 根据栏目ids查询分类ids -->
+	<select id="selectIdsByColumnIds" resultType="String">
+		SELECT NEWMESSAGETYPEID
+		FROM WEB_NEWMESSAGETYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="messagetypeid04" close=")" open="(" separator=",">
+			#{messagetypeid04}
+		</foreach>
+	</select>
+	<!-- 查询类型对应的栏目数 -->
+	<select id="selectCountByIds" resultType="HashMap">
+		SELECT COUNT(*),NEWMESSAGETYPEID
+		FROM WEB_NEWMESSAGETYPE_COLUMN
+		WHERE NEWMESSAGETYPEID IN
+		<foreach collection="array" item="messagetypeid05" close=")" open="(" separator=",">
+			#{messagetypeid05}
+		</foreach>
+		GROUP BY NEWMESSAGETYPEID
+	</select>
+	<!-- 根据栏目ids删除和栏目的关联关系 -->
+	<delete id="deleteByColumnIds" >
+		DELETE FROM WEB_NEWMESSAGETYPE_COLUMN
+		WHERE COLUMNID IN
+		<foreach collection="array" item="messagetypeid06" close=")" open="(" separator=",">
+			#{messagetypeid06}
+		</foreach>
+	</delete>
+	
+	<!-- 根据产品类型的id查询图片的路径 -->
+	<select id="selectImagePath" resultType="pd">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_IMAGE I ON M.IMAGEID=I.IMAGE_ID
+		WHERE M.ID IN
+			<foreach collection="array" item="messagetypeid07" open="(" close=")"
+				separator=",">
+				<if test="messagetypeid07 !=null and messagetypeid07 != ''">
+					#{messagetypeid07}
+				</if>
+				<if test="messagetypeid07 ==null or messagetypeid07 == ''">
+					""
+				</if>
+			</foreach>
+	</select>
+	<!--保存资讯图片 -->
+	<insert id="saveMessageImage" parameterType="pd">
+		insert into WEB_IMAGE(
+		IMAGE_ID,TITLE,IMGURL,TYPE,BZ
+		) values (
+		#{messageImageId},#{messageTitle},#{messageImageUrl},6,#{bz}
+		)
+	</insert>
+	<!-- 修改资讯图片 -->
+	<update id="updateMessageImage" parameterType="pd">
+		UPDATE WEB_IMAGE
+		SET IMGURL=#{messageImageUrl}
+		WHERE IMAGE_ID=#{messageImageId}
+	</update>
+	<!-- 删除图片 -->
+	<delete id="deleteMessageImage">
+		DELETE FROM WEB_IMAGE
+		WHERE IMAGE_ID IN
+		<foreach collection="array" close=")" item="messagetypeid08" open="("
+			separator=",">
+			#{messagetypeid08}
+		</foreach>
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteMessageByIds">
+		DELETE FROM WEB_NEWMESSAGE_TYPE WHERE ID in
+		<foreach collection="array" item="messagetypeid09" close=")" open="("
+			separator=",">
+			#{messagetypeid09}
+		</foreach>
+	</delete>
+	<!--根据id更新资讯类型-->
+	<update id="updateMessageById" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		<set>
+			<if test="type_name !=null and type_name !='' ">TYPE_NAME=#{type_name},</if>
+			<if test="siteid !=null and siteid !='' ">SITEID=#{siteid},</if>
+			<if test="imageid !=null and imageid !='' ">IMAGEID=#{imageid},</if>
+			<if test="pid !=null and pid !='' ">PID=#{pid},</if>
+			<if test="type_status !=null and type_status !='' ">TYPE_STATUS=#{type_status},</if>
+			TYPE_SUMMARY=#{type_summary},
+			TYPE_KEYWORDS=#{type_keywords},
+			TYPE_WBURL=#{type_wburl},
+			UPDATE_TIME=#{update_time},
+			COLUMNID=#{columnid}
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 查询类型下的资讯id -->
+	<select id="selectMessageIds" resultType="String">
+		SELECT DISTINCT M.ID
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE MT.ID IN
+		<foreach collection="array" item="messagetypeid10" close=")" open="("
+			separator=",">
+			#{messagetypeid10}
+		</foreach>
+	</select>
+	<!--通过id更新资讯类型状态  -->
+	<update id="updateMessageTypeStatusByIds" parameterType="HashMap">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		SET
+		TYPE_STATUS= #{STATUS}
+		WHERE ID IN
+		<foreach collection="ids" item="messagetypeid11" close=")" open="("
+			separator=",">
+			#{messagetypeid11}
+		</foreach>
+	</update>
+	
+	<!--通过id更新资讯类型状态  -->
+	<update id="updateTypeStatus">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		SET
+		TYPE_STATUS=#{STATUS}
+		WHERE ID IN
+		<foreach collection="ids" item="messagetypeid12" close=")" open="("
+			separator=",">
+			#{messagetypeid12}
+		</foreach>
+	</update>
+	
+	<!-- 通过id更新资讯状态 -->
+	<update id="updateMessageStatusByIds" parameterType="HashMap">
+		UPDATE WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION MTR
+		ON M.ID = MTR.MESSAGEID
+		SET M.STATUS= #{STATUS}
+		WHERE MTR.MESSAGETYPEID IN
+		<foreach collection="ids" item="messagetypeid13" close=")" open="("
+			separator=",">
+			#{messagetypeid13}
+		</foreach>
+	</update>
+	<!-- 修改资讯类型状态 -->
+	<update id="updateMessageTypeStatus" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		<set>
+			<if test="status !=null and status !=''">TYPE_STATUS=#{status},</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 以下为删除层级关系之间进行的改动 -->
+	<!--查找所有的id和pid -->
+	<select id="selectAllIdPiD" parameterType="pd" resultType="HashMap">
+		SELECT ID,PID
+		FROM WEB_NEWMESSAGE_TYPE
+	</select>
+	
+	<!-- 展示所有资讯类型顶级的查询 -->
+	<select id="selectMessage_TypeByColumnIdTop" resultMap="resultMessage_Type">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,I.IMGURL,
+		T.ID AS TEM_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_,WSC.SKIPPATH as typeUrlName
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON MC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=M.COLUMNID
+		LEFT JOIN WEB_IMAGE I ON M.IMAGEID = I.IMAGE_ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON M.ID = WSC.TYPEID
+		WHERE MC.COLUMNID=#{id}
+	</select>
+	<!-- 修改资讯类型SORT -->
+	<update id="updateMessageTypeSort" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		<set>
+			<if test="sort !=null and sort !=''">SORT=#{sort},</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 根据ID查询 -->
+	<select id="findTypeInfoById" parameterType="String" resultMap="resultMessageType">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,
+		M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,
+		T.ID as TEM_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH
+		FROM WEB_NEWMESSAGE_TYPE M
+		INNER JOIN WEB_TEMPLATE T
+		WHERE M.ID=#{id} AND M.COLUMNID=T.ID
+	</select>
+	<!-- 展示对应栏目下所有资讯类型-->
+	<select id="findMessageTypeByColumnId" resultType="cn.cebest.entity.system.newMessage.NewMessageType">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		WHERE  MC.COLUMNID=#{id}
+	</select>
+	<!-- 展示对应栏目下所有资讯类型-->
+	<select id="findMessageTypeByColumnIds" resultType="cn.cebest.entity.system.newMessage.NewMessageType">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,MC.COLUMNID AS columId
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		<where>
+			<if test="SITEID !=null and SITEID != ''">SITEID=#{SITEID}</if>
+			<if test="columnids!=null and columnids!=''">
+				AND MC.COLUMNID IN
+				<foreach collection="columnids" close=")" item="messagetypeid14" open="(" separator=",">
+				#{messagetypeid14}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<!--通过类型名查找类型 -->
+	<select id="findMessageTypeByName"  parameterType="String" resultType="cn.cebest.entity.system.newMessage.NewMessageType">
+		SELECT ID,TYPE_NAME,TYPE_ID,IMAGEID,TYPE_STATUS,TYPE_DETAIL,TYPE_KEYWORDS,TYPE_SUMMARY,TYPE_WBURL,COLUMNID,SORT
+		FROM WEB_NEWMESSAGE_TYPE
+		WHERE TYPE_NAME=#{name}
+	</select>
+	
+	<!-- 展示所有资讯类型顶级的查询 -->
+	<select id="findTypelistPageByColumnIds" parameterType="page" resultMap="resultMessage_Type">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,
+		T.ID AS TEM_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON MC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=M.COLUMNID
+		WHERE  MC.COLUMNID=#{pd.columId} AND M.PID = '0'
+	</select>
+	
+	<!-- 展示所有资讯类型不是顶级的查询 -->
+	<select id="findTypeChildByColumnIds" parameterType="page" resultMap="resultMessage_Type">
+		SELECT
+		M.ID,M.TYPE_NAME,M.SITEID,M.IMAGEID,M.TYPE_STATUS,M.TYPE_KEYWORDS,M.TYPE_SUMMARY,M.PID,M.TYPE_WBURL,M.CREATED_TIME,M.UPDATE_TIME,M.SORT,
+		T.ID AS TEM_ID,T.TEM_NAME,T.TEM_FILEPATH,T.TEM_FILENAME,T.CREATETIME AS T_CREATETIME,T.TEM_TYPE,T.TEM_IMAGEPATH,T.IS_DEFAULT,CCF.ID AS CID,CCF.COLUM_NAME AS COLUMNAME_
+		FROM WEB_NEWMESSAGE_TYPE M
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG CCF ON MC.COLUMNID=CCF.ID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=M.COLUMNID
+		WHERE  MC.COLUMNID=#{pd.columId} AND M.PID != '0'
+	</select>
+	
+	<!-- 修改资讯状态 -->
+	<update id="updateMessageStatus" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE_TYPE
+		SET TYPE_STATUS= ${status}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="messagetypeid15" close=")" open="("
+			separator=",">
+			#{messagetypeid15}
+		</foreach>
+	</update>
+	
+	<!-- 删除资讯分类的地址栏URL信息 -->
+	<delete id="deleteMessagetypeUrlName">
+		DELETE FROM WEB_SKIPPATH_COLUMN
+		WHERE TYPEID IN
+		<foreach collection="array" item="id" close=")" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除资讯内容的地址栏URL信息 -->
+	<delete id="deleteMessagetypeContentUrlName">
+		DELETE FROM WEB_SKIPPATH
+		WHERE TYPEID IN
+		<foreach collection="array" item="id" close=")" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 保存分类url信息 -->
+	<insert id="saveContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		<if test="columnids !=null and columnids.length>0">
+			insert into WEB_SKIPPATH_COLUMN (
+				COLUMNID,TYPEID,TYPE,ISCHANNEL,SKIPPATH,ISSELECT
+			) values (
+				<foreach collection="columnids" item="messagetypeid03" open=""
+					separator="," close="">
+					#{messagetypeid03},#{id},2,0,#{typeUrlName},1
+				</foreach>
+			)
+		</if>
+	</insert>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentTypeUrlNameList" parameterType="cn.cebest.entity.system.newMessage.NewMessageType" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH_COLUMN 
+		WHERE TYPEID = #{id}
+	</select>
+	
+	<!-- 修改分类url信息 -->
+	<update id="editContentTypeUrlNameconfig" parameterType="cn.cebest.entity.system.newMessage.NewMessageType" >
+		UPDATE WEB_SKIPPATH_COLUMN
+		<set>
+			<foreach collection="columnids" item="messagetypeid04" open=""
+				separator="," close="">
+					TYPE				= 2
+					,ISCHANNEL			= 0
+					,ISSELECT			= 1
+					<if test="typeUrlName!=null and typeUrlName!=''">
+						,SKIPPATH			= #{typeUrlName}
+					</if>
+					<if test="messagetypeid04!=null and messagetypeid04!=''">
+						,COLUMNID			= #{messagetypeid04}
+					</if>
+			</foreach>
+		</set>
+		WHERE 
+			TYPEID = #{id}
+	</update>
+</mapper>

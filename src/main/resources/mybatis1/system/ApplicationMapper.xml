@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApplicationMapper">
+	<!-- begin wzd -->
+	<resultMap type="cn.cebest.entity.system.application.Application" id="resultApplication">
+		<id property="id" column="ID" />
+		<id property="item" column="ITEM" />
+		<result property="industry" column="INDUSTRY" />
+		<result property="field" column="FIELD" />
+		<result property="companyname" column="COMPANYNAME" />
+		<result property="establishment" column="ESTABLISHMENT" />
+		<result property="website" column="WEBSITE" />
+		<result property="registercapital" column="REGISTERCAPITAL" />
+		<result property="number" column="NUMBER" />
+		<result property="annualsales" column="ANNUALSALES" />
+		<result property="annualoutput" column="ANNUALOUTPUT" />
+		<result property="companyaddress" column="COMPANYADDRESS" />
+		<result property="workshoparea" column="WORKSHOPAREA"/>
+		<result property="fullname" column="FULLNAME" />
+		<result property="post" column="POST"/>
+		<result property="contactnumber" column="CONTACTNUMBER" />
+		<result property="email" column="EMAIL"/>
+		<result property="createtime" column="CREATETIME" />
+	</resultMap>
+	<!-- 保存内容 -->
+	<insert id="saveApplication" parameterType="cn.cebest.entity.system.application.Application">
+		INSERT INTO WEB_APPLICATION
+		(ITEM,INDUSTRY,FIELD,COMPANYNAME,ESTABLISHMENT,
+		WEBSITE,REGISTERCAPITAL,NUMBER,ANNUALSALES,ANNUALOUTPUT,
+		COMPANYADDRESS,WORKSHOPAREA,FULLNAME,POST,CONTACTNUMBER,
+		EMAIL,CREATETIME)
+		VALUES
+		(#{item},#{industry},#{field},#{companyname},#{establishment},
+		#{website},#{registercapital},#{number},#{annualsales},#{annualoutput},
+		#{companyaddress},#{workshoparea},#{fullname},#{post},#{contactnumber},
+		#{email},#{createtime})
+	</insert>
+	<!-- 修改内容 -->
+	<update id="editApplication" parameterType="cn.cebest.entity.system.application.Application">
+		UPDATE WEB_APPLICATION SET
+		ITEM = #{item},
+		INDUSTRY = #{industry},
+		FIELD = #{field},
+		COMPANYNAME = #{companyname},
+		ESTABLISHMENT = #{establishment},
+		WEBSITE = #{website},
+		REGISTERCAPITAL = #{registercapital},
+		NUMBER = #{number},
+		ANNUALSALES = #{annualsales},
+		ANNUALOUTPUT=#{annualoutput},
+		COMPANYADDRESS = #{companyaddress},
+		WORKSHOPAREA = #{workshoparea},
+		FULLNAME=#{fullname},
+		POST=#{post},
+		CONTACTNUMBER=#{contactnumber},
+		EMAIL=#{email}
+		WHERE ID=#{id}
+	</update>
+	<select id="findApplicationById" parameterType="pd"
+		resultMap="resultApplication">
+		SELECT
+		ID,ITEM,INDUSTRY,FIELD,COMPANYNAME,ESTABLISHMENT,
+		WEBSITE,REGISTERCAPITAL,NUMBER,ANNUALSALES,ANNUALOUTPUT,
+		COMPANYADDRESS,WORKSHOPAREA,FULLNAME,POST,CONTACTNUMBER,
+		EMAIL
+		FROM WEB_APPLICATION
+		WHERE ID=#{id}
+	</select>
+	<select id="selectApplicationslistPage" parameterType="page" resultMap="resultApplication">
+		SELECT 
+		ID,ITEM,INDUSTRY,FIELD,COMPANYNAME,ESTABLISHMENT,
+		WEBSITE,REGISTERCAPITAL,NUMBER,ANNUALSALES,ANNUALOUTPUT,
+		COMPANYADDRESS,WORKSHOPAREA,FULLNAME,POST,CONTACTNUMBER,
+		EMAIL
+		FROM WEB_APPLICATION
+		<where>
+			1=1
+			<if test="pd.keyword !=null and pd.keyword != ''">
+				AND COMPANYNAME LIKE '%' #{pd.keyword}
+				'%'
+			</if>
+		</where>
+		ORDER BY CREATETIME DESC
+	</select>
+	<!-- 导出申请全部列表 -->
+	<select id="listAllApplication" parameterType="pd" resultType="pd" >
+		SELECT 
+		ITEM,INDUSTRY,FIELD,COMPANYNAME,ESTABLISHMENT,
+		WEBSITE,REGISTERCAPITAL,NUMBER,ANNUALSALES,ANNUALOUTPUT,
+		COMPANYADDRESS,WORKSHOPAREA,FULLNAME,POST,CONTACTNUMBER,
+		EMAIL,CREATETIME
+		FROM WEB_APPLICATION
+	</select>
+</mapper>

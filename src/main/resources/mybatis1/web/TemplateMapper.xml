@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="TemplateMapper">
+    <resultMap id="BaseResultMap" type="cn.cebest.entity.system.Template">
+	    <id column="ID" jdbcType="VARCHAR" property="id" />
+	    <result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+	    <result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+	    <result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+	    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+	    <result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+	    <result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+	    <result column="IS_DEFAULT" property="isDefault" jdbcType="VARCHAR" />
+	    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+	    <result column="SITEID" property="siteID" jdbcType="VARCHAR" />
+    </resultMap>
+    
+     <resultMap id="SiteResultMap" type="cn.cebest.entity.system.Template">
+	    <id column="ID" jdbcType="VARCHAR" property="id" />
+	    <result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+	    <result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+	    <result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+	    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="CreateTime" />
+	    <result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+	    <result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+	    <result column="IS_DEFAULT" property="isDefault" jdbcType="VARCHAR" />
+	    <result column="IS_COLUMID" property="isColumId" jdbcType="VARCHAR" />
+    </resultMap>
+    
+	<sql id="Base_Column_List" >
+    	ID, TEM_NAME, TEM_FILEPATH, TEM_FILENAME, CREATETIME, TEM_TYPE, TEM_IMAGEPATH, IS_DEFAULT
+  	</sql>
+	
+	<delete id="delete" parameterType="pd">
+		delete from
+		WEB_TEMPLATE
+		where ID = #{ID}
+	</delete>
+	<insert id="save" parameterType="pd">
+		insert into WEB_TEMPLATE
+		(ID,TEM_NAME,TEM_FILEPATH,TEM_FILENAME,CREATETIME,TEM_TYPE,TEM_IMAGEPATH,IS_DEFAULT,TYPE)
+		values
+		(#{ID},#{TEM_NAME},#{TEM_FILEPATH},#{TEM_FILENAME},#{CREATETIME},#{TEM_TYPE},#{TEM_IMAGEPATH},#{IS_DEFAULT},#{TYPE})
+	</insert>
+	<update id="edit" parameterType="pd">
+		update
+		WEB_TEMPLATE
+		<trim prefix="set" suffixOverrides=",">
+			<if test="TEM_NAME !=null and TEM_NAME !=''">
+		      TEM_NAME = #{TEM_NAME},
+			</if>
+			<if test="TEM_FILEPATH !=null and TEM_FILEPATH !=''">
+			 TEM_FILEPATH = #{TEM_FILEPATH},
+			</if>
+			<if test="TEM_FILENAME !=null and TEM_FILENAME !=''">
+		   TEM_FILENAME = #{TEM_FILENAME},
+			</if>
+			<if test="CREATETIME !=null and CREATETIME !=''">
+			CREATETIME = #{CREATETIME},
+			</if>
+			TEM_TYPE = #{TEM_TYPE},
+			<if test="TEM_IMAGEPATH !=null and TEM_IMAGEPATH !=''">
+			TEM_IMAGEPATH = #{TEM_IMAGEPATH},
+			</if>
+			<if test="IS_DEFAULT !=null and IS_DEFAULT !=''">
+			IS_DEFAULT = #{IS_DEFAULT},
+			</if>
+			<if test="TYPE !=null and TYPE !=''">
+			TYPE = #{TYPE}
+			</if>
+		</trim>
+		where ID = #{ID}
+	</update>
+	
+	<select id="findById" parameterType="pd" resultType="pd">
+		select tem.ID,tem.TEM_NAME,tem.TEM_FILEPATH,tem.TEM_FILENAME,tem.CREATETIME,tem.TEM_TYPE,tem.TEM_IMAGEPATH,
+			tem.IS_DEFAULT,tem.TYPE,pic.IMGURL as TEM_IMAGEPATH,pic.NAME as TEM_IMAGE_NAME,pic.IMGURL as TEM_IMAGE_PATH
+		from WEB_TEMPLATE tem
+		LEFT JOIN WEB_IMAGE pic ON tem.TEM_IMAGEPATH=pic.IMAGE_ID
+		where ID = #{ID}
+	</select>
+	
+	<select id="findPoById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+			<include refid="Base_Column_List"/>
+		from WEB_TEMPLATE
+		where ID = #{id}
+	</select>
+	
+	<select id="findSitePoById" parameterType="java.lang.String" resultMap="SiteResultMap">
+		select
+			T.ID, T.TEM_NAME, T.TEM_FILEPATH, T.TEM_FILENAME, T.CREATE_TIME, T.TEM_TYPE, T.TEM_IMAGEPATH, T.IS_DEFAULT,
+			C.ID AS IS_COLUMID
+		from WEB_TEMPLATE T
+		LEFT JOIN WEB_COLUMCONFIG C ON C.COLUM_TEMPLATETID=T.ID
+		where T.ID = #{id}
+	</select>
+	
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select ID,TEM_NAME,TEM_FILEPATH,TEM_FILENAME,CREATETIME,TEM_TYPE,TEM_IMAGEPATH
+		from WEB_TEMPLATE
+		<where>
+			<if test="TEM_TYPE != null and TEM_TYPE != ''"><!-- 类型检索 -->
+					and (
+						TEM_TYPE = #{TEM_TYPE}
+					)
+			</if>
+		</where>
+		order by CREATETIME desc
+	</select>
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT tem.ID,tem.TEM_NAME,tem.TEM_FILEPATH,tem.TEM_FILENAME,tem.CREATETIME,tem.TEM_TYPE,
+		 pic.IMGURL as TEM_IMAGEPATH,pic.NAME as TEM_IMAGE_NAME
+		FROM
+		WEB_TEMPLATE tem
+		LEFT JOIN WEB_IMAGE pic ON tem.TEM_IMAGEPATH=pic.IMAGE_ID
+		<where>
+			<if test="pd.TEM_NAME!= null and pd.TEM_NAME != ''"><!-- 名称检索 -->
+				and (
+					TEM_NAME LIKE CONCAT(CONCAT('%', #{pd.TEM_NAME}),'%')
+				)
+			</if>
+			<if test="pd.TEM_TYPE != null and pd.TEM_TYPE != ''"><!-- 类型检索 -->
+				and (
+					TEM_TYPE = #{pd.TEM_TYPE}
+				)
+			</if>
+		</where>
+		order by TEM_TYPE
+	</select>
+		<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		DELETE FROM
+		WEB_TEMPLATE
+		WHERE 
+			ID IN
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<select id="check" parameterType="String" resultType="int">
+		SELECT
+		COUNT(WT.ID)
+		FROM
+			WEB_TEMPLATE WT
+		JOIN WEB_CONTENT WC ON WC.CONTENT_TEMPLATEID = WT.ID 
+		
+		JOIN WEB_COLUMCONFIG WCC ON WCC.COLUM_TEMPLATETID = WT.ID 
+		
+		WHERE
+			WC.CONTENT_TEMPLATEID IN 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		OR WCC.COLUM_TEMPLATETID IN
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		OR WCTY.TYPE_TEMPLATEID IN 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</select>
+	
+	<!-- 获取指定类型的模板 -->
+	<select id="findListByDefinedType" parameterType="pd" resultType="pd">
+		select ID,TEM_NAME,TEM_FILEPATH,TEM_FILENAME,CREATETIME,TEM_TYPE,TEM_IMAGEPATH,IS_DEFAULT
+		from WEB_TEMPLATE
+		WHERE TEM_TYPE=#{type} 
+		<if test="temType != null and temType != ''">
+			AND TYPE=#{temType}
+		</if>
+		order by CREATETIME DESC
+	</select>
+	
+	<update id="resetDefault" parameterType="java.lang.String">
+		update
+		WEB_TEMPLATE
+			SET IS_DEFAULT = '0'
+		where TEM_TYPE = #{type}
+	</update>
+	<update id="updateDefault" parameterType="java.lang.String">
+		update
+		WEB_TEMPLATE
+			SET IS_DEFAULT = '1'
+		where ID = #{id}
+	</update>
+	
+	
+	<!-- 复制整站模板使用，按网站ID查询 -->
+	<select id="listAllForCopy" parameterType="String" resultMap="BaseResultMap">
+		select ID,TEM_NAME,TEM_FILEPATH,TEM_FILENAME,CREATETIME,TEM_TYPE,TEM_IMAGEPATH,IS_DEFAULT,TYPE,SITEID
+		from WEB_TEMPLATE	
+		<where>
+			1=1
+			<if test="siteID!= null and siteID != ''">
+				AND SITEID = #{siteID}
+			</if>
+		</where>	
+		order by CREATETIME desc
+	</select>
+	
+	<!-- 复制整站模板使用，批量复制 -->
+	<insert id="insertBatch">
+		insert into WEB_TEMPLATE
+		 (	ID,
+		 	TEM_NAME,
+		 	TEM_FILEPATH,
+		 	TEM_FILENAME,
+		 	CREATETIME,
+		 	TEM_TYPE,
+		 	TEM_IMAGEPATH,
+		 	IS_DEFAULT,
+		 	TYPE,
+		 	SITEID)
+		values
+		<foreach collection ="list" item="template" separator =",">
+         (	#{template.id}, 
+         	#{template.temName}, 
+         	#{template.temFilepath},
+         	#{template.temFilename},
+         	#{template.createtime},
+         	#{template.temType},
+         	#{template.temImagepath},
+         	#{template.isDefault},
+         	#{template.type},
+         	#{template.siteID})
+    	</foreach >		
+	</insert>
+	
+	<!--复制整站模板之前，如果执行过复制，再次执行需要先根据网站ID批量删除之前复制的模板-->
+	<delete id="deleteBeforCopy" parameterType="String">
+		delete from WEB_TEMPLATE
+		where 
+			SITEID=#{siteID}
+	</delete>
+	
+</mapper>

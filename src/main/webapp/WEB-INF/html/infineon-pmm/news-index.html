@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/news-index.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+
+	<!-- 置顶新闻模板 -->
+	<template id="news1T" style="display:none">
+		<div class="img_w fl">
+			<img class="scale" src="${imgPath}{imageUrl}" style="width: 100%;max-width: 100%;"/>
+		</div>
+		<div class="new_c_txt fr">
+			<i class="mt_40 mb_40"></i>
+			<p class="fnt_20 p1">{title}</p>
+			<p class="fnt_12 p2">{time}</p>
+			<p class="fnt_16 mt_20 p3">{contentSummary}</p>
+			<a class="fnt_18 mt_30" href="${autoPath}/skippath/{contentUrl}">查看详情 ></a>
+		</div>
+		<div class="clear"></div>
+  	</template>
+  	<template id="news1T2" style="display:none">
+		<div class="img_w fl">
+			<img class="scale" src="${imgPath}{imageUrl}" style="width: 100%;max-width: 100%;"/>
+		</div>
+		<div class="new_c_txt fr">
+			<i class="mt_40 mb_40"></i>
+			<p class="fnt_20 p1">{title}</p>
+			<p class="fnt_12 p2">{time}</p>
+			<p class="fnt_16 mt_20 p3">{contentSummary}</p>
+			<a class="fnt_18 mt_30" target="blank" href="http://{link}">查看详情 ></a>
+		</div>
+		<div class="clear"></div>
+  	</template>
+  	
+  	<!-- 新闻模板 -->
+	<template id="news2T" style="display:none">
+		<li class="fl pt_30 pb_30 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="${autoPath}/skippath/{contentUrl}">
+				<p class="p1">{time}</p>
+				<p class="p2 mt_20">{title}</p>
+				<img class="mt_30" src="${autoPath}/staticRelease/img/moreBg.png"/>
+			</a>
+		</li>
+  	</template>
+  	<template id="news2T2" style="display:none">
+		<li class="fl pt_30 pb_30 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="http://{link}" target="blank">
+				<p class="p1">{time}</p>
+				<p class="p2 mt_20">{title}</p>
+				<img class="mt_30" src="${autoPath}/staticRelease/img/moreBg.png"/>
+			</a>
+		</li>
+  	</template>
+  	
+  	<template id="clear" style="display:none">
+		<div class="clear"></div>
+  	</template>
+
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+
+<div class="new_c wrap pt_55 pb_55 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+	<div class="new_nei" id="news1">
+	
+	</div>
+</div>
+<div class="new_list wrap pb_75 pt_40">
+	<ul id="news2">
+		
+	</ul>
+</div>
+
+<div id="page" class="page_div"></div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+	
+	//focus
+	function news1(){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getNewsList",
+			data:{
+				"columId" : '${template.columId!}',
+				"top" : 1,
+				"currentPage" : 1,
+				"showCount" : 1
+			},
+			async:false,
+			dataType : "json",
+			success : function(data) {
+				var d = data.data;
+				$(d.data).each(function(){
+					var news1T;
+					if(this.link != null && this.link != ''){
+						news1T = $("#news1T2").html();
+						news1T = news1T.replace("{link}",this.link);
+					}else{
+						news1T = $("#news1T").html();
+						news1T = news1T.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+					}
+					if(this.image != null){
+						news1T = news1T.replace("{imageUrl}",this.image.imgurl);
+					}
+					news1T = news1T.replace("{title}",this.message_title);
+					news1T = news1T.replace("{time}",formatDate(this.release_time));
+					news1T = news1T.replace("{contentSummary}",this.description);
+					
+					$("#news1").append(news1T);
+				});
+				
+				$("#news1").append($("#clear").html())
+			}// end success
+			
+		});//ajax end
+	};
+	
+	//list
+	function news2(num){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getNewsList",
+			data:{
+				"columId" : '${template.columId!}',
+				"top" : '',
+				"currentPage" : num,
+				"showCount" : 10,
+				"time":1
+			},
+			async:false,
+			dataType : "json",
+			success : function(data) {
+				$("#news2").empty();
+				var d = data.data;
+				$("#page").show();
+				if(d.data == null || d.data == ''){
+					$("#page").hide();
+					return;
+				}
+				$(d.data).each(function(){
+					var news2T;
+					if(this.link != null && this.link != ''){
+						news2T = $("#news2T2").html();
+						news2T = news2T.replace("{link}",this.link);
+					}else{
+						news2T = $("#news2T").html();
+						news2T = news2T.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+					}
+					news2T = news2T.replace("{time}",formatDate(this.release_time));
+					news2T = news2T.replace("{title}",this.message_title);
+					$("#news2").append(news2T);
+				});
+				$("#news2").append($("#clear").html());
+				if(d.page.currentPage != 1){
+					$("html,body").animate({ scrollTop: $('.new_nei').offset().top+$('.new_nei').outerHeight() }, 500);
+				}
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						news2(num)
+					}
+				})
+			}// end success
+			
+		});//ajax end
+	};
+	
+	$(function(){
+		news2(1);
+		news1();
+		
+		$('img.scale').imageScale();
+		new WOW().init();
+	});
+	
+	
+function formatDate(millinSeconds){	
+	var date = new Date(parseInt(millinSeconds));
+	var monthArr = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");	
+	var suffix = new Array("st","nd","rd","th");		
+	var year = date.getFullYear(); //年	
+	var month = monthArr[date.getMonth()]; //月	
+	var ddate = date.getDate(); //日		
+	/* if(ddate % 10 < 1 || ddate % 10 > 3) {		
+		ddate = ddate + suffix[3];
+	}else if(ddate % 10 == 1) {		
+		ddate = ddate + suffix[0];
+	} else if(ddate % 10 == 2) {		
+		ddate = ddate + suffix[1];	
+	}else {		
+		ddate = ddate + suffix[2];	
+	} */	
+	return month + " "+ ddate + "," + year;
+	
+}
+	
+</script>
+</body>
+</html>          

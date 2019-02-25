@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ColumconfigMapper">
+      <resultMap id="TemplateMap" type="cn.cebest.entity.system.Template">
+	    <id column="TEM_ID" jdbcType="VARCHAR" property="id" />
+	    <result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+	    <result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+	    <result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+	    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+	    <result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+	    <result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+   	  </resultMap>
+	  
+	  <resultMap id="BaseResultMap" type="cn.cebest.entity.system.ColumConfig" >
+	    <id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="COLUM_NAME" property="columName" jdbcType="VARCHAR" />
+	    <result column="COLUM_URLPATH" property="columUrlpath" jdbcType="VARCHAR" />
+	    <result column="COLUM_DISPLAY" property="columDisplay" jdbcType="VARCHAR" />
+	    <result column="PARENTID" property="parentid" jdbcType="VARCHAR" />
+	    <result column="SORT" property="sort" jdbcType="INTEGER" />
+	    <result column="SITEID" property="siteid" jdbcType="VARCHAR" />
+	    <result column="COLUMGROUP_ID" property="columGroupId" jdbcType="VARCHAR" />
+	    <result column="COLUM_TEMPLATETID" property="columTemplatetid" jdbcType="VARCHAR" />
+	    <result column="COLUM_SUBNAME" property="columSubname" jdbcType="VARCHAR" />
+	    <result column="COLUM_IMAGE" property="columImage" jdbcType="VARCHAR" />
+	    <result column="COLUM_IMAGE_PATH" property="columImagePath" jdbcType="VARCHAR" />
+	    <result column="COLUM_DESC" property="columDesc" jdbcType="VARCHAR" />
+	    <result column="OUT_URL" property="outUrl" jdbcType="VARCHAR" />
+	    <result column="COLUM_TYPE" property="columType" jdbcType="VARCHAR" />
+	    <result column="NODE_TYPE" jdbcType="VARCHAR" property="nodeType"/>
+        <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+        <result column="INDEX_STATUS" property="index_Status" jdbcType="VARCHAR"/>
+        <result column="TEMPLATET_DETAIL_ID" jdbcType="VARCHAR" property="columndetailId"/>
+         <result column="COLUM_URLNAME" jdbcType="VARCHAR" property="columUrlName" />
+        <association property="template" resultMap="TemplateMap"/>
+	  </resultMap>
+	  
+	  <sql id="Base_Column_List" >
+	    ID, COLUM_NAME, COLUM_URLPATH, COLUM_DISPLAY, PARENTID, SORT, SITEID, COLUM_TEMPLATETID, 
+	    COLUM_SUBNAME, COLUM_IMAGE, COLUM_DESC, OUT_URL,CREATETIME,COLUM_TYPE
+  	  </sql>
+	
+	<select id="findColumconfiglistPage" resultType="pd">
+		SELECT
+			colum.ID, colum.COLUM_NAME, colum.COLUM_URLPATH, colum.COLUM_DISPLAY, colum.PARENTID, colum.SORT, colum.SITEID, colum.COLUM_TEMPLATETID, 
+		    colum.COLUM_SUBNAME, colum.COLUM_IMAGE, colum.COLUM_DESC, colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,
+		    colum.COLUM_ENGLISH_NAME,pic.NAME as PIC_NAME,pic.IMGURL as PIC_PATH
+		FROM
+			WEB_COLUMCONFIG colum 
+		LEFT JOIN 
+			WEB_IMAGE pic
+	    ON 
+	    	colum.COLUM_IMAGE=pic.IMAGE_ID 
+		WHERE colum.PARENTID=#{pd.ID} order by colum.SORT
+	</select>
+	
+	<!-- 后台接口,栏目列表 -->
+	<select id="columconfiglistPage" resultType="pd" parameterType="page">
+		SELECT
+			WCC.ID,
+			WCC.COLUM_NAME,
+			WCC.COLUM_URLPATH,
+			WCC.COLUM_DISPLAY,
+			WCC.PARENTID,
+			WCC.SORT,
+			WCC.COLUM_TEMPLATETID
+		FROM
+			WEB_COLUMCONFIG WCC
+			WHERE SITEID=#{pd.id}
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				AND WCC.COLUM_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+			</if>
+			<if test="pd.columconfigId!=null and pd.columconfigId!=''">
+				AND WCC.PARENTID=#{pd.columconfigId}
+			</if>
+			<if test="pd.columconfigId==null or pd.columconfigId==''">
+				AND WCC.PARENTID='0'
+			</if>
+			<if test="pd.columDisplay!=null and pd.columDisplay!=''">
+				AND WCC.COLUM_DISPLAY=#{pd.columDisplay}
+			</if>
+		</trim>
+			ORDER BY WCC.SORT
+	</select>
+	<!-- 更新内容详情的状态 -->
+	<update id="updateColumconfig" parameterType="pd">
+		<if test="columconfigId!=null and columconfigId!=''">
+			UPDATE WEB_COLUMCONFIG WCC
+				SET WCC.COLUM_DISPLAY = '2'
+			WHERE
+				WCC.ID = #{columconfigId}
+		</if>
+	</update>
+	<!-- 批量更新内容详情的状态 -->
+	<update id="updateAllColumconfig" parameterType="String">
+			UPDATE WEB_COLUMCONFIG WCC
+				SET WCC.COLUM_DISPLAY = '2'
+			WHERE WCC.ID in
+	 	<foreach item="item3" index="index" collection="array" open="(" separator="," close=")">
+        	#{item3}
+        </foreach>
+	</update>
+	<!-- 保存栏目 -->
+	<insert id="saveColumconfig" parameterType="pd">
+		insert into WEB_COLUMCONFIG (
+			ID,SITEID,COLUM_NAME,COLUM_URLPATH,COLUM_DISPLAY,PARENTID,COLUM_TEMPLATETID,COLUM_SUBNAME,COLUM_IMAGE,COLUM_DESC,OUT_URL,SORT,CREATETIME,UPDATE_TIME,COLUMGROUP_ID,COLUM_TYPE,COLUM_VIDEOID,TEMPLATET_DETAIL_ID,INDEX_STATUS
+		) values (
+			#{ID},#{SITEID},#{COLUM_NAME},#{COLUM_URLPATH},#{COLUM_DISPLAY},#{PARENTID},#{COLUM_TEMPLATETID},
+			#{COLUM_SUBNAME},#{COLUM_IMAGE},#{COLUM_DESC},#{OUT_URL},#{SORT},#{CREATETIME},#{UPDATE_TIME},#{COLUMGROUP_ID},#{COLUM_TYPE},#{COLUM_VIDEOID},#{TEMPLATET_DETAIL_ID},#{INDEX_STATUS}
+		)
+	</insert>
+	<!-- 通过Id获取数据 liu -->
+	<select id="findColumconfigById" parameterType="pd" resultType="pd" >
+		SELECT
+			colum.ID, colum.COLUM_NAME, colum.COLUM_URLPATH, colum.COLUM_DISPLAY, colum.PARENTID, colum.SORT, colum.SITEID, colum.COLUM_TEMPLATETID, 
+		    colum.COLUM_SUBNAME, colum.COLUM_IMAGE, colum.COLUM_DESC, colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,colum.TEMPLATET_DETAIL_ID,pic.NAME as PIC_NAME,pic.IMGURL as PIC_PATH,
+		    VIO.ID as videoId,VIO.VIDEO_NAME as videoName,VIO.VIDEO_TITLE as videoTitle,VIO.VIDEO_CONTENT as videoContent,VIO.TOURL as videoToUrl,
+		    SEO.SEO_TITLE AS title,SEO.SEO_KEYWORDS AS keywords,SEO.SEO_DESCRIPTION AS description,colum.COLUM_ENGLISH_NAME,colum.INDEX_STATUS
+		FROM
+			WEB_COLUMCONFIG colum 
+		LEFT JOIN 
+			WEB_IMAGE pic
+	    ON 
+	    	colum.COLUM_IMAGE=pic.IMAGE_ID 
+	    	
+	    LEFT JOIN 
+			WEB_VIDEO VIO	
+	     ON 	 
+	     	colum.COLUM_VIDEOID = VIO.ID
+	    LEFT JOIN
+	    	WEB_SEO SEO
+	   	 ON 
+	   	 	colum.ID = SEO.MASTER_ID
+		WHERE colum.ID=#{ID}
+	</select>
+	
+	<!-- 通过栏目Id获取栏目地址栏url信息 -->
+	<select id="findColumconfigUrlNameById" parameterType="pd" resultType="pd" >
+		SELECT
+			WSC.SKIPPATH as COLUM_URLNAME
+		FROM
+			WEB_SKIPPATH_COLUMN WSC 
+		LEFT JOIN
+	    	WEB_COLUMCONFIG colum
+	   	 ON 
+	   	 	colum.ID = WSC.COLUMNID
+		WHERE colum.ID=#{ID} AND WSC.TYPEID IS NULL
+	</select>
+	<!-- wzd -->
+	<select id="findColumconfigByPid" parameterType="pd" resultType="pd" >
+		SELECT
+			colum.ID, colum.COLUM_NAME, colum.COLUM_URLPATH, colum.COLUM_DISPLAY, colum.PARENTID, colum.SORT, colum.SITEID, colum.COLUM_TEMPLATETID, 
+		    colum.COLUM_SUBNAME, colum.COLUM_IMAGE, colum.COLUM_DESC, colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,
+		    colum.COLUM_ENGLISH_NAME,pic.NAME as PIC_NAME,pic.IMGURL as PIC_PATH,WSC.SKIPPATH as COLUM_URLNAME
+		FROM
+			WEB_COLUMCONFIG colum 
+		LEFT JOIN 
+			WEB_IMAGE pic
+	    ON 
+	    	colum.COLUM_IMAGE=pic.IMAGE_ID 
+	    LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON colum.ID = WSC.COLUMNID
+		WHERE 
+			<if test="COLUM_DISPLAY!=null and COLUM_DISPLAY != '' ">
+				colum.COLUM_DISPLAY=#{COLUM_DISPLAY} AND
+			</if>
+		colum.PARENTID=#{ID} order by colum.SORT
+	</select>
+	
+	<select id="findColumconfigPoById" parameterType="pd" resultMap="BaseResultMap" >
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,colum.COLUM_TEMPLATETID,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.COLUM_TYPE,colum.CREATETIME,
+			img.IMGURL as COLUM_IMAGE_PATH,temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH,temp.TEM_FILEPATH,WSC.SKIPPATH as COLUM_URLNAME
+		FROM
+			WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+			LEFT JOIN WEB_IMAGE img ON colum.COLUM_IMAGE = img.IMAGE_ID
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON colum.ID = WSC.COLUMNID			
+		WHERE colum.ID=#{ID}
+	</select>
+	
+	<!-- 修改内容详情 --> 
+	<update id="editColumconfig" parameterType="pd" >
+		UPDATE WEB_COLUMCONFIG
+		<set> 
+			COLUM_NAME 			= #{COLUM_NAME},
+			COLUM_URLPATH 		= #{COLUM_URLPATH},
+			COLUM_DISPLAY		= #{COLUM_DISPLAY},
+			PARENTID			= #{PARENTID},
+			COLUM_TEMPLATETID	= #{COLUM_TEMPLATETID},
+			TEMPLATET_DETAIL_ID	= #{TEMPLATET_DETAIL_ID},
+			INDEX_STATUS		= #{INDEX_STATUS},
+			COLUM_SUBNAME		= #{COLUM_SUBNAME},
+			COLUM_DESC			= #{COLUM_DESC},
+			OUT_URL				= #{OUT_URL},
+			SORT				= #{SORT},
+			COLUM_TYPE          = #{COLUM_TYPE},
+			UPDATE_TIME			 = #{UPDATE_TIME}
+			<if test="COLUM_IMAGE!=null and COLUM_IMAGE!=''">
+				,COLUM_IMAGE     = #{COLUM_IMAGE}
+			</if>
+		</set>
+		WHERE 
+			ID = #{ID}
+	</update>
+	
+	<!-- 修改状态 -->
+	<update id="auditColumconfig" parameterType="pd">
+		UPDATE WEB_COLUMCONFIG
+		SET COLUM_DISPLAY = #{COLUM_DISPLAY}
+		WHERE ID = #{ID}
+	</update>
+	
+	<!-- 查询所有栏目 -->
+	<select id="findAllList" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,colum.COLUM_TEMPLATETID,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,
+			colum.INDEX_STATUS,colum.COLUMGROUP_ID,2 AS NODE_TYPE,
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH,temp.TEM_FILEPATH,img.IMGURL AS COLUM_IMAGE_PATH,WSC.SKIPPATH as COLUM_URLNAME
+		FROM
+			WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+			LEFT JOIN WEB_IMAGE img ON img.IMAGE_ID=colum.COLUM_IMAGE
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON colum.ID = WSC.COLUMNID
+		WHERE colum.SITEID = #{siteid}
+		<if test="COLUMGROUP_ID!=null and COLUMGROUP_ID!=''">
+			AND colum.COLUMGROUP_ID=#{COLUMGROUP_ID}
+		</if>
+		<if test="COLUM_DISPLAY!=null and COLUM_DISPLAY!=''">
+			AND colum.COLUM_DISPLAY=#{COLUM_DISPLAY}
+		</if>
+		<if test="COLUM_NAME!=null and COLUM_NAME!=''">
+			AND colum.COLUM_NAME LIKE CONCAT(CONCAT('%', #{COLUM_NAME}),'%')
+		</if>
+		<if test="TEM_TYPE!=null and TEM_TYPE!=''">
+			AND colum.COLUM_TYPE=#{TEM_TYPE}
+		</if>
+		
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询顶级栏目 -->
+	<select id="findTopList" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH,temp.TEM_FILEPATH,img.IMGURL AS COLUM_IMAGE_PATH
+		FROM
+			WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+			LEFT JOIN WEB_IMAGE img ON img.IMAGE_ID=colum.COLUM_IMAGE
+		WHERE colum.SITEID = #{siteid} AND colum.PARENTID='0'
+		<if test="COLUMGROUP_ID!=null and COLUMGROUP_ID!=''">
+			AND colum.COLUMGROUP_ID=#{COLUMGROUP_ID}
+		</if>
+		<if test="COLUM_DISPLAY!=null and COLUM_DISPLAY!=''">
+			AND colum.COLUM_DISPLAY=#{COLUM_DISPLAY}
+		</if>
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询所有栏目 -->
+	<select id="findAllTree" parameterType="pd" resultType="pd">
+		SELECT colum.ID,colum.COLUM_NAME,colum.PARENTID,colum.COLUM_SUBNAME,colum.OUT_URL,pic.IMGURL AS PATH,colum.COLUMGROUP_ID,colum.COLUM_TYPE,WSC.SKIPPATH as COLUM_URLNAME
+			FROM WEB_COLUMCONFIG colum 
+			LEFT JOIN WEB_IMAGE pic ON colum.COLUM_IMAGE=pic.IMAGE_ID
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON colum.ID = WSC.COLUMNID
+		WHERE colum.SITEID = #{SITEID} AND colum.COLUM_DISPLAY='1'
+		<if test="COLUMGROUP_ID!=null and COLUMGROUP_ID!=''">
+			AND colum.COLUMGROUP_ID = #{COLUMGROUP_ID}
+		</if>
+		GROUP BY colum.ID
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询顶级栏目 -->
+	<select id="findTopTree" parameterType="pd" resultType="pd">
+		SELECT ID,COLUM_NAME,PARENTID,COLUM_SUBNAME
+			FROM WEB_COLUMCONFIG
+		WHERE SITEID = #{SITEID} AND COLUM_DISPLAY='1' AND PARENTID='0'
+		<if test="COLUMGROUP_ID!=null and COLUMGROUP_ID!=''">
+			AND COLUMGROUP_ID = #{COLUMGROUP_ID}
+		</if>
+		ORDER BY SORT
+	</select>
+	
+	<!-- 查询指定类型的所有栏目 -->
+	<select id="findAssignTypeAllTree" parameterType="pd" resultType="pd">
+		SELECT colum.ID,colum.COLUM_NAME,colum.PARENTID,colum.COLUM_SUBNAME,colum.COLUMGROUP_ID
+			FROM WEB_COLUMCONFIG colum
+		WHERE colum.SITEID = #{SITEID} AND colum.COLUM_DISPLAY='1' 
+			 AND colum.COLUM_TYPE=#{TEM_TYPE}
+   		<if test="COLUM_NAME!=null and COLUM_NAME!=''">
+			AND colum.COLUM_NAME LIKE CONCAT(CONCAT('%', #{COLUM_NAME}),'%')
+		</if>
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询指定类型的顶级栏目 -->
+	<select id="findAssignTypeTopTree" parameterType="pd" resultType="pd">
+		SELECT colum.ID,colum.COLUM_NAME,colum.PARENTID,colum.COLUM_SUBNAME
+			FROM WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+		WHERE colum.SITEID = #{SITEID} AND colum.COLUM_DISPLAY='1' AND colum.PARENTID='0' 
+			  AND colum.COLUM_TYPE=#{TEM_TYPE}
+		ORDER BY SORT
+	</select>
+	
+	<!-- 查询所有栏目 -->
+	<select id="columconfigAllList" resultType="pd" parameterType="pd">
+		SELECT
+			WCC.ID AS columconfigId,
+			WCC.COLUM_NAME AS columName
+		FROM
+			WEB_COLUMCONFIG WCC
+		WHERE WCC.COLUM_DISPLAY != '0'
+		ORDER BY WCC.SORT
+	</select>
+	
+	<!-- 查询指定类型的所有栏目 -->
+	<select id="findAssignTypeAllColums" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH
+			FROM WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+		WHERE colum.SITEID = #{SITEID} AND colum.COLUM_DISPLAY='1' 
+			  AND temp.TEM_TYPE=#{TEM_TYPE}
+   		<if test="COLUM_NAME!=null and COLUM_NAME!=''">
+			AND colum.COLUM_NAME LIKE CONCAT(CONCAT('%', #{COLUM_NAME}),'%')
+		</if>
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询指定类型的顶级栏目 -->
+	<select id="findAssignTypeTopColums" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH
+			FROM WEB_COLUMCONFIG colum 
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+		WHERE colum.SITEID = #{SITEID} AND colum.COLUM_DISPLAY='1' AND colum.PARENTID='0' 
+			  AND temp.TEM_TYPE=#{TEM_TYPE}
+		ORDER BY SORT
+	</select>
+	
+	<!-- 删除栏目-->
+	<delete id="delete" parameterType="pd">
+		delete from WEB_COLUMCONFIG
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 批量删除栏目 -->
+ 	<delete id="delAll" parameterType="String">
+ 		DELETE FROM WEB_COLUMCONFIG WHERE ID in
+ 		<foreach item="item4" index="index" collection="array" open="(" separator="," close=")">
+        	#{item4}
+        </foreach>
+ 	</delete>
+	
+	<!-- 查询所有栏目 -->
+	<select id="findAllIds" resultType="pd">
+		SELECT ID,PARENTID
+			FROM WEB_COLUMCONFIG
+		WHERE SITEID = #{siteId}
+	</select>
+	
+	<!--selectCountAndGroupIdFromColumnIds  -->
+	<select id="selectCountAndGroupIdFromColumnIds" resultType="pd" parameterType="String">
+		SELECT COUNT(colum.ID) as CCount,colum.COLUMGROUP_ID AS ID
+		 FROM WEB_COLUMCONFIG colum
+		WHERE  colum.ID IN 
+		<foreach item="item5" index="index" collection="array" open="(" separator="," close=")">
+        	#{item5}
+        </foreach>
+	</select>
+	
+	<!-- 更新栏目顺序 -->
+	<update id="updateColumSort" parameterType="cn.cebest.entity.system.ColumConfig">
+		  UPDATE WEB_COLUMCONFIG WCC
+		  <set>
+		   WCC.SORT= #{sort}
+		  </set>
+		  where WCC.ID= #{id}
+	</update>
+	
+	<!-- 查询所有栏目 -->
+	<select id="findIncludeColumCountByColumGroupId" resultType="int">
+		SELECT COUNT(COLUMGROUP_ID)
+		FROM WEB_COLUMCONFIG
+		WHERE COLUMGROUP_ID = #{columGroupId}
+	</select>
+	<!-- 江铜前端项目开始 -->
+	<select id="findColumconfigByColumnId" parameterType="pd" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT
+			P.IMGURL AS columImage,C.COLUM_NAME AS columName,C.COLUM_DESC AS columDesc,WSC.SKIPPATH as columUrlName
+		FROM
+			WEB_COLUMCONFIG C
+			LEFT JOIN WEB_IMAGE P ON P.IMAGE_ID=C.COLUM_IMAGE
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON C.ID = WSC.COLUMNID
+		WHERE C.ID=#{ID}
+	</select>
+	<!--江铜前端项目结束  -->
+	
+	<!-- 查询所有栏目用于产品管理下拉框 -->
+	<select id="selectColumByProductType" resultType="pd" parameterType="pd">
+		SELECT ID,COLUM_NAME
+		FROM
+			WEB_COLUMCONFIG
+		WHERE SITEID=#{SITEID} and COLUM_TYPE = '3'
+		ORDER BY CREATETIME DESC
+	</select>
+	
+	<!-- 查询具有权限的栏目 -->
+	<select id="findPermAllList" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,colum.COLUM_TEMPLATETID,
+			colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.COLUM_TYPE,
+			colum.COLUMGROUP_ID,2 AS NODE_TYPE,
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH,temp.TEM_FILEPATH,img.IMGURL AS COLUM_IMAGE_PATH
+		FROM
+			WEB_COLUMCONFIG colum
+			INNER JOIN SYS_ROLE_PERMISSION role ON role.MENU_ID=colum.ID
+			INNER JOIN SYS_USER_ROLE ur ON ur.ROLE_ID=role.ROLE_ID
+			LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID=temp.ID
+			LEFT JOIN WEB_IMAGE img ON img.IMAGE_ID=colum.COLUM_IMAGE
+		WHERE colum.SITEID = #{siteid} AND role.SITE_ID=#{siteid} AND role.TYPE='2' AND ur.USER_ID=#{userId}
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 查询内容管理栏目 -->
+	<select id="findColumAllList" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+			colum.ID,
+			colum.COLUM_NAME,
+			colum.COLUM_URLPATH,
+			colum.COLUM_DISPLAY,
+			colum.PARENTID,
+			colum.SORT,
+			colum.COLUM_TEMPLATETID,
+			colum.SITEID,
+			colum.COLUM_SUBNAME,
+			colum.COLUM_IMAGE,
+			colum.COLUM_DESC,
+			colum.OUT_URL,
+			colum.COLUM_TYPE,
+			colum.COLUMGROUP_ID,
+			2 AS NODE_TYPE,
+			temp.ID AS TEM_ID,
+			temp.TEM_NAME,
+			temp.TEM_TYPE,
+			temp.TEM_IMAGEPATH,
+			temp.TEM_FILEPATH,
+			img.IMGURL AS COLUM_IMAGE_PATH
+		FROM
+			WEB_COLUMCONFIG colum
+		LEFT JOIN WEB_TEMPLATE temp ON colum.COLUM_TEMPLATETID = temp.ID
+		LEFT JOIN WEB_IMAGE img ON img.IMAGE_ID = colum.COLUM_IMAGE
+		WHERE
+			colum.SITEID = #{siteid}
+		ORDER BY
+			colum.SORT
+	</select>
+	
+	<!-- 根据栏目ID查询模板详情页信息 -->
+	<select id="findTemplateDetailByColumId" parameterType="string" resultMap="TemplateMap" >
+		SELECT
+			temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH,temp.TEM_FILEPATH
+		FROM
+			WEB_COLUMCONFIG colum
+			LEFT JOIN WEB_TEMPLATE temp ON colum.TEMPLATET_DETAIL_ID=temp.ID
+		WHERE colum.ID=#{id}
+	</select>
+	
+	<!-- 根据栏目ID查询栏目详情信息 -->
+	<select id="findColumDetailByColumId" parameterType="string" resultType="cn.cebest.entity.system.ColumConfig" >
+		SELECT
+			colum.ID as id,colum.COLUM_NAME as columName,colum.COLUMGROUP_ID as columGroupId,colum.COLUM_TYPE as columType,colum.COLUM_SUBNAME as columSubname
+		FROM
+			WEB_COLUMCONFIG colum
+		WHERE colum.ID=#{columId}
+	</select>
+	
+	<select id="findColumList" resultType="cn.cebest.entity.system.ColumConfig" >
+		SELECT
+			ID,COLUM_NAME as columName,COLUM_URLPATH as columUrlpath,COLUM_DISPLAY as columDisplay,PARENTID as parentid,SORT as sort,COLUM_TEMPLATETID as columTemplatetid
+		FROM
+			WEB_COLUMCONFIG
+	</select>
+	
+	<!-- 修改状态 -->
+	<update id="updateColumIndexStatus" parameterType="pd">
+		UPDATE WEB_COLUMCONFIG
+		SET INDEX_STATUS = '0'
+		WHERE INDEX_STATUS = '1'
+	</update>
+	
+	<!-- 分页 -->
+	<select id="findColumconfigByPidlistPage" parameterType="page" resultType="pd" >
+		SELECT
+			colum.ID, colum.COLUM_NAME, colum.COLUM_URLPATH, colum.COLUM_DISPLAY, colum.PARENTID, colum.SORT, colum.SITEID, colum.COLUM_TEMPLATETID, 
+		    colum.COLUM_SUBNAME, colum.COLUM_IMAGE, colum.COLUM_DESC, colum.OUT_URL,colum.CREATETIME,colum.COLUM_TYPE,
+		    colum.COLUM_ENGLISH_NAME,pic.NAME as PIC_NAME,pic.PATH as PIC_PATH
+		FROM
+			WEB_COLUMCONFIG colum 
+		LEFT JOIN 
+			TB_PICTURES pic
+	    ON 
+	    	colum.COLUM_IMAGE=pic.PICTURES_ID 
+		WHERE colum.PARENTID=#{pd.ID} and colum.COLUM_DISPLAY = '1'
+		order by colum.SORT ASC
+	</select>
+	<select id="selectSubColumnListByParientId" parameterType="pd" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT
+			C.ID, C.COLUM_NAME AS columName, C.SORT
+		FROM WEB_COLUMCONFIG C
+		WHERE C.SITEID = #{siteId} AND C.PARENTID = #{parientId}
+		ORDER BY C.SORT
+	</select>
+	<select id="selectParientColumn" parameterType="page" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT
+			C2.ID, C2.COLUM_NAME AS columName
+		FROM WEB_COLUMCONFIG C1
+		LEFT JOIN WEB_COLUMCONFIG C2 ON C1.PARENTID = C2.ID
+		WHERE C1.SITEID = #{pd.siteId} AND C1.ID = #{pd.columnId}
+	</select>
+	<select id="selectColumn" parameterType="page" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT
+			C1.ID, C1.COLUM_NAME AS columName
+		FROM WEB_COLUMCONFIG C1
+		WHERE C1.SITEID = #{pd.siteId} AND C1.ID = #{pd.columnId}
+	</select>
+	
+	<!-- 复制整站栏目时使用 -->
+	<resultMap id="CopyResultMap" type="cn.cebest.entity.system.ColumConfig" >
+	    <id column="ID" property="id" jdbcType="VARCHAR" />
+	    <result column="COLUM_NAME" property="columName" jdbcType="VARCHAR" />
+	    <result column="COLUM_URLPATH" property="columUrlpath" jdbcType="VARCHAR" />
+	    <result column="COLUM_DISPLAY" property="columDisplay" jdbcType="VARCHAR" />
+	    <result column="PARENTID" property="parentid" jdbcType="VARCHAR" />
+	    <result column="SORT" property="sort" jdbcType="INTEGER" />
+	    <result column="SITEID" property="siteid" jdbcType="VARCHAR" />
+	    <result column="COLUM_TEMPLATETID" property="columTemplatetid" jdbcType="VARCHAR" />
+	    <result column="COLUM_SUBNAME" property="columSubname" jdbcType="VARCHAR" />
+	    <result column="COLUM_IMAGE" property="columImage" jdbcType="VARCHAR" />
+	    <result column="COLUM_DESC" property="columDesc" jdbcType="VARCHAR" />
+	    <result column="OUT_URL" property="outUrl" jdbcType="VARCHAR" />
+	    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+	    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />	      
+	    <result column="COLUMGROUP_ID" property="columGroupId" jdbcType="VARCHAR" />
+	    <result column="COLUM_TYPE" property="columType" jdbcType="VARCHAR" />
+	    <result column="COLUM_ENGLISH_NAME" jdbcType="VARCHAR" property="columEnglishName"/>	    
+	    <result column="TEMPLATET_DETAIL_ID" jdbcType="VARCHAR" property="columndetailId"/>
+	    <result column="INDEX_STATUS" property="index_Status" jdbcType="VARCHAR"/>	        
+	  </resultMap>
+	<!-- 查询所有栏目 -->
+	<select id="listAllForCopy" parameterType="String" resultMap="CopyResultMap">
+		SELECT
+			colum.ID,
+			colum.COLUM_NAME,
+			colum.COLUM_URLPATH,
+			colum.COLUM_DISPLAY,
+			colum.PARENTID,
+			colum.SORT,
+			colum.SITEID,
+			colum.COLUM_TEMPLATETID,			
+			colum.COLUM_SUBNAME,
+			colum.COLUM_IMAGE,
+			colum.COLUM_DESC,
+			colum.OUT_URL,
+			colum.CREATETIME,
+			colum.UPDATE_TIME,
+			colum.COLUMGROUP_ID,
+			colum.COLUM_TYPE,
+			colum.COLUM_ENGLISH_NAME,
+			colum.TEMPLATET_DETAIL_ID,
+			colum.INDEX_STATUS
+		FROM
+			WEB_COLUMCONFIG colum			
+		WHERE colum.SITEID = #{siteID}
+		ORDER BY colum.SORT
+	</select>
+	
+	<!-- 复制整站栏目使用，批量复制 -->
+	<insert id="insertBatch">
+		insert into WEB_COLUMCONFIG 
+		(
+			ID,			
+			COLUM_NAME,
+			COLUM_URLPATH,
+			COLUM_DISPLAY,
+			PARENTID,
+			SORT,
+			SITEID,
+			COLUM_TEMPLATETID,
+			COLUM_SUBNAME,
+			COLUM_IMAGE,			
+			COLUM_DESC,
+			OUT_URL,
+			CREATETIME,
+			UPDATE_TIME,
+			COLUMGROUP_ID,
+			COLUM_TYPE,
+			COLUM_ENGLISH_NAME,
+			TEMPLATET_DETAIL_ID,
+			INDEX_STATUS
+		) values
+		<foreach collection ="list" item="column" separator =",">
+         (	#{column.id}, 
+         	#{column.columName}, 
+         	#{column.columUrlpath},
+         	#{column.columDisplay},
+         	#{column.parentid},
+         	#{column.sort},
+         	#{column.siteid},
+         	#{column.columTemplatetid},
+         	#{column.columSubname},
+         	#{column.columImage},
+         	#{column.columDesc},
+         	#{column.outUrl},
+         	#{column.createtime},
+         	#{column.updateTime},
+         	#{column.columGroupId},
+         	#{column.columType},
+         	#{column.columEnglishName},
+         	#{column.columndetailId},
+         	#{column.index_Status})
+    	</foreach >	
+	</insert>
+	
+	<!--复制整站栏目之前，如果执行过复制，再次执行需要先根据网站ID批量删除之前复制栏目-->
+	<delete id="deleteBeforCopy" parameterType="String">
+		delete from WEB_COLUMCONFIG
+		where 
+			SITEID = #{siteID}
+	</delete>
+	
+
+	<!-- 根据栏目名称查询id -->
+	<select id="selectColumnIdByName"  parameterType="String" resultMap="BaseResultMap">
+		SELECT C.ID,C.COLUM_NAME,
+		C.TEMPLATET_DETAIL_ID
+		FROM WEB_COLUMCONFIG C WHERE C.COLUM_NAME = #{columnName}
+	</select>
+	
+	
+
+	<!-- 保存栏目url信息 -->
+	<insert id="saveColumUrlNameconfig" parameterType="pd">
+		insert into WEB_SKIPPATH_COLUMN (
+			COLUMNID,TYPE,ISCHANNEL,SKIPPATH,ISSELECT
+		) values (
+			#{ID},#{COLUM_TYPE},1,#{COLUM_URLNAME},1
+		)
+	</insert>
+	
+	<!-- 修改栏目url信息 -->
+	<update id="editColumUrlNameconfig" parameterType="pd" >
+		UPDATE WEB_SKIPPATH_COLUMN
+		<set>
+			TYPE				= #{COLUM_TYPE}
+			,ISCHANNEL			= 1
+			,ISSELECT			= 1
+		<if test="COLUM_URLNAME!=null and COLUM_URLNAME!=''">
+			,SKIPPATH			= #{COLUM_URLNAME}
+		</if>
+		</set>
+		WHERE 
+			COLUMNID 			= #{ID}
+			AND TYPEID IS NULL
+	</update>
+	
+	<!-- 查询改栏目的地址栏URL信息 -->
+	<select id="findColumUrlNameList" parameterType="pd" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH_COLUMN 
+		WHERE COLUMNID = #{ID} AND TYPEID IS NULL
+	</select>
+	
+	<!-- 批量删除栏目url信息 -->
+ 	<delete id="delUrlNmaeAll" parameterType="String">
+ 		DELETE FROM WEB_SKIPPATH_COLUMN WHERE COLUMNID in
+ 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+ 	</delete>
+	<!-- 批量删除内容url信息 -->
+ 	<delete id="delContentUrlNmaeAll" parameterType="String">
+ 		DELETE FROM WEB_SKIPPATH WHERE COLUMNID in
+ 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+        	#{item}
+        </foreach>
+ 	</delete>
+ 	
+ 	<!-- 通过Id获取数据 liu -->
+	<select id="findColumUrlNameconfigById" parameterType="String" resultType="pd" >
+		SELECT 
+			COLUMNID AS Url_COLUMNID,
+			TYPEID AS Url_TYPEID,
+			TYPE AS Url_TYPE,
+			ISCHANNEL AS Url_ISCHANNEL,
+			SKIPPATH AS Url_SKIPPATH,
+			ISSELECT AS Url_ISSELECT
+		FROM
+			WEB_SKIPPATH_COLUMN WSC 
+		WHERE SKIPPATH=#{skipPath}
+	</select>
+	
+	<!-- 通过Id获取数据 liu -->
+	<select id="findContentUrlNameconfigById" parameterType="pd" resultType="pd" >
+		SELECT 
+			CONTENTID AS Url_CONTENTID,
+			COLUMNID AS Url_COLUMNID,
+			TYPEID AS Url_TYPEID
+		FROM
+			WEB_SKIPPATH
+		WHERE ID=#{contentName} AND COLUMNID=#{Url_COLUMNID}
+	</select>
+	
+	<!-- 获取父级栏目名称 -->
+	<select id="getParentName" parameterType="string" resultType="pd">
+		SELECT 
+			WC1.COLUM_NAME columName
+		FROM
+			WEB_COLUMCONFIG WC
+		LEFT JOIN
+			WEB_COLUMCONFIG WC1 ON WC.PARENTID=WC1.ID
+		WHERE WC.ID=#{columId}
+	</select>
+</mapper>

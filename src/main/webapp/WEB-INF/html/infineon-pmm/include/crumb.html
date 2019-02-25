@@ -1,0 +1,20 @@
+
+<div class="positionBox">
+	<div class="wrap">
+		<a href="${autoPath}" class="fnt_14">首页 > </a>
+		<#if columConfigTop?? && columConfigTop?size gt 0>
+			<#if template.columId==columConfigTop.id>
+				<a href="${autoPath}/channel/${columConfigTop.id}.html" class="fnt_14 active">${columConfigTop.columName!}</a>
+				<#else>
+				<a href="${autoPath}/channel/${columConfigTop.id}.html" class="fnt_14">${columConfigTop.columName!} > </a>
+				<#if columConfigTop.subConfigList?? &&  columConfigTop.subConfigList?size gt 0>
+					<#list columConfigTop.subConfigList as list>
+						<#if template.columId==list.id>
+						<a href="javascript:;" class="fnt_14 active">${list.columName!}  </a>
+						</#if>
+					</#list>
+				</#if>
+			</#if>
+		</#if>
+	</div>
+</div>

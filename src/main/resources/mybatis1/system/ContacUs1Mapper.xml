@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ContactUs1Mapper">
+
+	<insert id="save" parameterType="pd">
+		insert into WEB_CONTACTUS
+			(CONTACTUS_ID,DESCRIPTION,FIRST_NAME,LAST_NAME,EMAIL,UNITED_STATUS,PRODUCT,CREATE_TIME)
+		values
+		( #{id},#{description},#{firstName},#{lastName},#{email},#{unitedStatus},#{product},now())
+	</insert>		<!-- 后台接口,站点列表 -->	<select id="listPage" resultType="pd" parameterType="page">		SELECT			WPR.CONTACTUS_ID AS id,			WPR.EMAIL AS email,			WPR.UNITED_STATUS AS country,			WPR.DESCRIPTION AS description,			DATE_FORMAT(WPR.CREATE_TIME,'%Y-%m-%d %H:%i:%s') AS createTime		FROM			WEB_CONTACTUS WPR		ORDER BY			WPR.CREATE_TIME DESC		<!-- <trim prefix="WHERE" prefixOverrides="AND|OR">			<if test="pd.keywords!=null and pd.keywords!=''">				WC.FIRST_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')			</if>			<if test="pd.status!=null and pd.status!=''">				AND C.STATUS = #{pd.status}			</if>		</trim> -->	</select>		<delete id="delContactUs" parameterType="pd">		delete from		WEB_CONTACTUS		where CONTACTUS_ID = #{ID}	</delete>
+	<delete id="delsContactUs" parameterType="string">		delete from		WEB_CONTACTUS		where CONTACTUS_ID in				<foreach collection="array" open="(" separator="," close=")" item="item">			#{item}		</foreach>	</delete>		<!-- 根据id查询详情 -->	<select id="detailById" parameterType="string" resultType="pd">		select			CONTACTUS_ID id,			DESCRIPTION description,			FIRST_NAME firstName,			LAST_NAME lastName,			EMAIL email,			UNITED_STATUS unitedStatus,			PRODUCT product,			CREATE_TIME createTime		from			WEB_CONTACTUS		where 			CONTACTUS_ID=#{id}	</select>
+</mapper>

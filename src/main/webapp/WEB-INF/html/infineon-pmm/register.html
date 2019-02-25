@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>注册</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/z_style.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/form.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/cookie.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<div class="z-register clearfix">
+	<div class="z-top">
+		<img class="scale" src="${autoPath}/staticRelease/img/uploadfiles/z-register.jpg" width="1920" height="200" alt="英飞凌">
+	</div>
+	<div class="z-regisCon wrap">
+		<h2 class="fnt_32">欢迎注册成为英飞凌电源与传感社区会员</h2>
+		<form id="register_form">
+			<ul>
+				<li class="clearfix">
+					<span><em>*</em>姓</span>
+					<div class="input-ipt">
+						<input type="text" name="surname" placeholder="请输入姓">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>名</span>
+					<div class="input-ipt">
+						<input type="text" name="name" placeholder="请输入名">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>昵称</span>
+					<div class="input-ipt">
+						<input type="text" name="nickname" placeholder="请输入昵称">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>常用邮箱</span>
+					<div class="input-ipt">
+						<input type="text" name="email" placeholder="请输入邮箱">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>手机号码</span>
+					<div class="input-ipt">
+						<input type="text" name="phone" placeholder="请输入手机号">
+						<em></em>
+						<div class="tit">
+							<p>大陆地区电话号码请输入11位手机号</p>
+							<p>台湾地区手机号请按照以下格式输入：00886-*********</p>
+							<p>香港地区手机号请按照以下格式输入：00852-********</p>
+						</div>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>密码</span>
+					<div class="input-ipt">
+						<input type="password" name="password" placeholder="请输入密码" autocomplete="off">
+						<em></em>
+						<div class="tit">
+							<p>密码必须是15～32位的字符，且必须是数字、字母和特殊符号（$@!%*#?&amp;）的组合，且至少包含一位大写字母和一位小写字母。字母区分大小写。</p>
+						</div>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>确认密码</span>
+					<div class="input-ipt">
+						<input type="password" name="spassword" placeholder="请重新输入密码" autocomplete="off">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix select select_area">
+					<span><em>*</em>国家/地区</span>
+					<div class="input-ipt">
+						<div class="input" name="country">中国</div>
+						<div class="select-con">
+							<ul></ul>
+						</div>
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span><em>*</em>公司/单位/学校名称</span>
+					<div class="input-ipt">
+						<input type="text" name="company" placeholder="请输入您的公司/单位/学校名称">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>您是通过哪个渠道知道我们的呢？</span>
+					<div class="input-ipt">
+						<ul class="z-type">
+							<li class="clearfix">
+								<input type="radio" id="radio01" name="channel" value="1">
+								<label for="radio01">
+									<span>英飞凌原厂人员</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio02" name="channel" value="2">
+								<label for="radio02">
+									<span>英飞凌代理商</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio03" name="channel" value="3">
+								<label for="radio03">
+									<span>同事、朋友</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio04" name="channel" value="4">
+								<label for="radio04">
+									<span>英飞凌客户</span>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio05" name="channel" value="5">
+								<label for="radio05">
+									<span>媒体</span>
+									<div class="input_ipt">
+										<input type="text" name="channelMsg" placeholder="请注明媒体名称">
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio06" name="channel" value="6">
+								<label for="radio06">
+									<span>搜索引擎</span>
+									<div class="input_ipt">
+										<input type="text" name="channelMsg" placeholder="请注明搜索引擎名称">
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio07" name="channel" value="7">
+								<label for="radio07">
+									<span>线下会议</span>
+									<div class="input_ipt">
+										<input type="text" name="channelMsg" placeholder="请注明会议名称">
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio08" name="channel" value="8">
+								<label for="radio08">
+									<span>其他</span>
+									<div class="input_ipt">
+										<input type="text" name="channelMsg" placeholder="请说明">
+										<em></em>
+									</div>
+								</label>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>头像</span>
+					<div class="input-ipt">
+						<div class="pic">
+							<!--accept=".jpg,.jpeg,.png"-->
+							<div><img src="${autoPath}/staticRelease/img/z_user.png"/><b></b><input type="file" id="file" name="file" accept=".jpg,.jpeg,.png"></div>
+								
+						</div>
+						<div class="z-btn clearfix" style="display: none;">
+							<input type="button" value="上传">
+							<!--<input type="file" id="file" name="file"/>	-->						
+							<input type="button" name="" value="查看">
+						</div>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>所在城市</span>
+					<div class="input-ipt">
+						<input type="text" name="city">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司/单位/学校座机</span>
+					<div class="input-ipt">
+						<input type="text" name="seatPhone">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司/单位/学校地址</span>
+					<div class="input-ipt">
+						<input type="text" name="address">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>部门</span>
+					<div class="input-ipt">
+						<input type="text" name="dept">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>职务/职称</span>
+					<div class="input-ipt">
+						<input type="text" name="job">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司所从事的领域</span>
+					<div class="input-ipt">
+						<ul class="z-area clearfix">
+							<li class="clearfix">
+								<input type="checkbox" name="qunnxuan" id="companyField0" value="全选">
+								<label for="companyField0">全选</label>
+							</li><br />
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField1" value="1">
+								<label for="companyField1">汽车辅助驾驶</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField2" value="2">
+								<label for="companyField2">安防</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField3" value="3">
+								<label for="companyField3">无人机</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField4" value="4">
+								<label for="companyField4">智能家电/家居</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField5" value="5">
+								<label for="companyField5">智能会议系统</label>
+							</li>
+							
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField7" value="6">
+								<label for="companyField7">智慧照明</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField8" value="7">
+								<label for="companyField8">智慧超市</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField9" value="8">
+								<label for="companyField9">交通监控</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField10" value="9">
+								<label for="companyField10">健康管理</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField11" value="10">
+								<label for="companyField11">人机交互</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField12" value="11">
+								<label for="companyField12">门禁安全</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField13" value="12">
+								<label for="companyField13">服务机器人</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField14" value="13">
+								<label for="companyField14">无线充电</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField15" value="14">
+								<label for="companyField15">电源管理</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField16" value="15">
+								<label for="companyField16">其他</label>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<input type="hidden" name="source" value="2">
+				<li class="clearfix">
+					<span><em>*</em>验证码</span>
+					<div class="inpt-ipt ma">
+						<input type="text" name="ma">
+						<div class="z-ma">
+							<img src="">
+							<span>换一张</span>
+						</div>
+						<em></em>
+					</div>
+				</li>
+				<li class="agree agree_two" style="margin-bottom: 30px;">
+					<input type="checkbox" name="check_sub" checked="checked">
+					<span>我希望收到英飞凌新闻通讯以及有关英飞凌产品、服务和活动的更多营销信息。（您可以随时取消免费订阅。）<em></em></span>
+				</li>
+				<li class="agree">
+					<input type="checkbox" name="check" checked="checked">
+					<span>我同意英飞凌根据其<a style="text-decoration: underline;" href="${autoPath}/jump/clause.html">隐私政策</a>收集，处理和使用上述个人数据。 我已经阅读<a style="text-decoration: underline;" href="${autoPath}/jump/privacy.html">隐私政策</a>并同意。</a><em></em></span>
+				</li>
+				<li class="submit clearfix">
+					<button type="button" name="submit">注册</button>
+					<em></em>
+				</li>
+			</ul>
+		</form>
+		
+	</div>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<!--表单弹框-->
+<div class="SolutionForm register">
+	<div class="SolutionFormBox pra">
+		
+	</div>
+</div>
+
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script src="../../staticRelease/js/base64.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+<script type="text/javascript">
+	$('#companyField0').click(function(){
+		var flag = $(this).is(':checked');
+		if (flag) {
+			$('.z-area .xuan').prop("checked",true);
+		} else{
+			$('.z-area .xuan').prop("checked",false);
+		}
+	})
+	$('.z-area .xuan').click(function(){
+		var flag = $(this).is(':checked');
+		if (flag) {
+			$("#companyField0").prop("checked",false);
+		} else{
+			$("#companyField0").prop("checked",false);
+		}
+	})
+</script>
+</body>
+</html>          

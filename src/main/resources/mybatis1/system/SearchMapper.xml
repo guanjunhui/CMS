@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SearchMapper">
+	<resultMap type="cn.cebest.entity.system.solr.Search" id="solrSearch">
+		<id column="ID" property="id"/>
+		<result column="NAME" property="name"/>
+		<result column="DES" property="des"/>
+		<result column="COLUMNID" property="columnId"/>
+		<result column="TIME" property="time"/>
+		<result column="TYPEID" property="typeId"/>
+		<result column="PARENTID" property="columParentId"/>
+ 	</resultMap>
+	<select id="getContentList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT C.ID AS ID,C.RELEASE_TIME AS TIME,
+ 		C.CONTENT_TITLE AS NAME,
+ 		C.CONTENT_SUMMARY AS DES,
+ 		CF.COLUMNID COLUMNID,
+ 		WC.PARENTID  
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CF ON CF.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG WC ON WC.ID=CF.COLUMNID
+		WHERE C.SOLR_STATUS ='1'
+	</select>
+	<select id="getColumList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT 
+	 		C.ID AS ID,
+	 		C.CREATETIME AS TIME,
+	 		C.COLUM_NAME AS NAME,
+	 		C.COLUM_DESC AS DES,
+	 		C.ID COLUMNID,
+	 		C.PARENTID
+		FROM WEB_COLUMCONFIG C
+		WHERE C.PARENTID='7e49fcb9b6704a39aafb6c60f9eb88fd'
+	</select> 	
+	<select id="getMessageList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT N.ID AS ID,N.RELEASE_TIME AS TIME,
+ 		N.MESSAGE_TITLE AS NAME,
+ 		N.DESCRIPTION AS DES,
+ 		TMR.COLUMID AS COLUMNID,
+ 		TMR.MESSAGETYPEID  AS TYPEID
+		FROM WEB_NEWMESSAGE N
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=N.ID
+	</select> 	
+	<select id="getEmployList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT E.ID AS ID,E.RELEASE_TIME AS TIME,
+ 		E.RECRUIT_TITLE AS NAME,
+ 		E.RECRUIT_POSITION AS DES,
+ 		E.COLUMCONFIG_ID AS COLUMNID
+		FROM WEB_EMPLOY E ;
+	</select> 	
+	<select id="getFileList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT 
+ 		F.FILEID AS ID,F.CREATED_TIME AS TIME,
+ 		F.TITLE AS NAME,
+ 		F.SUMMARY AS DES,
+ 		FTF.COLUMNID AS COLUMNID,
+ 		FTF.FILETYPEID AS TYPEID 
+		FROM WEB_FILE F
+		LEFT JOIN WEB_FILETYPE_FILE FTF ON FTF.FILEID=F.FILEID
+	</select> 
+	<select id="getProductList" parameterType="pd" resultMap="solrSearch">
+ 		SELECT 
+ 		P.ID AS ID,P.CREATED_TIME AS TIME,
+ 		P.NAME AS NAME,
+ 		P.PRODUCT_SUMMARY AS DES,
+ 		TPR.COLUMNID AS COLUMNID,
+ 		TPR.PRODUCTTYPEID AS TYPEID
+		FROM WEB_PRODUCT P
+		LEFT JOIN WEB_TYPE_PRODUCT_RELATION TPR ON TPR.PRODUCTID=P.ID
+		where P.FLAG = '1'
+	</select>	
+</mapper>

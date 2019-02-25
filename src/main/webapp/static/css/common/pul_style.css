@@ -1,0 +1,44 @@
+﻿@charset "utf-8";
+
+
+
+@media only screen and (max-width: 1400px){
+  input[type="text"],input[type="password"]{width: 50%;}
+  .form-control{width: 50%;}
+  textarea{width: 50%;}
+  
+  .sle_data input[type="text"]{width:100%;}
+}
+
+/*7列样式*/
+
+@media only screen and (max-width: 1500px){
+  .col_07 .tit7{margin-right: -850px;}
+  .col_07 .tit7 .tit7_con{margin-right: 850px;}
+  .col_07 .sele07.other_width{width: 250px;}
+}
+
+/*6列样式*/
+
+@media only screen and (max-width: 1400px){
+  .col_06 .tit6{margin-right: -760px;}
+  .col_06 .tit6 .tit6_con{margin-right: 760px;}
+  .col_06 .sele06.other_width{width: 280px;}
+}
+
+/*5列样式*/
+
+@media only screen and (max-width: 1500px){
+  .zhandian_con .col_05 .tit5{margin-right: -750px;}
+  .zhandian_con .col_05 .tit5 .tit5_con{margin-right: 750px;}
+  .zhandian_con .col_05 .sele05.other_width{width: 300px;}
+}
+@media only screen and (max-width: 1400px){
+  .zhandian_con .col_05 .tit5{margin-right: -650px;}
+  .zhandian_con .col_05 .tit5 .tit5_con{margin-right: 650px;}
+  .zhandian_con .col_05 .sele05.other_width{width: 200px;}
+}
+
+
+		.bottom_con .page_list li.active{background: #6eafd9;border: 1px solid #6eafd9;border-left:0;}
+		.bottom_con .page_list li .btn-success{display:block;width:100%;background: #87b97e;color: #fff;}

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PmmContentMapper">
+	<!-- begin wzd -->
+	<resultMap type="cn.cebest.entity.system.content.Content" id="resultContent">
+		<result property="contentSummary" column="CONTENT_SUMMARY" />
+		
+		<result column="SURFACE_IMAGEURL" property="surface_imageurl" />
+		
+		<result column="SURFACE_IMAGEURL2" property="surface_imageurl2" />
+		<result property="filedJson" column="FILEDJSON" />
+		<result property="contentUrlName" column="contentUrlName" />
+		
+		<result property="columUrlName" column="columUrlName" />
+		<result property="contentTitle" column="CONTENT_TITLE" />
+	
+	</resultMap>
+	<!-- end wzd -->
+
+	<!-- 根据栏目id查询全部列表 -->
+	<select id="selectlistByColumID" parameterType="pd"
+		resultMap="resultContent">
+		SELECT  
+			WSC.SKIPPATH AS columUrlName,
+			WS.ID AS contentUrlName,
+			I3.IMGURL AS SURFACE_IMAGEURL2,
+			C.CONTENT_TITLE,
+			C.CONTENT_SUMMARY,
+			C.FILEDJSON,
+			I.IMGURL AS SURFACE_IMAGEURL
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID = CCT.COLUMNID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_IMAGE I3 ON I3.IMAGE_ID=C.SURFACE_IMAGEID2
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		where C.ID IN
+		<foreach collection="ids" close=")" item="id18" open="("
+			separator=",">
+			#{id18}
+		</foreach>
+		GROUP BY SURFACE_IMAGEURL
+		<if test="CREATED_TIME !=null and CREATED_TIME !=''">
+			ORDER BY C.SORT,C.RELEASE_TIME 
+		</if>
+		<if test="sort !=null and sort !=''">
+			ORDER BY C.SORT
+		</if>
+		<if test="NAME != null and NAME !=''">
+			ORDER BY C.CONTENT_TITLE DESC
+		</if>
+	</select>
+	<select id="selectTestlistPage" parameterType="page" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		<if test="(pd.colum_id !=null and pd.colum_id !='') or (pd.TYPEID !=null and pd.TYPEID !='')">
+			LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		</if>
+		<where>
+			1=1
+			<if test="pd.queryName !=null and pd.queryName !=''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.queryName} '%'
+			</if>
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND C.SITEID=#{pd.SITEID}
+			</if>
+			<if test="pd.TYPEID !=null and pd.TYPEID !=''">
+				AND CC.TYPEID=#{pd.TYPEID}
+			</if>
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CC.COLUMNID IN ( #{pd.colum_id} )
+			</if>
+			<if test="pd.recommend !=null and pd.recommend !=''">
+				AND C.RECOMMEND=#{pd.recommend}
+			</if>
+			<if test="pd.hot !=null and pd.hot !=''">
+				AND C.HOT=#{pd.hot}
+			</if>
+			<if test="pd.CONTENT_STATUS !=null and pd.CONTENT_STATUS !=''">
+				AND C.CONTENT_STATUS=#{pd.CONTENT_STATUS}
+			</if>
+		</where>
+		<if test="pd.CREATE_TIME !=null">
+			ORDER BY C.CREATED_TIME DESC
+		</if>
+		<if test="pd.UPDATE_TIME !=null">
+			ORDER BY C.UPDATE_TIME DESC
+		</if>
+		<if test="pd.TOP_TIME !=null">
+			ORDER BY C.TOP DESC, C.TOP_TIME DESC
+		</if>
+		<if test="pd.RECOMMEND_TIME !=null">
+			ORDER BY C.RECOMMEND DESC, C.RECOMMEND_TIME DESC
+		</if>
+		
+		<if test="pd.NAME !=null and pd.NAME !=''">
+			ORDER BY C.CONTENT_TITLE DESC
+		</if>
+		<if test="pd.sort !=null and pd.sort !=''">
+			ORDER BY C.SORT
+		</if>
+
+	</select>
+</mapper>

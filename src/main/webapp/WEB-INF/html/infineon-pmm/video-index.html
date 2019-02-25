@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/video-index.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 我的视频模板 -->
+	<template id="videoT" style="display:none">
+		<li class="myvideo_inx pt_55 pb_55 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="javascript:checkLogin('{contentUrl}')">
+				<div class="video_img fl">
+					<img class="scale video_img_n" src="${imgPath}/{image}"/>
+					<img class="scale" src="${autoPath}/staticRelease/img/player.png"/>
+				</div>
+				<div class="video_txt fr">
+					<p class="p1 fnt_20">{title}</p>
+					<p class="p2 fnt_14 mt_20">{content}</p>
+					<p class="fnt_12 time">发布时间:{releaseTime}</p>
+					<p class="fnt_16 see mt_30" href="#">点击观看</p>
+				</div>
+				<div class="clear"></div>
+			</a>
+		</li>
+  	</template>
+	<!-- 敬请期待模板模板 -->
+	<template id="expect" style="display:none">
+		<div class="no_list pb_55">
+			<p class="fnt_26">敬请期待</p >
+			<img src="${autoPath}/staticRelease/img/no_list.png"/>
+		</div>
+	</template>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+<#if (_const_cas_assertion_.principal.attributes.id)??>
+	<input type="hidden" id="checkId" value="1"/>
+<#else>
+	<input type="hidden" id="checkId" value="2"/>
+</#if>
+<div class="screening">
+	<div class="wrap">
+	<p class="qing fnt_14 pt_30 bold">*按标签筛选</p>
+	 <@colum_typeList columId="${template.columId!}">
+		<#if out_list?? && out_list?size gt 0>
+			<#list out_list as list>
+				<div class="screening_inx">
+					<p class="fl fnt_14 screening_bt bold">${list.name!}：
+						<img src="${autoPath}/staticRelease/img/more.png"/>
+					</p>
+					<div class="screening_r fl type_${list_index+1}">
+					<p class="fnt_14 both on" data-id="0">全部</p>
+					<#if list.childList ?? && list.childList? size gt 0 >
+						<#list  list.childList as childData>
+								<a class="fnt_14 types" data-id="${childData.id!}" href="javascript:;">${childData.name!}</a>
+						</#list>
+					</#if>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</#list>
+		</#if>
+	 </@colum_typeList>
+		<div class="yixuan">
+			<p class="fnt_14 bold yixuan_bt fl">已选条件：</p>
+			<div class="yixuan_r fl clearfix"></div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div class="video_list wrap" id="videoList">
+	<ul class="myvideo_list pt_30 pb_60" id="video">
+		
+	</ul>
+</div>
+<div id="page" class="page_div"></div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+	
+</script>
+<script type="text/javascript">
+	$('.screening .screening_inx .screening_bt').click(function(){
+		$(this).parent().toggleClass("on").siblings().removeClass("on");
+	});
+	
+	//切换选中
+	/* $(".screening_r a").on('click',function(){
+		$(this).toggleClass('on');
+		video(1);
+	}); */
+	
+	function video(num){
+		
+		/* var ids = [];
+		$(".screening_r .on").each(function(i){//把所有被选中的复选框的值存入数组
+            ids[i] =$(this).data("id");
+        });
+		$(".screening_inx .screening_r").each(function(){
+			var activeId = $(this).find(".on").data('id');
+			if(activeId == 0){
+				$(this).find('a').each(function(){
+					ids.push($(this).data('id'))
+				});
+			}
+		}); */
+		var typeIds1 = [];
+		var typeIds2 = [];
+		var typeIds3 = [];
+		$(".type_1 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds1[i] =$(this).data("id");
+			}
+			
+        });
+		$(".type_2 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds2[i] =$(this).data("id");
+			}
+			
+        });
+		$(".type_3 .on").each(function(i){//把所有被选中的复选框的值存入数组
+			if($(this).data("id") != 0){
+				typeIds3[i] =$(this).data("id");
+			}
+			
+        });
+		$.ajax({
+			type : "POST",
+			url : "/productfront/getContentList",
+			data:{
+				"columId" : '${template.columId!}',
+				"typeIds1":typeIds1.join(','),
+				"typeIds2":typeIds2.join(','),
+				"typeIds3":typeIds3.join(','),
+				"currentPage" : num,
+				"showCount" : 6,
+				"timeFlag":1
+			},
+			traditional: true,
+			dataType : "json",
+			success : function(data) {
+				$("#video").empty();
+				var d = data.data;
+				$("#page").show();
+				if(d.data == null || d.data == ''){
+					$("#page").hide();
+					$("#video").append($("#expect").html());
+					return;
+				} 
+				
+				if(d != null){
+					$(d.data).each(function(){
+						var videoT = $("#videoT").html();
+						videoT = videoT.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+						videoT = videoT.replace("{image}",this.surface_imageurl);
+						videoT = videoT.replace("{title}",this.contentTitle);
+						var tempTime = this.releaseTime.split(" ");
+						videoT = videoT.replace("{releaseTime}",tempTime[0]);
+						videoT = videoT.replace("{content}",this.contentSummary);
+						$("#video").append(videoT);
+					});
+					
+					if(d.page.currentPage != 1){
+						$("html,body").animate({ scrollTop: $('.innerBanner').offset().top+$('.innerBanner').outerHeight() }, 500);
+					}
+					$('img.scale').imageScale();
+					new WOW().init();
+				}
+				
+				//分页
+				$("#page").paging({
+					pageNo: num,
+					totalPage: d.page.totalPage,
+					totalSize: d.page.totalResult,
+					callback: function(num) {
+						video(num)
+					}
+				})
+			}// end success
+			
+			
+		});//ajax end
+	};
+	
+	function checkLogin(url){
+		if($("#checkId")=="1"){
+			window.location.href=baseData.clientUrl+"/skippath/"+url;
+		}else{
+			window.location.href=baseData.loginUrl+"?service="+baseData.clientUrl+"/skippath/"+url;
+		}
+	}
+	
+	$(function(){
+		video(1);
+	});
+</script>
+<script type="text/javascript">
+	$('.screening .screening_inx .screening_r a').click(function(){
+		
+		var dataId = $(this).attr('data-id');
+		var _txt = $(this).text();
+		var p_len = $('.screening .yixuan .yixuan_r p').length;
+		if (p_len!=0) {
+			if ($(this).hasClass('on')) {
+				return false;
+			} else{
+				$('.screening .yixuan .yixuan_r p:last-child').after('<p class="fnt_14 fl" data-id=""></p>');
+				$('.screening .yixuan .yixuan_r p:last-child').text(_txt).append('<i></i>');
+				$('.screening .yixuan .yixuan_r p:last-child').attr('data-id',dataId);
+			}
+		} else{
+			$('.screening .yixuan .yixuan_r').append('<p class="fnt_14 fl"></p>');
+				$('.screening .yixuan .yixuan_r p').text(_txt).append('<i></i>');
+				$('.screening .yixuan .yixuan_r p').attr('data-id',dataId);
+		}
+		
+		$(this).siblings('.both').removeClass('on');
+		
+	});
+	$('.screening .screening_inx .screening_r a,p').click(function(){
+		$(this).addClass('on');
+		
+	});
+	
+
+	$(document).on('click','.screening .yixuan .yixuan_r p i',function(){
+		 var dataId2 = $(this).parent('p').attr('data-id');
+		$(this).parent('p').remove();
+		$('.screening .screening_inx').each(function(){
+			$(this).children('.screening_r').children('a,p').each(function(){
+				if($(this).data('id')==dataId2){
+					$(this).removeClass('on');
+				}
+			})
+		})
+		video(1);
+	})
+	
+	$(document).on('click','.screening .screening_inx .screening_r .both',function(){
+		 $(this).parent('.screening_r').children('a').each(function(){
+		 	var dataId3 = $(this).data('id');
+		 		$('.screening .yixuan .yixuan_r p').each(function(){
+		 			if ($(this).data('id')==dataId3) {
+		 				$(this).remove();
+		 			}
+		 		})
+		 })
+	})
+	
+	$('.screening .screening_inx .screening_r p.both').click(function(){
+		$(this).siblings().removeClass('on');
+		$(this).addClass('on');
+		video(1);
+	})
+	
+	$(".types").click(function(){
+		video(1);
+	});
+</script>
+</body>
+</html>          

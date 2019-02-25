@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="QuestionMapper">
+
+	<!-- 后台接口,站点列表 -->
+	<select id="questionlistPage" resultType="pd" parameterType="page">
+		SELECT
+			Q.ID AS id,
+			Q.QUESTION AS question,
+			Q.EMAIL AS email
+		FROM
+			WEB_QUESTION Q
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				Q.QUESTION LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+			</if>
+			<if test="pd.status!=null and pd.status!=''">
+				AND Q.STATUS = #{pd.status}
+			</if>
+		</trim>
+	</select>
+
+	<delete id="delteQuestion" parameterType="pd">
+		delete from
+		WEB_QUESTION
+		where ID = #{ID}
+	</delete>
+	
+	<insert id="saveQuestion" parameterType="pd">
+		insert into WEB_QUESTION
+			(ID,QUESTION,EMAIL)
+		values
+		( #{id},#{question},#{email})
+	</insert>
+	
+	<!-- 批量删除 -->
+	<delete id="delAllQuestion" parameterType="String">
+		delete from
+		WEB_QUESTION
+		where 
+			ID in
+		<foreach item="id" index="index" collection="array" open="(" separator="," close=")">
+                 #{id}
+		</foreach>
+	</delete>
+<!--   ============ 以上是新的业务    ================   -->
+
+	<delete id="delete" parameterType="pd">
+		delete from
+		EASYAPP_SURVEY_QUESTION
+		where QUESTION_ID = #{QUESTION_ID}
+	</delete>
+	<insert id="save" parameterType="pd">
+		insert into EASYAPP_SURVEY_QUESTION
+		(QUESTION_NAME,QUESTION_TYPE,OPTIONS,SURVEY_ID)
+		values
+		( #{QUESTION_NAME},#{QUESTION_TYPE},#{OPTIONS},#{SURVEY_ID})
+	</insert>
+	<update id="edit" parameterType="pd">
+		update
+		EASYAPP_SURVEY_QUESTION
+		set QUESTION_NAME = #{QUESTION_NAME},
+		QUESTION_TYPE = #{QUESTION_TYPE},
+		OPTIONS = #{OPTIONS}
+		where QUESTION_ID = #{QUESTION_ID}
+	</update>
+	<select id="findById" parameterType="pd" resultType="cn.cebest.entity.system.survey.Question">
+		select QUESTION_ID,QUESTION_NAME,QUESTION_TYPE,OPTIONS,SURVEY_ID
+		from
+		EASYAPP_SURVEY_QUESTION
+		where QUESTION_ID = #{QUESTION_ID}
+	</select>
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select QUESTION_ID,QUESTION_NAME,QUESTION_TYPE,OPTIONS,SURVEY_ID
+		from EASYAPP_SURVEY_QUESTION
+	</select>
+
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select QUESTION_ID,QUESTION_NAME,QUESTION_TYPE,OPTIONS,SURVEY_ID
+		from
+		EASYAPP_SURVEY_QUESTION
+		<where>
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and (
+					QUESTION_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+			</if>
+		</where>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		EASYAPP_SURVEY_QUESTION
+		where 
+			QUESTION_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+
+	<delete id="deleteQuestionBySurveyId" parameterType="pd">
+		delete from
+		EASYAPP_SURVEY_QUESTION where SURVEY_ID = #{SURVEY_ID}
+	</delete>
+</mapper>

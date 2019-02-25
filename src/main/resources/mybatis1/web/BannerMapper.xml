@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BannerMapper">
+
+	<!-- <resultMap id="BaseResultMap" type="cn.cebest.entity.web.banner.BannerEntity"> 
+		<id column="ID" jdbcType="VARCHAR" property="id" /> <result column="BANNER_NAME" 
+		jdbcType="VARCHAR" property="bannerName" /> <result column="BANNER_TYPEID" 
+		jdbcType="VARCHAR" property="bannerTypeId" /> <result column="BANNER_STATUS" 
+		jdbcType="VARCHAR" property="bannerStatus" /> <result column="SITE_ID" jdbcType="VARCHAR" 
+		property="siteId" /> <result column="TARGET_CONNECTION" jdbcType="VARCHAR" 
+		property="targetConnection" /> </resultMap> -->
+
+	<sql id="Base_Column_List">
+		ID,BANNER_NAME,BANNER_TYPEID,BANNER_STATUS,SITE_ID,TARGET_CONNECTION,FORDER
+	</sql>
+	<!-- 查询资讯详情模板 -->
+		<select id="selectBannerTemplate" parameterType="pd"
+			resultType="pd">
+			SELECT TEM_NAME,ID
+			FROM WEB_TEMPLATE
+			WHERE TEM_TYPE=
+			#{TEMPLATE_TYPE_2}
+		</select>
+	<!-- 新增 -->
+	<insert id="insert" parameterType="pd">
+		insert into WEB_BANNER
+		(ID,BANNER_NAME,BANNER_TYPEID,BANNER_STATUS,SITE_ID,TARGET_CONNECTION,FORDER,COLUMCONFIGID)
+		values
+		(#{ID},#{BANNER_NAME},#{BANNER_TYPEID},#{BANNER_STATUS},#{SITE_ID},#{TARGET_CONNECTION},#{FORDER},#{COLUMCONFIGID})
+	</insert>
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="pd">
+		delete from WEB_BANNER
+		where ID = #{ID}
+		
+	</delete>
+	
+	
+	<!-- 根据栏目ids查询分类ids -->
+	<select id="selectIdsByColumnIds" resultType="String">
+		SELECT BANNERID
+		FROM WEB_BANNERCOLUMN_RELATION
+		WHERE COLUMNID IN
+		<foreach collection="array" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<!-- 查询类型对应的栏目数 -->
+	<select id="selectCountByIds" resultType="HashMap">
+		SELECT COUNT(*),BANNERID
+		FROM WEB_BANNERCOLUMN_RELATION
+		WHERE BANNERID IN
+		<foreach collection="array" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+		GROUP BY BANNERID
+	</select>
+	<!-- 根据栏目ids删除和栏目的关联关系 -->
+	<delete id="deleteByColumnIds" >
+		DELETE FROM WEB_BANNERCOLUMN_RELATION
+		WHERE COLUMNID IN
+		<foreach collection="array" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from WEB_BANNER
+		where
+		ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="updateByPrimaryKey" parameterType="pd">
+		update WEB_BANNER
+		set BANNER_NAME = #{BANNER_NAME},
+		BANNER_TYPEID = #{BANNER_TYPEID},
+		BANNER_STATUS = #{BANNER_STATUS},
+		SITE_ID = #{SITE_ID},
+		TARGET_CONNECTION = #{TARGET_CONNECTION},
+		FORDER = #{FORDER}
+		where ID = #{ID}
+	</update>
+	
+	<!-- 更新状态 -->
+	<update id="updateStatusByPrimaryKey" parameterType="pd">
+			update WEB_BANNER
+			set
+				BANNER_STATUS = #{BANNER_STATUS}
+			where ID = #{ID}
+	</update>
+	
+	<!-- 查询 -->
+	<select id="selectByPrimaryKey" parameterType="pd" resultType="pd">
+		select
+		<include refid="Base_Column_List" />
+		from WEB_BANNER
+		where ID = #{ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Base_Column_List"></include>
+		from WEB_BANNER
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+			(
+			BANNER_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+			)
+		</if>
+		<if test="pd.BANNER_STATUS!= null and pd.BANNER_STATUS != ''"><!-- 状态过滤 -->
+			 and BANNER_STATUS =#{BANNER_STATUS}
+		 </if>
+		order by FORDER
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Base_Column_List"></include>
+		from WEB_BANNER
+		where TYPE = #{BANNER_TYPEID}
+		order by FORDER
+	</select>
+
+	<insert id="insertSelective" parameterType="pd">
+		insert into WEB_BANNER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ID != null">
+				ID,
+			</if>
+			<if test="BANNER_NAME != null">
+				BANNER_NAME,
+			</if>
+			<if test="BANNER_TYPEID != null">
+				BANNER_TYPEID,
+			</if>
+			<if test="BANNER_STATUS != null">
+				BANNER_STATUS,
+			</if>
+			<if test="SITE_ID != null">
+				SITE_ID,
+			</if>
+			<if test="TARGET_CONNECTION != null">
+				TARGET_CONNECTION,
+			</if>
+			<if test="FORDER != null">
+				FORDER
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ID != null">
+				#{ID},
+			</if>
+			<if test="BANNER_NAME != null">
+				#{BANNER_NAME},
+			</if>
+			<if test="BANNER_TYPEID != null">
+				#{BANNER_TYPEID},
+			</if>
+			<if test="BANNER_STATUS != null">
+				#{BANNER_STATUS},
+			</if>
+			<if test="SITE_ID != null">
+				#{SITE_ID},
+			</if>
+			<if test="TARGET_CONNECTION != null">
+				#{TARGET_CONNECTION},
+			</if>
+			<if test="FORDER != null">
+				#{FORDER}
+			</if>
+			
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="pd">
+		update WEB_BANNER
+		<set>
+			<if test="bannerName != null">
+				BANNER_NAME = #{BANNER_NAME},
+			</if>
+			<if test="bannerTypeId != null">
+				BANNER_TYPEID = #{BANNER_TYPEID},
+			</if>
+			<if test="bannerStatus != null">
+				BANNER_STATUS = #{BANNER_STATUS},
+			</if>
+			<if test="siteId != null">
+				SITE_ID = #{SITE_ID},
+			</if>
+			<if test="targetConnection != null">
+				TARGET_CONNECTION = #{TARGET_CONNECTION}
+			</if>
+			<if test="FORDER != null">
+				TARGET_CONNECTION = #{FORDER}
+			</if>
+			
+		</set>
+		where ID = #{ID}
+	</update>
+	<!-- ===========开启重生之路============== -->
+	<!-- 保存图片 -->
+	<insert id="saveImage" parameterType="pd">
+		INSERT INTO WEB_IMAGE(
+		IMAGE_ID,TITLE,IMGURL,TYPE,TOURL,BZ,MASTER_ID,CREATE_TIME,SUBHEAD,forder
+		) values (#{bannerImageId},#{bannerTitle},#{bannerImageUrl},6,#{imgToUrl},#{bz},#{bannerId},#{create_time},#{subhead},#{forder})	
+	</insert>
+	<!--保存视频 -->
+	<select id="saveVideo" parameterType="pd">
+		INSERT INTO WEB_VIDEO(ID,VIDEO_TITLE,VIDEO_URL,VIDEO_TYPE,CREATETIME,MASTER_ID,VIDEO_CONTENT)
+		VALUES(#{bannerVideoId},#{bannerVideoTitle},#{bannerVideoUrl},#{extensionName},#{videoTime},#{bannerId},#{videoContent})
+	</select>
+	<!-- 保存banner -->
+	<insert id="saveBanner" parameterType="cn.cebest.entity.web.Banner">
+		INSERT INTO WEB_BANNER
+		(ID,BANNER_NAME,BANNER_TYPEID,BANNER_STATUS,SITE_ID,TARGET_CONNECTION,FORDER,COLUMCONFIGID,COUNTIMAGE,COUNTVIDEO,COUNTIV,CREATE_TIME)
+		VALUES
+		(#{id},#{banner_name},#{banner_typeid},#{banner_status},#{site_id},#{target_connection},#{forder},#{columconfigid},#{countimage},#{countvideo},#{countiv},#{create_time})
+	</insert>
+	<!--保存banner和栏目之间的关系 -->
+	<insert id="saveColumnBannerRelation" parameterType="pd">
+		INSERT INTO WEB_BANNERCOLUMN_RELATION(COLUMNID,BANNERID)
+		VALUES(#{columnid},#{bannerid})
+	</insert>
+	<!--终结显示列表 ======================================= -->
+	<resultMap type="cn.cebest.entity.web.Banner" id="resultBanner">
+		<id property="id" column="id" />
+		<result property="banner_name" column="BANNER_NAME" />
+		<result property="banner_typeid" column="BANNER_TYPEID" />
+		<result property="banner_status" column="BANNER_STATUS" />
+		<result property="site_id" column="SITE_ID" />
+		<result property="target_connection" column="TARGET_CONNECTION" />
+		<result property="forder" column="FORDER" />
+		<result property="columconfigid" column="ID_" />
+		<result property="countimage" column="COUNTIMAGE" />
+		<result property="countvideo" column="COUNTVIDEO" />
+		<result property="countiv" column="COUNTIV" />
+		<collection property="pictures"   ofType="cn.cebest.entity.system.Image">
+ 			<id column="image_id_" property="imageId"/>
+			<result column="type_" property="type"/>
+			<result column="title_" property="title"/>
+			<result column="imgurl_" property="imgurl"/>
+			<result column="SUBHEAD" property="subhead"/>
+			<result column="FORDER" property="forder"/>
+			<result column="bz" property="bz"/>
+			<result column="tourl_" property="tourl"/>
+ 		</collection>
+ 		<collection property="videos"   ofType="cn.cebest.entity.system.Video">
+ 			<id column="video_id_" property="id"/>
+			<result column="video_type_" property="video_type"/>
+			<result column="video_title_" property="video_title"/>
+			<result column="video_url_" property="video_url"/> 
+			<result column="video_content_" property="video_content"/>
+			
+			<result column="VIDEO_TOURL" property="tourl"/>
+ 		</collection>
+		<collection property="cols"
+			ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="ID_" />
+			<result property="columName" column="COLUM_NAME" />
+		</collection>
+	</resultMap>
+	<!-- 查询banner列表 -->
+	<select id="findBannerlistPage"  parameterType="page"
+		resultMap="resultBanner">
+		SELECT  B.ID,B.BANNER_NAME,B.CREATE_TIME,B.COUNTIV,C.ID AS ID_,C.COLUM_NAME FROM
+		(/*start*/SELECT * FROM WEB_BANNER where SITE_ID=#{pd.SITEID}
+		<if test="pd.banner_name !=null and pd.banner_name != ''">
+			AND BANNER_NAME LIKE CONCAT(CONCAT('%', #{pd.banner_name}),'%')
+		</if>
+		/*end*/) B
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION BCR ON BCR.BANNERID=B.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=BCR.COLUMNID
+		ORDER BY B.CREATE_TIME DESC
+	</select>
+	<!-- 删除banner和栏目之间的关系 -->
+	<delete id="deleteCBrelation" >
+	DELETE FROM WEB_BANNERCOLUMN_RELATION
+	WHERE BANNERID IN
+	<foreach collection="array" item="id" close=")" open="(" separator=",">
+		#{id}
+	</foreach>
+	</delete>
+	<!-- 删除banner-->
+	<delete id="deleteBanner">
+		DELETE FROM WEB_BANNER
+		WHERE ID IN
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除banner对应的图片-->
+	<delete id="deleteBannerImage">
+		DELETE FROM WEB_IMAGE
+		WHERE MASTER_ID IN
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 删除banner对应的视频-->
+	<delete id="deleteBannerVideo">
+		DELETE FROM WEB_VIDEO
+		WHERE MASTER_ID IN
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 根据bannerid去查询banner -->
+	<select id="selectBannerById" resultType="cn.cebest.entity.web.Banner">
+		SELECT ID,BANNER_NAME,BANNER_TYPEID,BANNER_STATUS,SITE_ID,TARGET_CONNECTION,FORDER,COLUMCONFIGID,COUNTIMAGE,COUNTVIDEO,COUNTIV
+		FROM WEB_BANNER
+		WHERE ID=#{id}
+	</select>
+	
+	<!--根据bannerid去查找其对应的栏目  -->
+	<select id="selectColumByBannerId" resultMap="resultBanner">
+		SELECT  B.ID,B.BANNER_NAME,C.ID AS ID_,C.COLUM_NAME,
+		I.TYPE AS TYPE_,I.IMAGE_ID AS IMAGE_ID_,I.TITLE AS TITLE_,I.IMGURL AS IMGURL_,I.BZ,I.TOURL AS TOURL_,I.SUBHEAD,I.FORDER,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_IMAGE I ON I.MASTER_ID=B.ID
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION R ON R.BANNERID=B.ID 
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=R.COLUMNID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=B.ID
+        WHERE B.ID=#{id}
+	</select>
+	
+	<!-- 根据banner的id查询单张图片的路径 -->
+	 <select id="selectImagePath" resultType="pd" >
+	 
+		SELECT I.IMGURL,I.MASTER_ID
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_IMAGE I ON B.ID=I.MASTER_ID
+		WHERE B.ID IN
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			<if test="id !=null and id != ''">
+				#{id}
+			</if>
+		</foreach>
+	</select> 
+	<!-- 根据banner的id查询多张图片的路径 -->
+	 <select id="selectImagesPath" resultType="cn.cebest.entity.system.Image" >
+	 
+		SELECT IMGURL,MASTER_ID
+		FROM WEB_BANNER B
+		JOIN WEB_IMAGE I ON B.ID=I.MASTER_ID
+		WHERE B.ID=#{id}
+	</select> 
+	
+	<!-- 根据banner的id查询单个视频的路径 -->
+	 <select id="selectVideoPath" resultType="pd">
+		SELECT V.VIDEO_URL,V.MASTER_ID
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_VIDEO V ON B.ID=V.MASTER_ID
+		WHERE B.ID IN
+		<foreach collection="array" item="id" open="(" close=")"
+			separator=",">
+			<if test="id !=null and id != ''">
+				#{id}
+			</if>
+		</foreach>
+	</select> 
+	
+	<!-- 根据banner的id查询多个视频的路径 -->
+	 <select id="selectVideosPath" resultType="cn.cebest.entity.system.Video">
+		SELECT V.VIDEO_URL,V.MASTER_ID
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_VIDEO V ON B.ID=V.MASTER_ID
+		WHERE B.ID=#{id}
+	</select> 
+	
+	<!--更新banner-->
+	<update id="updateBanner" parameterType="cn.cebest.entity.web.Banner">
+		UPDATE WEB_BANNER
+		<set>
+			<if test="banner_name !=null and banner_name !='' ">BANNER_NAME=#{banner_name},</if>
+			<if test="countimage !=null and countimage !=''">COUNTIMAGE=#{countimage},</if>
+			<if test="countvideo !=null and countvideo !=''">COUNTVIDEO=#{countvideo},</if>
+			<if test="countiv !=null and countiv !=''">COUNTIV=#{countiv},</if>	
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!--根据id查询对应栏目的详细信息-->
+	<select id="selectColumnDetail" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT ID AS id,COLUM_NAME AS columName,COLUM_URLPATH AS columUrlpath,SITEID AS siteid,COLUM_SUBNAME AS columSubname,COLUM_IMAGE AS columImage,COLUM_DESC AS columDesc,CREATETIME AS createtime
+		FROM WEB_COLUMCONFIG
+		WHERE ID=#{id}
+	</select>
+	<!--根据栏目id查询其对应下的所有banner-->
+	<select id="selectListPageBannerDetailByColumnId" parameterType="pd" resultType="cn.cebest.entity.web.Banner">
+		SELECT DISTINCT B.ID,B.BANNER_NAME,B.BANNER_TYPEID,B.BANNER_STATUS,B.SITE_ID,B.TARGET_CONNECTION,B.FORDER,B.COUNTIV,IM.IMGURL AS imageUrl,IM.TOURL AS toUrl,IM.TITLE AS title,
+		IM.SUBHEAD AS subhead,IM.BZ AS bz,V.VIDEO_TITLE AS videotitle,V.VIDEO_URL AS videourl
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION BCR ON BCR.BANNERID=B.ID
+		LEFT JOIN WEB_COLUMCONFIG COL ON COL.ID=BCR.COLUMNID
+		LEFT JOIN WEB_IMAGE IM ON IM.MASTER_ID=B.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=B.ID
+		WHERE COL.ID=#{columId} ORDER BY 
+		B.FORDER ASC,
+		<if test="sort != null and sort != '' ">
+			IM.FORDER ASC,
+		</if>
+		IM.CREATE_TIME DESC LIMIT 0,#{showCount}
+	</select>
+	
+	<select id="selectBannerByName" parameterType="map" resultType="Long">
+		SELECT count(1)
+		FROM WEB_BANNER
+		<where>
+			BANNER_NAME=#{bannerName}
+			<if test="id !=null and id != ''">
+				AND ID = #{id}
+			</if>
+		</where> 
+	</select>
+	<!--删除banner与栏目之间的关系-->
+	<delete id="deleteBannerColumRelation">
+		DELETE FROM WEB_BANNERCOLUMN_RELATION
+		WHERE BANNERID=#{id}
+	</delete>
+	
+	<!-- 根据banner的id查询多张图片详情 -->
+	 <select id="findImagesBybannerid" resultType="cn.cebest.entity.system.Image" >
+		SELECT IMAGE_ID AS imageId,TITLE AS title,IMGURL AS imgurl,TYPE AS type,BZ AS bz,TOURL AS tourl
+		FROM WEB_IMAGE 
+		WHERE MASTER_ID=#{id}
+	</select> 
+	<!-- 根据图片的id查询图片详情 -->
+	 <select id="selectImagePathByid" resultType="cn.cebest.entity.system.Image" >
+		SELECT IMAGE_ID AS imageId,TITLE AS title,IMGURL AS imgurl,TYPE AS type,BZ AS bz,TOURL AS tourl
+		FROM WEB_IMAGE 
+		WHERE IMAGE_ID=#{id}
+	</select>
+	<!--删除图片详情-->
+	<delete id="deleteImage">
+		DELETE FROM WEB_IMAGE
+		WHERE IMAGE_ID=#{id}
+	</delete>
+	<!-- 根据banner的id查询多张视频详情 -->
+	 <select id="findVideosBybannerid" resultType="cn.cebest.entity.system.Video" >
+		SELECT ID AS id,VIDEO_TITLE AS video_title,VIDEO_CONTENT AS video_content,VIDEO_URL AS video_url,CREATETIME AS createtime,TOURL AS tourl
+		FROM WEB_VIDEO 
+		WHERE MASTER_ID=#{id}
+	</select> 
+	<!-- 根据视频的id查询视频详情 -->
+	 <select id="selectVideoPathByid" resultType="cn.cebest.entity.system.Video" >
+		SELECT ID AS id,VIDEO_TITLE AS video_title,VIDEO_CONTENT AS video_content,VIDEO_URL AS video_url,CREATETIME AS createtime,TOURL AS tourl
+		FROM WEB_VIDEO 
+		WHERE ID=#{id}
+	</select>
+	<!--删除视频详情-->
+	<delete id="deleteVideo">
+		DELETE FROM WEB_VIDEO
+		WHERE ID=#{id}
+	</delete>
+	<!--根据图片id更新图片-->
+	<update id="updateImage" parameterType="cn.cebest.entity.web.Banner">
+		UPDATE WEB_IMAGE
+		<set>
+		    forder=#{forder},
+			TITLE=#{title},
+			SUBHEAD=#{subhead},
+			<if test="imgurl !=null and imgurl !=''">IMGURL=#{imgurl},</if>
+			TOURL=#{tourl},
+			BZ=#{bz},
+		</set>
+		WHERE IMAGE_ID=#{imageId}
+	</update>
+	<!--根据图片id更新视频-->
+	<update id="updateVideo" parameterType="cn.cebest.entity.web.Banner">
+		UPDATE WEB_VIDEO
+		<set>
+			<if test="video_title !=null and video_title !='' ">VIDEO_TITLE=#{video_title},</if>
+			<if test="video_url !=null and video_url !=''">VIDEO_URL=#{video_url},</if>
+			<if test="tourl !=null and tourl !=''">TOURL=#{tourl},</if>
+			<if test="video_content !=null and video_content !=''">VIDEO_CONTENT=#{video_content},</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 查询与banner有关的栏目 -->
+	<select id="selectColum" parameterType="pd" resultType="pd">
+		SELECT C.ID,C.COLUM_NAME
+		FROM WEB_COLUMCONFIG C
+        WHERE C.SITEID=#{SITEID}
+	</select>
+	<!-- 根据栏目id查询banner列表 -->
+	<select id="selectListPageBannerByColumnId"  parameterType="page"
+		resultMap="resultBanner">
+		SELECT DISTINCT B.ID,B.BANNER_NAME,B.CREATE_TIME,B.COUNTIV,C.ID AS ID_,C.COLUM_NAME
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION BCR ON BCR.BANNERID=B.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=BCR.COLUMNID
+		WHERE C.ID=#{pd.colum_id}
+		ORDER BY B.CREATE_TIME DESC
+	</select>
+	
+	<!--根据栏目id查询其对应下的所有banner详情===============================-->
+	<select id="selectBannerListPageByColumId" parameterType="pd" resultMap="resultBanner">
+		SELECT DISTINCT B.ID,B.BANNER_NAME,B.BANNER_TYPEID,B.BANNER_STATUS,B.SITE_ID,B.TARGET_CONNECTION,B.FORDER,B.COUNTIV,IM.IMGURL AS imgurl_,IM.TOURL AS tourl_,IM.TITLE AS title_,
+		IM.SUBHEAD,IM.BZ AS bz,V.VIDEO_TITLE AS video_title_,V.VIDEO_URL AS video_url_,
+		V.VIDEO_CONTENT AS video_content_,V.TOURL AS VIDEO_TOURL
+		FROM WEB_BANNER B
+		LEFT JOIN WEB_IMAGE IM ON IM.MASTER_ID=B.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=B.ID
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION BCR ON BCR.BANNERID=B.ID
+		LEFT JOIN WEB_COLUMCONFIG COL ON COL.ID=BCR.COLUMNID
+		WHERE COL.ID=#{columId} 
+		ORDER BY IM.FORDER ASC
+	</select>
+	
+	<!-- 根据栏目ID查询其内容  -->
+	<select id="selectIdsByColumID" parameterType="String" resultType="String">
+		SELECT DISTINCT BANNERID FROM WEB_BANNERCOLUMN_RELATION WHERE 1=1
+		<if test="columId !=null and columId !=''">
+			AND COLUMNID=#{columId}
+		</if>
+	</select>
+	
+	<!-- 根据bannerID数组，查询其关联信息  -->
+	<select id="selectlistPageInfoByIdArry" parameterType="page" resultMap="resultBanner">
+		<!-- SELECT DISTINCT B.ID,B.BANNER_NAME,B.BANNER_TYPEID,B.BANNER_STATUS,B.SITE_ID,B.TARGET_CONNECTION,B.FORDER,B.COUNTIV,IM.IMGURL AS imgurl_,IM.TOURL AS tourl_,IM.TITLE AS title_,
+		IM.SUBHEAD,IM.BZ AS bz,IM.FORDER AS image_forder,V.VIDEO_TITLE AS video_title_,V.VIDEO_URL AS video_url_,
+		V.VIDEO_CONTENT AS video_content_,V.TOURL AS VIDEO_TOURL
+		FROM (/*start*/ -->
+				 SELECT * FROM WEB_BANNER BO where 1=1
+				 <if test="pd.idArry !=null and pd.idArry.length>0">
+					AND BO.ID IN 
+					<foreach collection="pd.idArry" close=")" item="bannerid" open="(" separator=",">
+						'${bannerid}'
+					</foreach>
+				</if>
+				ORDER BY BO.CREATE_TIME DESC
+		<!--   /*end*/) B
+		LEFT JOIN WEB_IMAGE IM ON IM.MASTER_ID=B.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=B.ID
+		LEFT JOIN WEB_BANNERCOLUMN_RELATION BCR ON BCR.BANNERID=B.ID
+		LEFT JOIN WEB_COLUMCONFIG COL ON COL.ID=BCR.COLUMNID
+		ORDER BY IM.FORDER ASC -->
+	</select>
+	<!-- 修改排序值 -->
+	<update id="updateSort" parameterType="pd">
+			update WEB_BANNER
+			set
+				FORDER = #{forder}
+			where ID = #{bannerId}
+	</update>
+	
+	
+	
+</mapper>

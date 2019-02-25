@@ -1,0 +1,19 @@
+@charset "UTF-8";
+.small_banner .swiper-container {
+    position: relative;
+}
+.small_banner .swiper-wrapper, .small_banner .swiper-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity:0;
+    opacity: 0;
+}
+.small_banner .swiper-wrapper, .small_banner .swiper-slide.swiper-slide-active {
+    filter:alpha(opacity=100);
+    -moz-opacity:1;
+    -khtml-opacity:1;
+    opacity: 1;
+}

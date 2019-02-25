@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="AppUserExtMapper" >
+  <resultMap id="BaseResultMap" type="cn.cebest.entity.system.AppUserExt" >
+    <id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="MEM_REAL_NAME" property="memRealName" jdbcType="VARCHAR" />
+    <result column="MEM_NICK" property="memNick" jdbcType="VARCHAR" />
+    <result column="MEM_SEX" property="memSex" jdbcType="VARCHAR" />
+    <result column="MEM_BIRTHDAY" property="memBirthday" jdbcType="TIMESTAMP" />
+    <result column="MEM_IDCARD" property="memIdcard" jdbcType="VARCHAR" />
+    <result column="MEM_CITY" property="memCity" jdbcType="VARCHAR" />
+    <result column="MEM_ADDR" property="memAddr" jdbcType="VARCHAR" />
+    <result column="MEM_TEL" property="memTel" jdbcType="VARCHAR" />
+    <result column="MEM_IMG_PATH" property="memImgPath" jdbcType="VARCHAR" />
+    <result column="MEM_SIGN" property="memSign" jdbcType="VARCHAR" />
+    <result column="MEM_INTRO" property="memIntro" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    USER_ID, MEM_REAL_NAME, MEM_NICK, MEM_SEX, MEM_BIRTHDAY, MEM_IDCARD, MEM_CITY, MEM_ADDR, 
+    MEM_TEL, MEM_IMG_PATH, MEM_SIGN, MEM_INTRO
+  </sql>
+  <select id="findByUiId" resultType="pd" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from SYS_APP_USER_EXT
+    where USER_ID = #{USER_ID,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteU" parameterType="java.lang.String" >
+    delete from SYS_APP_USER_EXT
+    where USER_ID = #{USER_ID,jdbcType=VARCHAR}
+  </delete>
+  <insert id="saveU" parameterType="pd" >
+    insert into SYS_APP_USER_EXT (USER_ID, MEM_REAL_NAME, MEM_NICK, 
+      MEM_SEX, MEM_BIRTHDAY, MEM_IDCARD, 
+      MEM_CITY, MEM_ADDR, MEM_TEL, 
+      MEM_IMG_PATH, MEM_SIGN, MEM_INTRO
+      )
+    values (#{USER_ID,jdbcType=VARCHAR}, #{MEM_REAL_NAME,jdbcType=VARCHAR}, #{MEM_NICK,jdbcType=VARCHAR}, 
+      #{MEM_SEX,jdbcType=VARCHAR}, #{MEM_BIRTHDAY,jdbcType=TIMESTAMP}, #{MEM_IDCARD,jdbcType=VARCHAR}, 
+      #{MEM_CITY,jdbcType=VARCHAR}, #{MEM_ADDR,jdbcType=VARCHAR}, #{MEM_TEL,jdbcType=VARCHAR}, 
+      #{MEM_IMG_PATH,jdbcType=VARCHAR}, #{MEM_SIGN,jdbcType=VARCHAR}, #{MEM_INTRO,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="editU" parameterType="cn.cebest.entity.system.AppUserExt" >
+    update SYS_APP_USER_EXT
+    set MEM_REAL_NAME = #{memRealName,jdbcType=VARCHAR},
+      MEM_NICK = #{memNick,jdbcType=VARCHAR},
+      MEM_SEX = #{memSex,jdbcType=VARCHAR},
+      MEM_BIRTHDAY = #{memBirthday,jdbcType=TIMESTAMP},
+      MEM_IDCARD = #{memIdcard,jdbcType=VARCHAR},
+      MEM_CITY = #{memCity,jdbcType=VARCHAR},
+      MEM_ADDR = #{memAddr,jdbcType=VARCHAR},
+      MEM_TEL = #{memTel,jdbcType=VARCHAR},
+      MEM_IMG_PATH = #{memImgPath,jdbcType=VARCHAR},
+      MEM_SIGN = #{memSign,jdbcType=VARCHAR},
+      MEM_INTRO = #{memIntro,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="saveImage" parameterType="pd" >
+    update SYS_APP_USER_EXT
+    set
+      MEM_IMG_PATH = #{MEM_IMG_PATH,jdbcType=VARCHAR}
+    where USER_ID = #{USER_ID,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

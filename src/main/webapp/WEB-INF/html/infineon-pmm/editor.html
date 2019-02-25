@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>编辑资料</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/z_style.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/cookie.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<!--header begin-->
+<!--#include file="${autoPath}/staticRelease/include/header.html"-->
+<!--header end-->
+<#include "../htmlFront/include/header.html">
+<div class="z-register clearfix">
+	<div class="innerBanner prz">
+		<img src="${autoPath}/staticRelease/img/uploadfiles/nei_banner2.jpg" alt="">
+		<div class="innerBox pra">
+			<div class="wrap">
+				<p class="chTil fnt_32 wow fadeInUp" data-wow-duration="1.5s">个人中心</p>
+				<p class="line wow fadeInUp" data-wow-duration="1.5s"><span></span></p>
+				<p class="enTil fnt_22 wow fadeInUp" data-wow-duration="1.5s">Personal Center</p>
+			</div>
+		</div>
+	</div>
+	<div class="positionBox">
+		<div class="wrap">
+			<a href="${autoPath}" class="fnt_14">首页 > </a>
+			<a href="${autoPath}/channel/9c83f37d371044ce9773fb3399be6f8c.html" class="fnt_14">个人中心 > </a>
+			<a href="javascript:;" class="fnt_14 active">资料编辑 </a>
+		</div>
+	</div>
+	<div class="z-regisCon wrap pt_75">
+		<h2 class="fnt_32">编辑会员资料</h2>
+		<form id="register_form">
+		<input type="hidden" name="id" id="uid" value="">
+			<ul>
+				<li class="clearfix">
+					<span>姓</span>
+					<div class="input-ipt">
+						<input type="text" name="surname" id="surname" value="">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>名</span>
+					<div class="input-ipt">
+						<input type="text" name="name" id="name" value="">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>昵称</span>
+					<div class="input-ipt">
+						<input type="text" name="nickname" id="nickname" value="">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>常用邮箱</span>
+					<div class="input-ipt">
+						<input type="text" name="email" id="email" value="">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>手机号码</span>
+					<div class="input-ipt">
+						<input type="text" name="phone" id="phone" value="">
+						<em></em>
+						<div class="tit">
+							<p>大陆地区电话号码请输入11位手机号</p>
+							<p>台湾地区手机号请按照以下格式输入：00886-*********</p>
+							<p>香港地区手机号请按照以下格式输入：00852-********</p>
+						</div>
+					</div>
+				</li>
+				
+				<li class="clearfix select select_area">
+					<span>国家/地区</span>
+					<div class="input-ipt">
+						<div class="input" id="country" name="country">中国</div>
+						<div class="select-con">
+							<ul></ul>
+						</div>
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司/单位/学校名称</span>
+					<div class="input-ipt">
+						<input type="text" name="company" id="company" value="某某公司">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>您是通过哪个渠道知道我们的呢？</span>
+					<div class="input-ipt">
+						<ul class="z-type">
+							<li class="clearfix">
+								<input type="radio" id="radio01" name="channel">
+								<label for="radio01">
+									<span>英飞凌原厂人员</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio02" name="channel">
+								<label for="radio02">
+									<span>英飞凌代理商</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio03" name="channel">
+								<label for="radio03">
+									<span>同事、朋友</span>
+								</label>
+							</li>
+							<li class="clearfix">
+								<input type="radio" id="radio04" name="channel">
+								<label for="radio04">
+									<span>英飞凌客户</span>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio05" name="channel">
+								<label for="radio05">
+									<span>媒体</span>
+									<div class="input_ipt">
+										<input type="text" id="rad1">
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio06" name="channel" value="2">
+								<label for="radio06">
+									<span>搜索引擎</span>
+									<div class="input_ipt">
+										<input type="text" id="rad2" >
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio07" name="channel">
+								<label for="radio07">
+									<span>线下会议</span>
+									<div class="input_ipt">
+										<input type="text" id="rad3">
+										<em></em>
+									</div>
+								</label>
+							</li>
+							<li class="clearfix dWidth">
+								<input type="radio" id="radio08" name="channel" value="6">
+								<label for="radio08">
+									<span>其他</span>
+									<div class="input_ipt">
+										<input type="text" id="rad4" placeholder="请说明">
+										<em></em>
+									</div>
+								</label>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>头像</span>
+					<div class="input-ipt">
+						<div class="pic">
+							<!--accept=".jpg,.jpeg,.png"-->
+							<div><img id="photo" src="${autoPath}/staticRelease/img/pro_detailIcon1.png"/><b></b><input type="file" id="file" name="file" accept=".jpg,.jpeg,.png"></div>
+						</div>
+						<div class="z-btn clearfix" style="display: none;">
+							<input type="button" value="上传">
+							<!--<input type="file" id="file" name="file"/>	-->						
+							<input type="button" name="" value="查看">
+						</div>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>所在城市</span>
+					<div class="input-ipt">
+						<input type="text" id="city" name="city">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司/单位/学校座机</span>
+					<div class="input-ipt">
+						<input type="text" id="seatPhone" name="seatPhone">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>公司/单位/学校地址</span>
+					<div class="input-ipt">
+						<input type="text" id="address" name="address">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>部门</span>
+					<div class="input-ipt">
+						<input type="text" id="dept" name="dept">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>职务/职称</span>
+					<div class="input-ipt">
+						<input type="text" id="job" name="job">
+						<em></em>
+					</div>
+				</li>
+				<li class="clearfix">
+					<span>所感兴趣的应用领域</span>
+					<div class="input-ipt">
+						<ul class="z-area clearfix">
+							<li class="clearfix">
+								<input type="checkbox" name="qunnxuan" id="companyField0" value="全选">
+								<label for="companyField0">全选</label>
+							</li><br />
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField1" value="1">
+								<label for="companyField1">汽车辅助驾驶</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField2" value="2">
+								<label for="companyField2">安防</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField3" value="3">
+								<label for="companyField3">无人机</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField4" value="4">
+								<label for="companyField4">智能家电/家居</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField5" value="5">
+								<label for="companyField5">智能会议系统</label>
+							</li>
+							
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField6" value="6">
+								<label for="companyField7">智慧照明</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField7" value="7">
+								<label for="companyField8">智慧超市</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField8" value="8">
+								<label for="companyField9">交通监控</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField9" value="9">
+								<label for="companyField10">健康管理</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField10" value="10">
+								<label for="companyField11">人机交互</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField11" value="11">
+								<label for="companyField12">门禁安全</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField12" value="12">
+								<label for="companyField13">服务机器人</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField13" value="13">
+								<label for="companyField14">无线充电</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField14" value="14">
+								<label for="companyField15">电源管理</label>
+							</li>
+							<li class="clearfix">
+								<input class="xuan" type="checkbox" name="pmmField" id="companyField15" value="15">
+								<label for="companyField16">其他</label>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li class="agree agree_two" style="margin-bottom: 30px;">
+					<input type="checkbox" name="check_sub" id="isSub">
+					<span>我希望收到英飞凌新闻通讯以及有关英飞凌产品、服务和活动的更多营销信息。（您可以随时取消免费订阅。）<em></em></span>
+				</li>
+				<li class="submit clearfix">
+					<button type="button" name="submit">确定</button>
+					<em></em>
+				</li>
+			</ul>
+		</form>
+		
+	</div>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/baseData.js"></script>
+<script type="text/javascript">
+	$('img.scale').imageScale();
+	new WOW().init();
+</script>
+<script type="text/javascript">
+var userId = "${(_const_cas_assertion_.principal.attributes.id)!}";
+	$('#companyField0').click(function(){
+		var flag = $(this).is(':checked');
+		if (flag) {
+			$('.z-area .xuan').prop("checked",true);
+		} else{
+			$('.z-area .xuan').prop("checked",false);
+		}
+	})
+	$('.z-area .xuan').click(function(){
+		var flag = $(this).is(':checked');
+		if (flag) {
+			$("#companyField0").prop("checked",false);
+		} else{
+			$("#companyField0").prop("checked",false);
+		}
+	})
+	
+$(function(){
+	$.ajax({
+		type : "GET",
+		url : baseData.member_base_url+"user/getUserById",
+		data:{
+			"id" : userId
+		},
+		traditional: true,
+		dataType : "json",
+		success : function(d) {
+			
+			var data = d.data;
+				$("#uid").val(data.id);
+				$("#surname").val(data.surname);
+				$("#name").val(data.name);
+				$("#nickname").val(data.nickname);
+				$("#email").val(data.email);
+				$("#phone").val(data.phone);
+				$("#country").text(data.country);
+				$("#company").val(data.company);
+				$("#address").val(data.address);
+				if(data.channel == '1'){
+					$("#radio01").prop("checked",true);
+				}else if(data.channel == '2'){
+					$("#radio02").prop("checked",true);
+				}else if(data.channel == '3'){
+					$("#radio03").prop("checked",true);
+				}else if(data.channel == '4'){
+					$("#radio04").prop("checked",true);
+				}else if(data.channel == '5'){
+					$("#radio05").prop("checked",true);
+					$("#rad1").val(data.channelMsg);
+				}else if(data.channel == '6'){
+					$("#radio06").prop("checked",true);
+					$("#rad2").val(data.channelMsg);
+				}else if(data.channel == '7'){
+					$("#radio07").prop("checked",true);
+					$("#rad3").val(data.channelMsg);
+				}else if(data.channel == '8'){
+					$("#radio07").prop("checked",true);
+					$("#rad4").val(data.channelMsg);
+				}
+				if(data.photoUrl != null && data.photoUrl != ''){
+					$("#photo").attr("src",baseData.member_base_url+"/upload/"+data.photoUrl);
+				}else{
+					$("#photo").attr("src","${autoPath}/staticRelease/img/z_user.png");
+				}
+				$("#isSub").prop("checked",true);
+				$("#city").val(data.city);
+				$("#seatPhone").val(data.seatPhone);
+				$("#dept").val(data.dept);
+				$("#job").val(data.dept);
+				var arr = [];
+				if(data.pmmField != null){
+					arr = data.pmmField.split(",");
+					if(arr.length > 0){
+						for(var i = 0;i < arr.length; i++){
+							if(arr[i] == 1){
+								$("#companyField1").prop("checked",true);
+							}else if(arr[i] == 2){
+								$("#companyField2").prop("checked",true);
+							}else if(arr[i] == 3){
+								$("#companyField3").prop("checked",true);
+							}else if(arr[i] == 4){
+								$("#companyField4").prop("checked",true);
+							}else if(arr[i] == 5){
+								$("#companyField5").prop("checked",true);
+							}else if(arr[i] == 6){
+								$("#companyField6").prop("checked",true);
+							}else if(arr[i] == 7){
+								$("#companyField7").prop("checked",true);
+							}else if(arr[i] == 8){
+								$("#companyField8").prop("checked",true);
+							}else if(arr[i] == 9){
+								$("#companyField9").prop("checked",true);
+							}else if(arr[i] == 10){
+								$("#companyField10").prop("checked",true);
+							}else if(arr[i] == 11){
+								$("#companyField11").prop("checked",true);
+							}else if(arr[i] == 12){
+								$("#companyField12").prop("checked",true);
+							}else if(arr[i] == 13){
+								$("#companyField13").prop("checked",true);
+							}else if(arr[i] == 14){
+								$("#companyField14").prop("checked",true);
+							}else if(arr[i] == 15){
+								$("#companyField15").prop("checked",true);
+							}
+						}
+					}
+				}
+		}// end success
+		
+	});//ajax end
+});
+	
+	
+</script>
+<script type="text/javascript">
+$(function() {
+	//过滤危险字符
+	$(document).on('keyup', 'input[type=text],textarea,input[type=password]', function () {
+
+        var val = $(this).val().toLocaleLowerCase();
+        var otherKey = " and | exec | count | chr | mid | master | or | truncate | char | declare | join |<|>|*|/*|*/|'|;|\\u|insert|select|delete|update|create|drop|script|javascript|alert";
+        var goon = true;
+        for (var i = 0; i < otherKey.split('|').length ; i++) {
+            if (goon) {
+                if (val.indexOf(otherKey.split('|')[i]) != -1) {
+                    $(this).siblings('em').text('您输入的字符不能包含空格');
+                    $(this).val('');
+                    goon = false;
+                    return;
+                }
+            }
+        }
+        if(val.indexOf(' ')>=0){
+			$(this).siblings('em').text('您输入的字符不能包含空格');
+			return false; 
+		}
+    });
+
+	var tools = {
+		 	init: function() {
+		 		
+		 		//下拉框模拟
+				$(".z-register .input").click(function(){	
+					var liLength = $(this).siblings('.select-con').find('ul li').length;
+					if($(this).hasClass('on')){
+						$(this).siblings('.select-con').css({
+							'height':'0'
+						});
+						$(this).siblings('.select-con').hide();
+						$(this).removeClass('on');
+					}else{
+						$(this).addClass('on')
+						if(liLength<=4){
+							$(this).siblings('.select-con').show()
+						}else{				
+							$(this).siblings('.select-con').show();
+							$(this).siblings('.select-con').css({
+								'height':'168px'
+							})
+						}			
+					};
+					var e=arguments.callee.caller.arguments[0]||event; //若省略此句，下面的e改为event，IE运行可以，但是其他浏览器就不兼容
+					if (e && e.stopPropagation) {
+						e.stopPropagation();
+					} else if (window.event) {
+						window.event.cancelBubble = true;
+					}
+				})	
+				
+				$("input[type=file]").change(function(e){
+					var objUrl = getObjectURL(this.files[0]); 
+				    if (objUrl) {  
+				        $(".z-regisCon li .pic div img").attr("src", objUrl) ;  
+				    }
+				})
+				function getObjectURL(file) {  
+				    var url = null ;   
+				    if (window.createObjectURL!=undefined) { // basic  
+				        url = window.createObjectURL(file) ;  
+				    } else if (window.URL!=undefined) { // mozilla(firefox)  
+				        url = window.URL.createObjectURL(file) ;  
+				    } else if (window.webkitURL!=undefined) { // webkit or chrome  
+				        url = window.webkitURL.createObjectURL(file) ;  
+				    }  
+				    return url ;  
+				} 
+				//点击下拉框获取值给模拟的input
+				$(".z-regisCon .select ul").on('click','li',function(){
+					var tex = $(this).text();
+					$(this).parents().siblings('.input').text(tex).removeClass('on');
+					$(this).parents('.select-con').hide();
+				})
+			
+				//点击盒子以外的地方隐藏下拉框
+				$(document).click(function(event){
+					$(".z-regisCon .select-con").hide();
+					$('.z-regisCon .select .input').removeClass('on');
+				});
+		
+		 	
+			 	//地区接口
+				$.ajax({
+					url:baseData.member_base_url+'/pub/getAllCountry',
+					type:'GET',
+					success:function(data){
+						if(data.code==200){
+							var liText='';
+							for(var i=0; i<data.data.length;i++){
+								liText +='<li>'+data.data[i]+'</li>' 
+							}
+							$(".select_area .input").text(data.data[0])
+							$(".select_area ul").append(liText)
+						}
+					}
+				})
+			
+			
+			
+				
+				$( "#loginIframe" ).contents().find( "input[name=loginName]" ).blur(function(){
+					var _this = $(this);
+					var nameTxt = $(this).val();
+					if(nameTxt.indexOf('@')!=-1){
+						checkEmail(nameTxt,_this);
+					}else{
+						checkMobile(nameTxt,_this);
+					}		
+				}).focus(function(){
+					var _this = $(this);
+					disapper(_this)
+				});
+			
+				$( "#loginIframe" ).contents().find( "input[name=password]" ).blur(function(){
+					var _this = $(this);
+					errorTex(_this)
+				}).focus(function(){
+					var _this = $(this);
+					disapper(_this)
+				})
+		
+			
+				//登录页面
+				$( "#loginIframe" ).contents().find( "input[name=submit]" ).click(function(){	
+					var loginName = $( "#loginIframe" ).contents().find( "input[name=loginName]").val();
+					var passWord = base64encode($( "#loginIframe" ).contents().find( "input[name=password]").val());			
+					var code = $( "#loginIframe" ).contents().find( "input[name=code]").val();
+					if(loginName==''){
+						$( "#loginIframe" ).contents().find( "input[name=loginName]").siblings('em').text('请输入电子邮箱或手机号')
+						return false
+					}
+					if(passWord==''){
+						$( "#loginIframe" ).contents().find( "input[name=password]").siblings('em').text('请输入密码')
+						return false
+					}
+					if(code==''){
+						$( "#loginIframe" ).contents().find( "input[name=code]").siblings('em').text('请输入验证码')
+						return false
+					}
+					
+				})
+		 	},
+		 	
+		 	checkEmail: function(_this, val, tips) {
+		 		var flag = true;
+		 		var regEmail=/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+		 		if(tools.checkSpace(_this, val, tips)){
+		 			if(!(regEmail.test(val))){ 
+				  	 	_this.siblings('em').text("邮箱输入有误！"); 
+				  	 	flag = false; 
+					}else{
+						
+						$.ajax({
+							type : "POST",
+							url : baseData.member_base_url+"user/getUser",
+							data:{
+								"email" : val,
+								"id" : userId
+							},
+							async:false, 
+							dataType : "json",
+							success : function(data) {
+								if(data.data != null){
+									_this.siblings('em').text("邮箱已存在！"); 
+									
+									flag = false;
+								}
+							}// end success
+						});//ajax end
+					}
+		 			if(!flag){
+						return;
+					}
+		 			return flag;
+		 		}
+				return;
+		 	},
+		 	
+		 	checkTel: function(_this, val, tips) {
+		 		var flag = true;
+		 		if (tools.checkSpace(_this, val, tips)){
+		 			var reg=/^1[3|4|5|7|8|9][0-9]\d{4,8}$/;//定义手机号正则表达式
+					var rg=/^00886-|00852-/;
+					if(/^00886-/.test(val)){
+						if(val.length!=15){
+							_this.siblings('em').text("港澳地区，电话位数按要求输入！");
+							flag = false;
+						}
+					}else if(/^00852-/.test(val)){
+						if(val.length!=14){
+							_this.siblings('em').text("港澳地区，电话位数按要求输入！");
+							flag = false;
+						}	
+					}else if(!(reg.test(val)) || val.length!=11){
+				    	_this.siblings('em').text("电话输入有误。港澳地区，电话格式按要求输入！");
+				    	flag = false;
+		 			}
+					
+					$.ajax({
+						type : "POST",
+						url : baseData.member_base_url+"user/getUser",
+						data:{
+							"phone" : val,
+							"id" : userId
+						},
+						async:false, 
+						dataType : "json",
+						success : function(data) {
+							if(data.data != null){
+								_this.siblings('em').text("电话已存在！"); 
+								flag = false;
+							}
+						}// end success
+					});//ajax end
+					
+					if(!flag){
+						return;
+					}
+					return flag;
+		 		}	 		
+		 		return;
+		 	},
+		 	
+		 	checkPassword: function(_this, val, tips) {
+		 		if(tools.checkSpace(_this, val, tips)){
+		 			var reg=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{15,32}$/;
+		 			if(!(reg.test(val))){ 
+				  	 	_this.siblings('em').text("您输入的密码不符合要求，请按要求输入"); 
+				   	 	return false; 
+					}else{
+						return true;
+					}
+		 		}
+		 		return false;
+		 	},
+		 		 	
+		 	checkSpace: function(_this,val,tips) {
+		 		if (val.length === 0) {
+		 			_this.siblings('em').text(tips);
+		 			return false;
+		 		} 
+		 		return true;
+		 	},
+		 	
+		 	checkAgree: function(_this) {
+		 		if(_this.prop('checked')==false){
+		 			$(".agree input[name=check]").siblings('span').find('em').text('请选择是否同意条款');
+		 			return false;
+		 		}else{
+		 			$(".agree input[name=check]").siblings('span').find('em').text('');
+		 			return true;
+		 		}
+		 	},
+		 	
+		 	checkCompony: function(_this, val, tips) {
+		 		var reg = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]|-/i;
+				regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
+				if (tools.checkSpace(_this, val, tips)){	 		
+		 			if(reg.test(val)|| regCn.test(val)){	
+		 					_this.siblings('em').text("您输入的只能包含字母、汉字或数字");
+						return false;
+					}else{					
+				    	return true;
+					}				
+		 		}		 		
+		 		return false;
+		 	},
+		 	checkUserName: function(_this, val, tips) {
+		 		var reg = /[1-9]|[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]|-/i;
+				var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;		
+		 		if (tools.checkSpace(_this, val, tips)){	 		
+		 			if(reg.test(val)|| regCn.test(val)){	
+		 					_this.siblings('em').text("您输入的只能是字母或汉字");
+						return false;
+					}else{	
+						
+						return true;
+						
+					}				
+		 		}		 		
+		 		return false;
+		 	},
+		 	checkNickName: function(_this, val, tips) {
+		 		var flag = true;
+		 		var reg = /[1-9]|[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]|-/i;
+				var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;		
+		 		if (tools.checkSpace(_this, val, tips)){	 		
+		 			if(reg.test(val)|| regCn.test(val)){	
+		 					_this.siblings('em').text("您输入的只能是字母或汉字");
+						flag = false;
+					}else{	
+						$.ajax({
+							type : "POST",
+							url : baseData.member_base_url+"user/getUser",
+							data:{
+								"nickName" : val,
+								"id" : userId
+							},
+							async:false, 
+							dataType : "json",
+							success : function(data) {
+								if(data.data != null){
+									_this.siblings('em').text("昵称已存在！"); 
+									flag = false;
+								}
+							}// end success
+						});//ajax end
+						
+					}	
+		 			if(!flag){
+						return;
+					}
+		 			return flag;
+		 		}		 		
+		 		return;
+		 	},
+		 	
+		 	setScrollTop:function(obj) {
+		 		/* var offTop = obj.offset().top;
+				$('body,html').animate({ scrollTop: offTop-90 }, 800); */
+		 	},
+		 	
+		 	
+		 	
+		 	//获取输入框长度
+		 	testInput:function(obj,length1){
+				var val = obj.val();
+				
+				//获取字符长度
+				var len = 0;  		
+				for (var i=0; i<val.length; i++) {  
+					if (val[i].match( /^[\u4E00-\u9FA5]{1,}$/)) {  
+					 	len += 2;  
+					} else {  
+					    len ++;  
+					} 			
+				}  
+				if(len>length1){
+					obj.siblings('em').text('您输入的字符最多'+length1+'字节，请重新输入');
+					flag=false;
+				}
+			},
+		 	
+		 	
+		 	
+		 	spaceMsg:{
+		 		telTips: '手机号不能为空,请输入...',
+		 	},
+		 	
+		 	checkMsg:function(_this, val, tips){
+		 		var val = _this.val();
+				var reg = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/i;
+				regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im;
+		 		if(reg.test(val)|| regCn.test(val)){	
+		 			_this.siblings('em').text("您输入的只能包含字母、汉字或数字");
+					return false;
+				}else{					
+				    return true;
+				}		
+		 	},
+		 	
+		 	getObjectURL: function() {
+		 		var url = null ;   
+		   	 	if (window.createObjectURL!=undefined) { // basic  
+		        	url = window.createObjectURL(file) ;  
+		   		 } else if (window.URL!=undefined) { // mozilla(firefox)  
+		      		url = window.URL.createObjectURL(file) ;  
+		   		 } else if (window.webkitURL!=undefined) { // webkit or chrome  
+		     		url = window.webkitURL.createObjectURL(file) ;  
+		    	}  
+		   		return url ;  
+		 	}	 		 	
+		}
+	
+	
+	//姓和名
+	$("#register_form input[name=surname],#register_form input[name=name],input[name=username]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkUserName(_this, tex, '您输入的不能为空,请重新输入');
+		tools.testInput(_this,26)
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	});
+	
+	//
+	$("#register_form input[name=nickname]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		if(tex != null && tex != ''){
+			
+			tools.checkNickName(_this, tex, '您输入的不能为空,请重新输入');
+			tools.testInput(_this,100)
+		}
+		
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	});
+	
+	//邮箱
+	$("input[name=email]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkEmail(_this, tex, '您输入的不能为空,请重新输入');
+		tools.testInput(_this,100)
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	})
+	
+	//电话
+	$("input[name=phone]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkTel(_this, tex, '您输入的不能为空,请重新输入');
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	});
+	
+	//密码
+	$("#register_form input[name=password]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkPassword(_this, tex, '您输入的不能为空,请重新输入');
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	})
+	
+	//确认密码
+	$("#register_form input[name=spassword]").blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var passwordVal = $("input[name=password]").val();
+		if(tex!=passwordVal){
+			$(this).siblings('em').text('两次输入的密码不一样，请重新输入');
+			$("#register_form input[name=password]").siblings('em').text('两次输入的密码不一样，请重新输入');
+		}
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	})
+	
+	//公司/单位/学校名称
+	$('input[name=company]').blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkCompony(_this, tex, '您输入的不能为空,请重新输入');
+		tools.testInput(_this,100)
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	})
+	
+	//渠道
+	$('input[name=channelMsg]').blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		var inputPlaceholder=$(this).attr('placeholder');
+		if(tex==''){
+			_this.siblings('em').text(inputPlaceholder);
+			
+		}
+		tools.checkMsg(_this, tex, '您输入的不能为空,请重新输入');		
+		tools.testInput(_this,50)
+	}).focus(function(){
+		$(this).parent().parent().parent().siblings().find('em').text('');
+		$(this).parent().parent().siblings('input').prop('checked',true).siblings().find('.input_ipt input').attr('name','channelMsg');
+		$(this).parents('li').siblings('.dWidth').find('.input_ipt input').removeAttr('name');
+	})
+	
+	$("#register_form .z-type li").click(function(){
+		var _this=$(this);
+		_this.siblings().find('em').text('');
+		if(_this.hasClass('dWidth')){
+			_this.find('.input_ipt input').focus();
+			_this.find('.input_ipt em').text('');
+		}		
+	})
+	
+	//城市/座机/地址/部门/职称
+	$('input[name=city],input[name=seatPhone],input[name=address],input[name=dept],input[name=job]').blur(function(){
+		var _this = $(this);
+		var tex = _this.val();
+		tools.checkMsg(_this, tex, '您输入的不能为空,请重新输入');
+		tools.testInput(_this,100)
+	}).focus(function(){
+		$(this).siblings('em').text('');
+	})
+	
+	
+	//注册按钮
+	$("#register_form button[name=submit]").click(function(){
+		var surname = $('input[name=surname]').val();
+		var name = $('input[name=name]').val();
+		var nickname = $('input[name=nickname]').val();
+		var email = $('input[name=email]').val();
+		var phone = $("input[name=phone]").val();
+		var _password = $('input[name=password]').val();
+		var spassword = $("input[name=spassword]").val();
+		var company = $('input[name=company]').val();
+		var ma = $("input[name=ma]").val();
+		if (!tools.checkUserName($('input[name=surname]'), surname, '您输入的姓，不能为空'))  {	
+			tools.setScrollTop($('input[name=surname]'));
+			return;
+		}
+		
+		if (!tools.checkUserName($('input[name=name]'), name, '您输入的名，不能为空'))  {	
+			tools.setScrollTop($('input[name=name]'));
+			return;
+		}
+		
+		if (!tools.checkUserName($('input[name=nickname]'), nickname, '您输入的昵称，不能为空'))  {	
+			tools.setScrollTop($('input[name=nickname]'));
+			return;
+		}
+		
+		if (!tools.checkEmail($('input[name=email]'), email, '您输入的邮箱，不能为空'))  {	
+			tools.setScrollTop($('input[name=email]'));
+			return;
+		}
+		
+		if (!tools.checkTel($('input[name=phone]'), phone, '您输入的电话，不能为空'))  {	
+			tools.setScrollTop($('input[name=phone]'));
+			return;
+		}
+		
+		if (!tools.checkCompony($('input[name=company]'), company, '您输入的确认公司/学校/单位名称，不能为空'))  {	
+			tools.setScrollTop($('input[name=company]'));
+			return;
+		}
+		
+		if(!tools.checkAgree($('input[name=check]'))){
+			tools.setScrollTop($('input[name=check]'));
+			return;
+		}
+		
+		$(".z-regisCon>form .agree span em,.z-regisCon .submit em").text('')
+		var surname=$("input[name=surname]").val();
+		var name=$("input[name=name]").val();
+		var nickname=$("input[name=nickname]").val();
+		var email= $("input[name=email]").val();
+		var phone= $("input[name=phone]").val();
+		var country=$("div[name=country]").text();
+		var company=$("input[name=company]").val();
+		var ma=$("input[name=ma]").val();
+		var check=$("input[name=check]").val();		
+		var formData = new FormData($( "#register_form" )[0]);
+        formData.append("country",country);
+        formData.append("code",ma);
+        formData.append("check",check);      
+        formData.append("file",$("#file")[0]);
+		$.ajax({
+			url:baseData.member_base_url+'/user/updateUser',
+			type:'post',
+			data: formData,
+			processData: false,
+			contentType: false,			
+			success:function(data){
+				if(data.code!=200){
+					$("input[name=password]").val('');
+					$("input[name=spassword]").val('');
+					tools.setScrollTop($('input[name='+data.data+']'));
+					$('input[name='+data.data+']').siblings('em').text(data.message);
+					flag=false;
+				}else if(data.code==200){
+					setTimeout(function(){
+						location.href="${autoPath}/channel/9c83f37d371044ce9773fb3399be6f8c.html";
+					},3000)
+				}
+			}
+		});
+	});
+	
+	tools.init();
+	
+});
+</script>
+</body>
+</html>          

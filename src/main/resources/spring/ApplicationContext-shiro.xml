@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/util
+						http://www.springframework.org/schema/util/spring-util.xsd
+	">
+	
+		<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+			<property name="realm" ref="ShiroRealm" />
+		</bean>
+		
+		<!-- 項目自定义的Realm -->
+	    <bean id="ShiroRealm" class="cn.cebest.interceptor.shiro.ShiroRealm">
+	        <property name="credentialsMatcher">
+	            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+	                <property name="hashAlgorithmName" value="MD5"></property> <!-- 加密算法的名称 -->
+	                <property name="hashIterations" value="2"></property> <!-- 配置加密的次数 -->
+	            </bean>
+       		</property>
+	    </bean>
+		
+		<!-- Shiro Filter -->
+		<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			<property name="loginUrl" value="/"/>
+			
+			<property name="successUrl" value="/" />
+			
+			<property name="unauthorizedUrl" value="/" />
+			<property name="filters">
+				<util:map>
+					<entry key="authc" value-ref="authcFilter" />
+					<entry key="user" value-ref="userFilter" />
+					<entry key="logout" value-ref="logoutFilter" />
+				</util:map>
+			</property>
+			
+			<property name="filterChainDefinitions">
+				<value>
+					/manage/login.do 			= authc
+					/static/** 			        = anon
+					/plugins/** 			    = anon
+					/uploadFiles/** 			= anon
+		           	/manage/code.do 			= anon
+		           	/app**/** 					= anon
+		           	/web**/**					= anon
+		           	/fh_static_1/**				= anon
+		           	/fh_static_2/**				= anon
+		           	/fh_static_3/**				= anon
+		           	/fh_static_4/**				= anon
+		           	/index.html					= anon
+		           	/weixin/** 					= anon
+		           	/manage**/** 				= user
+		           	/dictionaries/**			= anon
+		           	/manage/ueditor/upload.do 	= anon
+				</value>
+			</property>
+		</bean>
+		
+	 	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	  		<constructor-arg name="name" value="SRSESSIONID"/>
+	  	</bean>
+	   	<bean id="manageUrlBean" class="cn.cebest.entity.ManageUrl">
+			<property name="manageLogin" value="/manage/login.do"/> 
+			<property name="managePrefix" value="/manage"/>
+			<property name="manageNoLogin">
+				<set>
+					<value>/manage</value>
+					<value>/manage/</value>
+				</set>
+			</property> 
+		</bean>
+		<bean id="authcFilter" class="cn.cebest.filter.shiro.ShiroAuthenticationFilter" parent="manageUrlBean">
+			<property name="manageIndex" value="/manage/index.do"/>
+		</bean>
+   		<bean id="userFilter"   class="cn.cebest.filter.shiro.ShiroUserFilter" parent="manageUrlBean"/>
+   		<bean id="logoutFilter" class="cn.cebest.filter.shiro.ShiroLogoutFilter" parent="manageUrlBean"/>
+   		
+		<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+</beans>

@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommentMapper">
+	
+	<resultMap type="cn.cebest.entity.system.comment.Comment" id="commentResultMap">
+		<id column="commentId" property="id"/>
+		<result column="memImgPath" property="memImgPath"/>
+		<result column="memNick" property="memNick"/>
+		<result column="createTime" property="createTime"/>
+		<result column="readStatus" property="readStatus"/>
+		<result column="commentScore" property="commentScore"/>
+		<result column="commentContent" property="commentContent"/>
+		<result column="clientType" property="clientType"/>
+		<result column="status" property="status"/>
+		<association property="commentProperty" javaType="cn.cebest.entity.system.comment.CommentProperty">
+			<result column="commentType" property="commentType"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="cn.cebest.util.Message" id="messageMap">
+		<id column="commentId" property="commentId"/>
+		<result column="commentTitle" property="commentTitle"/>
+		<result column="sonCount" property="sonCount"/>
+		<collection property="sonList" ofType="cn.cebest.util.Message">
+			<result column="sonCommentId" property="commentId"/>
+			<result column="sonCommentTitle" property="commentTitle"/>
+		</collection>
+	</resultMap>
+	
+	<select id="findNewSonCommentList" resultMap="messageMap">
+		SELECT
+			P.ID AS commentId,P.CONTENT AS commentTitle
+		FROM
+			WEB_SOLUTION_COMMENT P
+		WHERE
+			P.RESOURCE_ID = #{resourceId}
+		AND 
+			DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d')=#{date}
+		AND
+			P.PARENT_ID=#{PARENT_ID}
+	</select>
+	
+	<select id="findNewCommentList" resultMap="messageMap">
+		SELECT
+			P.ID AS commentId,P.CONTENT AS commentTitle
+		FROM
+			WEB_SOLUTION_COMMENT P
+		WHERE
+			P.RESOURCE_ID = #{resourceId}
+		AND 
+			DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d')=#{date}
+		AND 
+			P.PARENT_ID='0'
+	</select>
+	
+	<select id="findNewSonMessageList" resultMap="messageMap">
+		SELECT
+			P.ID AS commentId,P.CONTENT AS commentTitle,S.ID AS sonCommentId,S.CONTENT AS sonCommentTitle
+		FROM
+			WEB_SOLUTION_COMMENT P
+		LEFT JOIN
+			WEB_SOLUTION_COMMENT S
+		ON
+			P.ID = S.PARENT_ID
+		WHERE
+			P.RESOURCE_ID = #{resourceId}
+		AND 
+			DATE_FORMAT(S.CREATE_TIME,'%Y-%m-%d')=#{date}
+		AND 
+			DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d') &lt;&gt; #{date}
+	</select>
+	
+	<select id="findSendMessageList" resultMap="messageMap">
+		SELECT
+			P.ID AS commentId,P.CONTENT AS commentTitle, COUNT(S.ID) AS sonCount,S.ID AS sonCommentId,S.CONTENT AS sonCommentTitle
+		FROM
+			WEB_SOLUTION_COMMENT P
+		LEFT JOIN
+			WEB_SOLUTION_COMMENT S
+		ON
+			P.ID = S.PARENT_ID
+		WHERE
+			P.RESOURCE_ID = #{resourceId}
+		AND 
+			DATE_FORMAT(P.CREATE_TIME,'%Y-%m-%d')=#{date}
+	</select>
+	
+	<select id="findSendMessageResource" resultType="pd">
+		SELECT 
+			C.CONTENT_TITLE,WS.ID SKIPID,WSC.SKIPPATH
+		FROM
+			WEB_CONTENT C,WEB_SKIPPATH WS,WEB_SKIPPATH_COLUMN WSC
+		WHERE
+			WS.CONTENTID = C.ID AND WSC.COLUMNID = WS.COLUMNID AND C.ID=#{resourceId}
+		GROUP BY SKIPID
+		LIMIT 0,1
+	</select>
+	
+	<delete id="deleteCommentByUserIdAndComId">
+		DELETE FROM
+			WEB_USER_COMMENT_RELATION
+		WHERE
+			ID IN
+		<foreach item="RELATIONID" index="index" collection="RELATIONID" separator="," open="(" close=")">
+        	#{RELATIONID}
+        </foreach>
+	</delete>
+	
+	<insert id="saveCommentByUserId">
+		INSERT INTO WEB_USER_COMMENT_RELATION
+		(ID,USERID,COMMENTID)
+		VALUES
+		<foreach item="relation" index="index" collection="list" separator=",">
+        	('${relation.id}','${relation.userId}','${relation.checkIds}')
+        </foreach>
+	</insert>
+	
+	<select id="findNoReCommentListByUserId" parameterType="pd" resultType="pd">
+		SELECT
+			C.ID,
+			C.CONTENT_TITLE
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON CC.CONTENTID = C.ID
+		WHERE
+			CC.COLUMNID = #{id}
+		AND C.ID NOT IN(
+			SELECT
+				COMMENTID
+			FROM
+				WEB_USER_COMMENT_RELATION
+			WHERE
+				USERID = #{userId} AND ID IS NOT NULL
+		)
+		GROUP BY C.ID
+		
+	</select>
+	
+	<!-- 根据用户ID查找对应关联的解决方案ID -->
+	<select id="findCommentIdListByUserId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT 
+			WUCR.COMMENTID
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN 
+			WEB_USER_COMMENT_RELATION WUCR
+		ON
+			WUCR.COMMENTID=C.ID
+		WHERE
+			WUCR.USERID=#{userId}
+	</select>
+	
+	<!-- 根据用户ID查找对应关联的解决方案列表 -->
+	<select id="findCommentListByUserId" parameterType="pd" resultType="pd">
+		SELECT 
+			C.ID,C.CONTENT_TITLE,WUCR.ID RELATIONID
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN 
+			WEB_USER_COMMENT_RELATION WUCR
+		ON
+			WUCR.COMMENTID=C.ID
+		WHERE
+			WUCR.USERID=#{userId}
+			<if test="commentId != '' and commentId != null">
+				AND WUCR.COMMENTID = #{commentId}
+			</if>
+		GROUP BY C.ID
+	</select>
+	
+	<!-- 保存评论属性 -->
+	<insert id="saveCommentProperty" parameterType="pd">
+		insert into SYS_COMMENT_PROPERTY (
+			ID,COMMENT_TYPE,RELEVANCE_ID
+		) values (
+			#{commentPropertyId},
+			#{commentType},
+			#{relevanceId}
+		)
+	</insert>
+	
+	<!-- 保存评论 -->
+	<insert id="saveComment" parameterType="pd">
+		insert into SYS_COMMENT (
+			ID,COMMENT_PROPERTY_ID,USER_ID,READ_STATUS,COMMENT_SCORE,EMAIL,COMMENT_CONTENT,CLIENT_TYPE,CREATE_TIME,STATUS
+		) values (
+			#{commentId},
+			#{commentPropertyId},
+			#{userId},
+			#{readStatus},
+			#{commentScore},
+			#{email},
+			#{commentContent},
+			#{clientType},
+			#{createTime},
+			#{status}
+		)
+	</insert>
+	
+	<!-- 根据关联ID/用户ID查询(评论/提问列表) -->
+	<select id="commentlistPage" resultType="pd" parameterType="page">
+		SELECT
+			SC.ID AS id,
+			SC.COMMENT_PARENT_ID AS commentParentId,
+			SCP.ID AS commentPropertyId,
+			SAUE.MEM_IMG_PATH AS memImgPath,
+			SAUE.MEM_NICK AS memNick,
+			SCP.COMMENT_TYPE AS commentType,
+			SC.CLIENT_TYPE AS clientType,
+			SC.CREATE_TIME AS createTime,
+			SC.READ_STATUS AS readStatus,
+			SC.COMMENT_SCORE AS commentScore,
+			SC.COMMENT_CONTENT AS commentContent,
+			SC. STATUS AS STATUS,
+			WC.CONTENT_TITLE AS contentTitle,
+			ES.SC_NAME_CN AS scNameCN
+		FROM
+			SYS_COMMENT SC
+		INNER JOIN SYS_COMMENT_PROPERTY SCP ON SC.COMMENT_PROPERTY_ID = SCP.ID
+		INNER JOIN SYS_APP_USER SAU ON SC.USER_ID = SAU.USER_ID
+		LEFT JOIN SYS_APP_USER_EXT SAUE ON SAUE.USER_ID = SAU.USER_ID
+		LEFT JOIN WEB_CONTENT WC ON SCP.RELEVANCE_ID = WC.ID
+		LEFT JOIN EASYAPP_SCHOOL ES ON SCP.RELEVANCE_ID = ES.ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			SC.COMMENT_PARENT_ID IS NULL
+			AND SC.STATUS ='0'
+			<if test="pd.commentType!=null and pd.commentType!=''">
+				AND SCP.COMMENT_TYPE = #{pd.commentType}
+			</if>
+			<if test="pd.UserId!=null and pd.UserId!=''">
+				AND SC.USER_ID = #{pd.UserId}
+			</if>
+			<if test="pd.relevanceContentTitle!=null and pd.relevanceContentTitle!=''">
+			AND (
+				WC.CONTENT_TITLE LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%')
+				OR ES.SC_NAME_CN LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%') 
+				OR ES.SC_NAME_EN LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%')
+			)
+			</if>
+		</trim>
+		ORDER BY
+			SC.CREATE_TIME
+	</select>
+	
+	<!-- 根据提问ID查询跟评-->
+	<select id="commentReplylistpage" resultType="pd" parameterType="page">
+	SELECT
+		SU.USERNAME AS userName,
+		SC.COMMENT_CONTENT AS commentContent
+	FROM
+		SYS_COMMENT SC
+		LEFT JOIN SYS_USER SU ON SU.USER_ID=SC.USER_ID
+	<trim prefix="WHERE" prefixOverrides="AND|OR">
+		SC.STATUS='0'
+		<if test="pd.commentId!=null and pd.commentId!=''">
+			SC.COMMENT_PARENT_ID= #{pd.commentId}
+		</if>
+	</trim>
+		ORDER BY SC.CREATE_TIME
+	</select>
+	
+	<!-- 保存,回复提问 -->
+	<insert id="saveCommentReply" parameterType="pd">
+		insert into SYS_COMMENT (
+			ID,COMMENT_PARENT_ID,COMMENT_PROPERTY_ID,USER_ID,COMMENT_CONTENT,CLIENT_TYPE,CREATE_TIME,STATUS
+		) values (
+			#{newCommentId},
+			#{commentId},
+			#{commentPropertyId},
+			#{userId},
+			#{commentReplyContent},
+			#{clientType},
+			#{createTime},
+			#{status}
+		)
+	</insert>
+	<!-- 更新回复内容 -->
+	<update id="updateCommentReply">
+		UPDATE SYS_COMMENT SC
+		SET SC.COMMENT_CONTENT = #{commentReplyContent},SC.USER_ID = #{userId}
+		WHERE
+			SC.ID = #{commentReplyId}
+	</update>
+	<!-- 删除评论 -->
+	<update id="delComment" parameterType="pd">
+		UPDATE SYS_COMMENT SC SET SC.STATUS = '2'
+		WHERE 1=1
+		<if test="commentId!=null and commentId!=''">
+			AND SC.ID=#{commentId}
+		</if>
+	</update>
+	<!-- 通过commentId获取数据 -->
+	<select id="findCommentById" parameterType="pd" resultType="pd" >
+		SELECT
+		SC.ID AS id,
+		SAU.USERNAME AS memNick,
+		SU.USERNAME AS userName,
+		SCP.COMMENT_TYPE AS commentType,
+		SC.CLIENT_TYPE AS clientType,
+		SC.CREATE_TIME AS createTime,
+		SC.READ_STATUS AS readStatus,
+		SC.COMMENT_SCORE AS commentScore,
+		SC.COMMENT_CONTENT AS commentContent,
+		SC.EMAIL AS email,
+		WCON.CONTENT_TITLE AS contentTitle,
+		ES.SC_NAME_CN AS scNameCN,
+		WCT.TYPE_NAME AS typeName,
+		SC.STATUS AS status,
+		SCC.ID AS commentReplyId,
+		SCC.COMMENT_CONTENT AS commentReplyContent,
+		SUU.USERNAME AS commentReplyUserName
+	FROM
+		SYS_COMMENT SC
+		INNER JOIN SYS_COMMENT_PROPERTY SCP ON SC.COMMENT_PROPERTY_ID = SCP.ID
+		LEFT JOIN SYS_APP_USER SAU ON SC.USER_ID = SAU.USER_ID
+		LEFT JOIN SYS_APP_USER_EXT SAUE ON SAUE.USER_ID = SAU.USER_ID
+		LEFT JOIN SYS_USER SU ON SU.USER_ID=SC.USER_ID
+		LEFT JOIN WEB_CONTENT WCON ON SCP.RELEVANCE_ID = WCON.ID
+		LEFT JOIN EASYAPP_SCHOOL ES ON SCP.RELEVANCE_ID = ES.ID
+		LEFT JOIN WEB_CONTENTTYPE WCT ON WCON.TYPEID=WCT.ID
+		LEFT JOIN SYS_COMMENT SCC ON SCC.COMMENT_PARENT_ID = SC.ID
+		LEFT JOIN SYS_USER SUU ON SUU.USER_ID = SCC.USER_ID
+	<trim prefix="WHERE" prefixOverrides="AND|OR">
+			1=1
+		<if test="commentId!=null and commentId!=''">
+			AND SC.ID=#{commentId}
+		</if>
+	</trim>
+		ORDER BY
+			SC.CREATE_TIME
+	</select>
+	<!-- 后台接口,显示评论/提问列表 -->
+	<select id="commentManagerlistPage" resultType="pd" parameterType="page">
+	SELECT
+		SC.ID AS id,
+		SC.COMMENT_PARENT_ID AS commentParentId,
+		SCP.ID AS commentPropertyId,
+		SAUE.MEM_IMG_PATH AS memImgPath,
+		SAU.USERNAME AS memNick,
+		SU.USERNAME AS userName,
+		SCP.COMMENT_TYPE AS commentType,
+		SC.CLIENT_TYPE AS clientType,
+		SC.CREATE_TIME AS createTime,
+		SC.READ_STATUS AS readStatus,
+		SC.COMMENT_SCORE AS commentScore,
+		SC.COMMENT_CONTENT AS commentContent,
+		SC.STATUS AS status,
+		WC.CONTENT_TITLE AS contentTitle,
+		ES.SC_NAME_CN AS scNameCN
+	FROM
+		SYS_COMMENT SC
+		INNER JOIN SYS_COMMENT_PROPERTY SCP ON SC.COMMENT_PROPERTY_ID = SCP.ID
+		LEFT JOIN WEB_CONTENT WC ON WC.ID=SCP.RELEVANCE_ID
+		LEFT JOIN EASYAPP_SCHOOL ES ON SCP.RELEVANCE_ID = ES.ID
+		LEFT JOIN SYS_APP_USER SAU ON SC.USER_ID = SAU.USER_ID
+		LEFT JOIN SYS_APP_USER_EXT SAUE ON SAUE.USER_ID = SAU.USER_ID
+		LEFT JOIN SYS_USER SU ON SU.USER_ID=SC.USER_ID
+	<trim prefix="WHERE" prefixOverrides="AND|OR">
+			SC.COMMENT_PARENT_ID IS NULL AND SC.STATUS != '2'
+		<if test="pd.commentType!=null and pd.commentType!=''">
+			AND SCP.COMMENT_TYPE = #{pd.commentType}
+		</if>
+		<if test="pd.UserId!=null and pd.UserId!=''">
+			AND SC.USER_ID = #{pd.UserId}
+		</if>
+		<if test="pd.relevanceContentTitle!=null and pd.relevanceContentTitle!=''">
+			AND (
+				WC.CONTENT_TITLE LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%')
+				OR ES.SC_NAME_CN LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%') 
+				OR ES.SC_NAME_EN LIKE CONCAT(CONCAT('%', #{pd.relevanceContentTitle}), '%')
+			)
+		</if>
+		<if test="pd.keywords!=null and pd.keywords!=''">
+			AND SC.COMMENT_CONTENT LIKE CONCAT(CONCAT('%', #{pd.keywords}), '%')
+		</if>
+		<if test="pd.startTime!=null and pd.startTime!=''">
+			AND SC.CREATE_TIME &gt;= #{pd.startTime}
+		</if>
+		<if test="pd.endTime!=null and pd.endTime!=''">
+			AND SC.CREATE_TIME &lt;= #{pd.endTime}
+		</if>
+		<if test="pd.status!=null and pd.status!=''">
+			AND SC.STATUS = #{status}
+		</if>
+	</trim>
+		ORDER BY
+			SC.CREATE_TIME
+	</select>
+	<!-- 审核评论 -->
+	<update id="auditComment" parameterType="pd">
+		<if test="status!=null and status!=''">
+			UPDATE SYS_COMMENT SC
+			SET SC. STATUS = #{status}
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+					1=1
+				<if test="commentId!=null and commentId!=''">
+					AND SC.ID = #{commentId}
+				</if>
+			</trim>
+		</if>
+	</update>
+	<!-- 批量删除评论 -->
+	<update id="deleteAllComment" parameterType="String" >
+		UPDATE SYS_COMMENT SC SET SC.STATUS = '2'
+			where SC.ID in
+	 	<foreach item="item6" index="index" collection="array" open="(" separator="," close=")">
+        	#{item6}
+        </foreach>
+        	OR SC.COMMENT_PARENT_ID IN
+        <foreach item="item7" index="index" collection="array" open="(" separator="," close=")">
+        	#{item7}
+        </foreach>
+	</update>
+</mapper>

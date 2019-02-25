@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:spring/ApplicationContext-main.xml,
+      classpath:spring/ApplicationContext-dataSource.xml,
+      classpath:spring/ApplicationContext-shiro.xml 
+    </param-value>
+  </context-param>
+  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>classpath:config/log4j.properties</param-value>
+  </context-param>
+  <!-- xss start -->
+  <filter>  
+    <filter-name>XssSqlFilter</filter-name>  
+    <filter-class>cn.cebest.filter.XssFilter</filter-class>  
+  </filter>  
+  <filter-mapping>  
+	 <filter-name>XssSqlFilter</filter-name>  
+	 <url-pattern>/*</url-pattern>  
+	 <dispatcher>REQUEST</dispatcher>  
+  </filter-mapping>
+  <!--xss end  -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>webAppRootKey</param-name>
+    <param-value>www.cebset.com</param-value>
+  </context-param>
+  <!-- 连接池 启用Web监控统计功能   start-->
+  <filter>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>DruidStatView</servlet-name>
+    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
+  </servlet-mapping>
+  <!-- 连接池 启用Web监控统计功能   end-->
+
+  <listener>
+    <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- 执行系统初始化操作 -->
+  <listener>
+       <description>系统监听器</description>
+       <listener-class>cn.cebest.listener.WebAppContextListener</listener-class>
+  </listener>
+  <!-- <listener>
+	<listener-class> cn.cebest.filter.shiro.ApplicationListener</listener-class>
+  </listener> --> 
+  <servlet-mapping>
+     <servlet-name>default</servlet-name>    
+     <url-pattern>/admin/*</url-pattern>    
+     <url-pattern>/static/*</url-pattern>    
+     <url-pattern>/plugins/*</url-pattern>    
+     <url-pattern>/uploadFiles/*</url-pattern>
+	 <url-pattern>/WEB-INF/errors/*</url-pattern>
+	 <url-pattern>/staticRelease/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>springFrontMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring/ApplicationContext-mvc-front.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springFrontMvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>springManageMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring/ApplicationContext-mvc-manage.xml</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springManageMvc</servlet-name>
+     <url-pattern>/manage/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- tomcat等 启动之前执行
+  <filter>
+    <filter-name>startFilter</filter-name>
+    <filter-class>cn.cebest.filter.startFilter</filter-class>
+  </filter> -->
+
+  <!-- Shiro filter start -->
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>
+      org.springframework.web.filter.DelegatingFilterProxy
+    </filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- Shiro filter end -->
+  
+  <!-- cas相关过滤器 -->
+   <!--单点登出过滤器--> 
+   <filter>
+	    <filter-name>CAS Single Sign Out Filter</filter-name> 
+	    <filter-class>cn.cebest.util.MySingleSignOutFilter</filter-class>
+	     <init-param>
+	      <param-name>casServerUrlPrefix</param-name>
+	        <!-- 本地 --> 
+		    <!-- <param-value>https://cas.roger.com:8443/cas</param-value> -->
+		   <!-- 测试 -->
+		   <param-value>https://infineon-cas.xinb.cebest.com/cas</param-value> 
+		   <!-- 正式 -->
+		   <!-- <param-value>https://ssocn.infineon.cn/cas</param-value>  -->
+	     </init-param> 
+   </filter> 
+   
+   <listener>
+   		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class> 
+   </listener> 
+   <!--用来跳转登录--> 
+   <filter> 
+	   <filter-name>CAS Authentication Filter</filter-name> 
+	   <!--<filter-class>org.jasig.cas.client.authentication.Saml11AuthenticationFilter</filter-class>--> 
+	   <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class> 
+	   <init-param> 
+		   <param-name>casServerLoginUrl</param-name> 
+		   <!-- 本地 --> 
+		    <!-- <param-value>https://cas.roger.com:8443/cas/login</param-value> --> 
+		   <!-- 测试 -->
+		  <param-value>https://infineon-cas.xinb.cebest.com/cas/login</param-value>
+		   <!-- 正式 -->
+		   <!-- <param-value>https://ssocn.infineon.cn/cas/login</param-value> -->
+	   </init-param> 
+	   <init-param> 
+		   	<param-name>serverName</param-name> 
+		    <!--这是客户端的部署地址，认证时会带着这个地址，认证成功后会跳转到这个地址-->
+		    <!-- 本地 --> 
+		   <!-- <param-value>http://test.bestcms.com:80</param-value>  -->
+		     <!-- 测试 -->
+		      <param-value>https://infineon-pmm.xind.cebest.com:443</param-value>
+		    <!-- 正式 -->
+		    <!-- <param-value>https://ha.infineon-autoeco.com:443</param-value> --> 
+	   </init-param> 
+   </filter> 
+   <!--Ticket校验过滤器--> 
+   <filter> 
+	   <filter-name>CAS Validation Filter</filter-name> 
+	   <!--<filter-class>org.jasig.cas.client.validation.Saml11TicketValidationFilter</filter-class>--> 
+	   <filter-class>org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter</filter-class> 
+	   <init-param> 
+		   <param-name>casServerUrlPrefix</param-name> 
+		   <!-- 本地 -->
+		   <!--<param-value>https://cas.roger.com:8443/cas</param-value>   -->
+		   <!-- 测试 -->
+		    <param-value>https://infineon-cas.xinb.cebest.com/cas</param-value>
+		   <!-- 正式 -->
+		   <!-- <param-value>https://ssocn.infineon.cn/cas</param-value>  -->
+	   </init-param> 
+	   <init-param> 
+		   <param-name>serverName</param-name>
+		   <!-- 本地 --> 
+		    <!-- <param-value>http://test.bestcms.com:80</param-value>-->
+		   <!-- 测试 -->
+		   <param-value>https://infineon-pmm.xind.cebest.com:443</param-value> 
+		   <!-- 正式 --> 
+		   <!-- <param-value>https://ha.infineon-autoeco.com:443</param-value> --> 
+	   </init-param> 
+	   <init-param> 
+		   <param-name>redirectAfterValidation</param-name> 
+		   <param-value>true</param-value> 
+	   </init-param> 
+	   <init-param>
+		   <param-name>useSession</param-name> 
+		   <param-value>true</param-value> 
+	   </init-param> 
+	   <init-param> 
+		   <param-name>authn_method</param-name> 
+		   <param-value>mfa-duo</param-value> 
+  	   </init-param> 
+   </filter> 
+   <!-- 该过滤器负责实现HttpServletRequest请求的包裹，比如允许开发者通过HttpServletRequest的getRemoteUser()方法获得SSO登录用户的登录名，可选配置--> 
+   <filter> 
+	   <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name> 
+	   <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class> 
+   </filter> 
+   <!-- 该过滤器使得开发者可以通过org.jasig.cas.client.util.AssertionHolder来获取用户的登录名。 比如AssertionHolder.getAssertion().getPrincipal().getName()--> 
+   <!--<filter> 
+   <filter-name>CASAssertion Thread LocalFilter</filter-name> 
+   <filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class> 
+   </filter> <filter-mapping> <filter-name>CASAssertion Thread LocalFilter</filter-name> 
+   <url-pattern>/*</url-pattern> </filter-mapping>--> 
+   <filter-mapping> 
+	   <filter-name>CAS Single Sign Out Filter</filter-name>
+	   <url-pattern>/*</url-pattern> 
+   </filter-mapping> 
+   <filter-mapping> 
+	   <filter-name>CAS Validation Filter</filter-name> 
+	   <url-pattern>/*</url-pattern> 
+   </filter-mapping> 
+   <filter-mapping>
+	   <filter-name>CAS Authentication Filter</filter-name> 
+	   <url-pattern>/login/isLogin</url-pattern> 
+	   <url-pattern>/login/islogin</url-pattern> 
+	   <url-pattern>/plan/collection</url-pattern> 
+	   <url-pattern>/plan/thumb</url-pattern>
+	   <url-pattern>/jump/ask</url-pattern>
+	   <url-pattern>/jump/ask.html</url-pattern>
+	   <url-pattern>/jump/personal_center_collect</url-pattern>
+	   <url-pattern>/jump/personal_center_collect.html</url-pattern>
+	   <url-pattern>/jump/ensure_password</url-pattern>
+	   <url-pattern>/jump/ensure_password.html</url-pattern>
+	    <url-pattern>/jump/editor.html</url-pattern>
+	   <url-pattern>/jump/editor</url-pattern>
+	   <url-pattern>/channel/center</url-pattern>
+   </filter-mapping> 
+   <filter-mapping> 
+	   <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name> 
+	   <url-pattern>/*</url-pattern> 
+   </filter-mapping>
+
+
+	  <error-page>
+	    <error-code>404</error-code>
+	    <location>/channel/404.html</location>
+	  </error-page>
+      <error-page>
+         <error-code>405</error-code>
+         <location>/WEB-INF/html/405.html</location>
+      </error-page>
+       <!--<error-page>
+         <error-code>javax.servle.ServletException</error-code>
+         <location>/WEB-INF/error.html</location>
+       </error-page>
+       <error-page>
+         <error-code>java.lang.NullPointerException</error-code>
+         <location>/WEB-INF/error.html</location>
+       </error-page>-->
+  <session-config>
+    <session-timeout>600</session-timeout>
+  </session-config>
+  
+  <welcome-file-list>
+	<welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  
+</web-app>

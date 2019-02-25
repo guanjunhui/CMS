@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SolutionCommentMapper">
+	
+	<resultMap type="cn.cebest.entity.system.infineon.SolutionCommentVO" id="BaseResultMap">
+		<id column="ID" property="id"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="RESOURCE_ID" property="resourceId"/>
+		<result column="PARENT_ID" property="parentId"/>
+		<result column="CONTENT" property="content"/>
+		<result column="TO_USER_ID" property="toUserId"/>
+		<result column="CREATE_TIME" property="createTime"/>
+		<result column="status" property="status"/>
+		<result column="likeNum" property="likeNum"/>
+		<result column="replyNum" property="replyNum"/>
+	</resultMap>
+	
+	<insert id="insertComment" parameterType="cn.cebest.entity.system.infineon.SolutionCommentVO">
+		INSERT INTO WEB_SOLUTION_COMMENT(
+			ID, RESOURCE_ID, PARENT_ID, USER_ID, CONTENT, TO_USER_ID, CREATE_TIME
+		)VALUES(
+			#{id}, #{resourceId}, #{parentId}, #{userId}, #{content}, #{toUserId}, NOW()
+		)
+	</insert>
+	
+	<select id="getCommentlistPage" parameterType="cn.cebest.entity.Page" resultMap="BaseResultMap">
+		SELECT 
+			ID, RESOURCE_ID, PARENT_ID, USER_ID, CONTENT, TO_USER_ID,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %h:%i:%s') CREATE_TIME,
+			<if test="pd.userId != null and pd.userId != ''">
+				(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT_LIKE WHERE CONTENT_ID=c.ID AND USER_ID=#{pd.userId}) status,
+			</if>
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT_LIKE WHERE CONTENT_ID=c.ID) likeNum,
+			(SELECT COUNT(ID) FROM  WEB_SOLUTION_COMMENT WHERE PARENT_ID=c.ID) replyNum
+		FROM WEB_SOLUTION_COMMENT c
+		WHERE 
+			RESOURCE_ID = #{pd.resourceId} AND PARENT_ID = #{pd.parentId}
+			ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<select id="getComment" parameterType="cn.cebest.entity.system.infineon.SolutionCommentVO" resultMap="BaseResultMap">
+		SELECT 
+			ID, RESOURCE_ID, PARENT_ID, USER_ID, CONTENT,  TO_USER_ID,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %h:%i:%s') CREATE_TIME
+		FROM WEB_SOLUTION_COMMENT 
+		WHERE 
+			RESOURCE_ID = #{resourceId} AND PARENT_ID = #{id}
+			ORDER BY CREATE_TIME
+	</select>
+	
+	<select id="getCommentById" parameterType="pd" resultType="String">
+		SELECT 
+			CONTENT
+		FROM WEB_SOLUTION_COMMENT 
+		WHERE 
+			ID = #{contentId}
+	</select>
+	
+	<!-- 点赞 -->
+	<insert id="likeComment" parameterType="pd">
+		INSERT INTO WEB_SOLUTION_COMMENT_LIKE
+			(ID, CONTENT_ID, USER_ID, CREATE_TIME)
+		VALUES
+			(#{id}, #{contentId}, #{userId}, NOW())
+	</insert>
+	
+	<!-- 取消点赞 -->
+	<delete id="cancelLike" parameterType="pd">
+		DELETE FROM 
+			WEB_SOLUTION_COMMENT_LIKE
+		WHERE CONTENT_ID=#{contentId} AND USER_ID=#{userId}
+	</delete>
+</mapper>

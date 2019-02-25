@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="guanwang" />
+<meta name="keywords" content="${seoKeywords!}" />
+<meta name="description" content="${seoDescription!}" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+<title>${seoTitle!}</title>
+<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+<script>if (/*@cc_on!@*/false && document.documentMode === 10) document.documentElement.className += ' ie10';</script>
+<script>if (/*@cc_on!@*/false && document.documentMode === 11) document.documentElement.className += ' ie11';</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/HotSpots.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/idangerous.swiper.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/paging.css"/>
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script src="../../staticRelease/js/image-scale.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/wow.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/idangerous.swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- 近期活动模板 -->
+	<template id="spot1T" style="display:none">
+		<div class="swiper-slide">
+	      	<div class="hot_spt_jin mt_60">
+				<div class="img_w wow fadeInLeft" data-wow-delay="1s" data-wow-duration="1s">
+					<div class="img_cov" style="background-image: url(${imgPath}{imageUrl});"></div>
+				</div>
+				<div class="txt_w wow fadeInRight" style="background-image: url(${autoPath}/staticRelease/img/hot_spt_bg.png);" data-wow-delay="1s" data-wow-duration="1s">
+					<p class="fnt_24 p1">{title}</p>
+					<p class="fnt_18 p2">{title2}</p>
+					<a class="fnt_14 alink mt_30" href="${autoPath}/skippath/{contentUrl}">立即参与 ></a>
+				</div>
+			</div>
+	      </div>
+  	</template>
+
+	<!-- 往期活动模板 -->
+	<template id="spot2T" style="display:none">
+		<li class="hot_spt_inx fl wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+			<a href="${autoPath}/skippath/{contentUrl}">
+				<img class="spt_zz" src="${autoPath}/staticRelease/img/hot_spt_zz.png"/>
+				<img class="spt_img scale" src="${imgPath}{imageUrl}"/>
+				<p class="fnt_22 bt line_height21">{title}</p>
+			</a>
+		</li>
+  	</template>
+  	
+  	<template id="clear" style="display:none">
+		<div class="clear"></div>
+  	</template>
+
+</head>
+<body>
+<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<!--header begin-->
+<!--#include file="${autoPath}/staticRelease/include/header.html"-->
+<!--header end-->
+<#include "../htmlFront/include/header.html">
+<#include "../htmlFront/include/banner.html"/>
+<#include "../htmlFront/include/crumb.html"/>
+
+<div class="hot_spt wrap pt_40">
+	<div class="hot_spt_t pt_55">
+		<div class="bt">
+			<p class="p1 fnt_30 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">近期活动</p>
+			<p class="p2 fnt_18 mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">英飞凌的产品搜索工具可以根据您的设计参数和性能迅速显示适合您的产品</p>
+		</div>
+		<div class="swiper-container">
+		  <div class="swiper-wrapper" id="spot1">
+		     
+		  </div>
+		</div>
+		
+	</div>
+	<div class="hot_spt_b mt_110">
+		<div class="bt">
+			<p class="p1 fnt_30 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">往期活动回顾</p>
+			<p class="p2 fnt_18 mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">我们的技术使消耗少一点、收获多一些，它随时在您身边</p>
+		</div>
+		<div class="hot_spt_list pt_75">
+			<ul id="spot2">
+				
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div id="page" class="page_div"></div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/paging.js"></script>
+<script type="text/javascript">
+
+function spot1(){
+	$.ajax({
+		type : "POST",
+		url : "/productfront/getNewsList",
+		data:{
+			"columId" : '${template.columId!}',
+			"recommend" : 'recommend',
+			"currentPage" : 1,
+			"showCount" : 10
+		},
+		traditional: true,
+		dataType : "json",
+		success : function(data) {
+			var d = data.data;
+			if(d.data == null || d.data == ''){
+				$("#page").hide();
+				return;
+			}
+			
+			$(d.data).each(function(){
+				var spot1T = $("#spot1T").html();
+				if(this.image != null && this.image != ''){
+					spot1T = spot1T.replace("{imageUrl}",this.image.imgurl);
+				}
+				spot1T = spot1T.replace("{title}",this.message_title);
+				spot1T = spot1T.replace("{title2}",this.description);
+				spot1T = spot1T.replace("{id}",this.id);
+				spot1T = spot1T.replace("{columId}",'${template.columId!}');
+				spot1T = spot1T.replace("{contentUrl}",this.columUrlName+"/"+this.id);
+				$("#spot1").append(spot1T);
+			});
+			$('img.scale').imageScale();
+			new WOW().init();
+			
+			 var mySwiper = new Swiper('.swiper-container',{
+				   loop: true,
+					 slidesPerView : 1,
+					 autoplay : 3000,
+					 speed:1500,
+					 lazyLoading : true,
+				  });  
+			
+		}// end success
+		
+	});//ajax end
+};
+
+function spot2(num){
+	$.ajax({
+		type : "POST",
+		url : "/productfront/getNewsList",
+		data:{
+			"columId" : '${template.columId!}',
+			"sort1" : "desc",
+			"currentPage" : num,
+			"showCount" : 6
+		},
+		traditional: true,
+		dataType : "json",
+		success : function(data) {
+			$("#spot2").empty();
+			var d = data.data;
+			$("#page").show();
+			if(d.data == null || d.data == ''){
+				$("#page").hide();
+				return;
+			}
+			
+			$(d.data).each(function(){
+				var spot2T = $("#spot2T").html();
+				spot2T = spot2T.replace("{contentUrl}",'${columCurrent.columUrlName!}/${columCurrent.columUrlName!}_'+this.contentUrlName);
+				if(this.image != null && this.image != ''){
+					spot2T = spot2T.replace("{imageUrl}",this.image.imgurl);
+				}
+				spot2T = spot2T.replace("{title}",this.message_title);
+				$("#spot2").append(spot2T);
+			});
+			$('img.scale').imageScale();
+			new WOW().init();
+			  
+			if(d.page.currentPage != 1){
+				$("html,body").animate({ scrollTop: $('.hot_spt_t').offset().top+$('.hot_spt_t').outerHeight() }, 500);
+			}
+			//分页
+			$("#page").paging({
+				pageNo: num,
+				totalPage: d.page.totalPage,
+				totalSize: d.page.totalResult,
+				callback: function(num) {
+					spot2(num)
+				}
+			})
+		}// end success
+		
+	});//ajax end
+};
+
+
+$(function(){
+	spot1();
+	spot2(1);
+	
+	
+});
+
+</script>
+</body>
+</html>          

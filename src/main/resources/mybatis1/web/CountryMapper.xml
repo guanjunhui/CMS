@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CountryMapper">	<!-- 查询所有的国家 -->	<select id="getAllCountrys" resultType="string">		SELECT			name_en		FROM 			SYS_COUNTRY		WHERE 			level = '2'		ORDER BY			name_en	</select>		<!-- 根据国家英文名称获取国家编号 -->	<select id="getCountryCode" parameterType="string" resultType="string">		SELECT 			code		FROM 			SYS_COUNTRY		WHERE			name_en=#{nameEn} 	</select>
+</mapper>

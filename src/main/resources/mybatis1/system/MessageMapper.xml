@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MessageMapper">
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessage" id="resultMessageRelation">
+		<id property="id" column="ID" />
+		<result property="site_id" column="SITE_ID" />
+		<result property="type_id" column="TYPE_ID" />
+		<result property="type_name" column="TYPE_NAME" />
+		<result property="link" column="LINK" />
+		<result property="message_title" column="MESSAGE_TITLE" />
+		<result property="message_template" column="MESSAGE_TEMPLATE" />
+		<result property="message_templateName" column="TEM_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="surface_image" column="SURFACE_IMAGE" />
+		<result property="detail" column="DETAIL" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="hot" column="HOT" />
+		<result property="top" column="TOP" />
+		<result property="top_time" column="TOP_TIME" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="recommend_time" column="RECOMMEND_TIME" />
+		<result property="author" column="AUTHOR" />
+		<result property="resource" column="RESOURCE" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="valuetext" column="VALUETEXT" />
+		<result property="release_time" column="RELEASE_TIME" />
+		<result property="created_time" column="CREATED_TIME" />
+		<result property="sort" column="SORT"/>
+		<result property="columid" column="COLUMID"/>
+		<result property="count" column="COUNT"/>
+		<result property="contentUrlName" column="contentUrlName" />
+		<result property="columUrlName" column="columUrlName" />
+		<association property="image" javaType="cn.cebest.entity.system.Image" >
+			<id property="imageId" column="IMAGE_ID" />
+			<result property="imgurl" column="IMGURL" />
+		</association>
+		<collection property="messageTypeList"  ofType="cn.cebest.entity.system.newMessage.NewMessageType">
+			<id property="id" column="ID_"/>
+			<result property="type_name" column="TYPE_NAME_"/>
+		</collection>
+		<collection property="columnTypeList"  ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="ID_C"/>
+			<result property="columName" column="COLUM_NAME"/>
+		</collection>
+		<collection property="pictures" ofType="cn.cebest.entity.system.Image">
+			<id column="IMAGE_ID_" property="imageId" />
+			<result column="TYPE_" property="type" />
+			<result column="TITLE_" property="title" />
+			<result column="IMGURL_" property="imgurl" />
+			<result column="BZ" property="bz" />
+			<result column="ASTOURL_" property="tourl" />
+			<result column="SUBHEAD" property="subhead" />
+			<result column="FORDER" property="forder" />
+			<result column="IMAGE_NAME" property="name" />
+		</collection>
+		<collection property="videos" ofType="cn.cebest.entity.system.Video">
+			<id column="video_id_" property="id" />
+			<result column="VIDEO_TYPE_" property="video_type" />
+			<result column="VIDEO_TITLE_" property="video_title" />
+			<result column="VIDEO_URL_" property="video_url" />
+			<result column="VIDEO_CONTENT_" property="video_content" />
+			<result column="VIDEO_TOURL" property="tourl" />
+			<result column="VIDEO_FORDER" property="forder" />
+			<result column="NAME" property="name" />
+		</collection>
+		<collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="CID_" />
+			<result property="columName" column="COLUMN_NAME_" />
+		</collection>
+	</resultMap>
+
+<select id="findPmmNewsList" parameterType="page" resultMap="resultMessageImage">
+		SELECT DISTINCT
+			WSC.SKIPPATH AS columUrlName,
+			M.ID,
+			M.MESSAGE_TITLE,
+			M.LINK,
+			I.IMGURL,
+			WS.ID AS contentUrlName
+		FROM
+			WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID = M.SURFACE_IMAGE
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID = WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID=#{pd.columId}
+		<where>
+			1=1
+			<if test="pd.id !=null and pd.id != ''">
+				AND MT.ID=#{pd.id}
+			</if>
+			<if test="null != pd.hot and '' != pd.hot">
+				AND M.HOT = '1'
+			</if>
+			<if test="null == pd.top or '' == pd.top">
+				<if test="null == pd.noTop or '' == pd.noTop">
+					AND M.TOP NOT IN (1)
+				</if>
+			</if>
+		</where>
+		GROUP BY ID
+		ORDER BY M.SORT
+	</select>
+
+	<select id="findNewMessageById" resultMap="resultMessageImage" parameterType="cn.cebest.util.PageData">
+		SELECT
+			N.ID,
+			N.MESSAGE_TITLE,
+			N.SORT,
+			N.LINK,
+			N.MESSAGE_TEMPLATE,
+			N. STATUS,
+			N.DETAIL,
+			N.DESCRIPTION,
+			N.RELEASE_TIME,
+			N.KEYWORD,
+			N.AUTHOR,
+			N.RESOURCE,
+			N.CREATED_TIME,
+			N.RECOMMEND,
+			N.HOT,
+			N.COUNT,
+			N.IMAGEID,
+			N.RECOMMEND_TIME,
+			N.TOP_TIME,
+			N.TOP,
+			I.IMGURL AS SURFACE_IMAGE
+		FROM
+			WEB_NEWMESSAGE N
+		LEFT JOIN 
+			WEB_IMAGE I 
+		ON 
+			I.IMAGE_ID = N.SURFACE_IMAGE
+		WHERE
+			N.ID=#{id}
+	</select>
+
+	<select id="findnewsList" resultType="pd">
+		SELECT 
+			N.ID,I.IMGURL,N.MESSAGE_TITLE,N.RELEASE_TIME,N.DESCRIPTION,WTMR.COLUMID
+		FROM
+			WEB_NEWMESSAGE N
+		LEFT JOIN
+			WEB_IMAGE I
+		ON	
+			I.IMAGE_ID= N.SURFACE_IMAGE
+		LEFT JOIN
+			WEB_TYPE_MESSAGE_RELATION WTMR
+		ON
+			WTMR.MESSAGEID=N.ID
+		WHERE
+			1=1
+		<if test="HOT!=null and HOT != '' ">		
+			AND N.HOT=#{HOT}
+		</if>
+		<if test="CURRENTID!=null and CURRENTID != '' ">		
+			AND WTMR.COLUMID IN 
+			<foreach collection="CURRENTID" item="CURRENTID" close=")" open="(" separator=",">
+				#{CURRENTID}
+			</foreach>
+		</if>
+		ORDER BY N.SORT
+	</select>
+
+	<select id="findnewsPageList" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.RELEASE_TIME,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE
+		 TMR.COLUMID=#{columId}
+		ORDER BY 
+		M.SORT ASC ,
+		M.CREATED_TIME DESC
+		LIMIT #{skipNum,jdbcType=INTEGER},#{showCount,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectMessagelistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.SORT,M.LINK,M.RELEASE_TIME,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE
+		 <if test="pd.id !=null and pd.id != ''">
+			 MT.ID=#{pd.id} AND
+		 </if>
+		 TMR.COLUMID=#{pd.columId}
+		ORDER BY 
+		<if test="pd.flag !=null and pd.flag != ''">
+		 	M.SORT ASC ,
+		 </if>
+		M.CREATED_TIME DESC
+	</select>
+
+	<select id="findNewsImageList" resultType="cn.cebest.entity.system.Image">
+		SELECT 
+			title,imgurl,forder,bz
+		FROM 
+			WEB_IMAGE
+		WHERE 
+			MASTER_ID = #{id}
+	</select>
+
+	<!--根据资讯类型id查询资讯  -->
+	<select id="selectMessageTypeById" resultMap="resultMessageRelation">
+		SELECT DISTINCT M.ID,M.MESSAGE_TITLE,MT.ID AS ID_,MT.TYPE_NAME AS TYPE_NAME_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE M.ID IN
+		<foreach collection="array" item="messageid01" close=")" open="(" separator=",">
+			#{messageid01}
+		</foreach>
+	</select>
+	<!-- begin -->
+	<!--根据id查询-->
+	<select id="selectDetailMessageById" resultMap="resultMessageRelation">
+		SELECT
+		M.ID,M.MESSAGE_TEMPLATE,MTY.ID AS ID_,M.LINK,M.DESCRIPTION,M.KEYWORD,M.STATUS,
+		M.MESSAGE_TITLE,M.HOT,M.RECOMMEND,M.IMAGEID,M.CREATED_TIME,MT.TXT,M.DETAIL,
+		M.VALUETEXT,M.AUTHOR,M.RESOURCE,M.COUNT,
+		I.TITLE,I.IMGURL AS IMGURL,I.IMAGE_ID AS IMAGE_ID,MTY.ID AS TYPE_ID,MTY.TYPE_NAME AS TYPE_NAME_,
+		T.TEM_NAME,M.RELEASE_TIME
+
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TXT MT
+		ON M.ID=MT.CONTENT_ID
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MTY ON MTY.ID=TMR.MESSAGETYPEID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TEMPLATE T ON M.MESSAGE_TEMPLATE=T.ID
+		WHERE M.ID= #{id}
+	</select>
+	<!-- end -->
+	<!-- 查询资讯列表 -->
+	<select id="findMessagelistPage"  parameterType="page"
+	resultMap="resultMessageRelation">
+		SELECT M.ID,M.TYPE_ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.RECOMMEND,M.HOT,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND_TIME,M.TOP,M.TOP_TIME,Y.TYPE_NAME AS TYPE_NAME_,Y.ID AS ID_
+		FROM (/*start*/SELECT * FROM WEB_NEWMESSAGE where SITE_ID=#{pd.SITEID}
+			<if test="pd.message_keyword !=null and pd.message_keyword != ''">
+					AND MESSAGE_TITLE LIKE '%' #{pd.message_keyword} 
+					'%'
+			</if>
+			<if test="pd.type_id !=null and pd.type_id != ''">
+				AND ID=#{pd.type_id}
+			</if>
+		/*end*/)M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE Y ON TMR.MESSAGETYPEID=Y.ID
+        LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.IMAGEID
+		ORDER BY M.CREATED_TIME DESC
+	</select>
+	<select id="findMessageIdByColumIds" resultType="String">
+		SELECT M.ID FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		WHERE TMR.COLUMID IN
+		<foreach collection="array" item="messageid02" open="(" close=")" separator=",">
+			#{messageid02}
+		</foreach>
+	</select>
+	<!--=======================================================================================-->
+	<!--根据id查询资讯,并把它的上一个和下一个资讯的id和标题带上 -->
+	<select id="findMessageById" resultMap="resultMessageImage" parameterType="java.lang.String">
+		SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,num
+		FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE MT.ID=(SELECT TMR.MESSAGETYPEID 
+											FROM WEB_NEWMESSAGE W
+											LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON  TMR.MESSAGEID=W.ID
+											WHERE W.ID=#{id}))N,(SELECT @y:=0)d											
+											ORDER BY CREATED_TIME DESC
+											)P
+		
+		WHERE P.num in ((SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE MT.ID=(SELECT TMR.MESSAGETYPEID 
+											FROM WEB_NEWMESSAGE W
+											LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON  TMR.MESSAGEID=W.ID
+											WHERE W.ID=#{id}))N,(SELECT @y:=0)d
+											ORDER BY CREATED_TIME DESC
+											)N
+		WHERE ID=#{id}),(SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE MT.ID=(SELECT TMR.MESSAGETYPEID 
+											FROM WEB_NEWMESSAGE W
+											LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON  TMR.MESSAGEID=W.ID
+											WHERE W.ID=#{id}))N,(SELECT @y:=0)d
+											ORDER BY CREATED_TIME DESC
+											)N
+		WHERE ID=#{id})-1,(SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE MT.ID=(SELECT TMR.MESSAGETYPEID 
+											FROM WEB_NEWMESSAGE W
+											LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON  TMR.MESSAGEID=W.ID
+											WHERE W.ID=#{id}))N,(SELECT @y:=0)d
+											ORDER BY CREATED_TIME DESC
+											)N
+		WHERE ID=#{id})+1)
+	</select>
+	<!-- 查询资讯详情模板 -->
+	<select id="selectMessageTemplate" parameterType="pd"
+		resultType="pd">
+		SELECT TEM_NAME,ID,TEM_FILEPATH,TEM_FILENAME,CREATETIME,TEM_TYPE,TEM_IMAGEPATH,IS_DEFAULT
+		FROM WEB_TEMPLATE
+		WHERE TEM_TYPE=#{TEMPLATE_TYPE_2} AND TYPE=#{type}
+		order by CREATETIME DESC
+	</select>
+	<!--查询所有资讯类型的id和名称  -->
+	<select id="selectMessageType"  parameterType="pd"
+	resultType="pd">
+		SELECT ID,TYPE_NAME,TYPE_ID,IMAGEID,TYPE_STATUS,TYPE_DETAIL,TYPE_KEYWORDS,TYPE_SUMMARY,TYPE_WBURL,COLUMNID
+		FROM WEB_NEWMESSAGE_TYPE
+	</select>
+	<!-- 删除资讯 -->
+	<delete id="deleteMessage">
+		DELETE FROM WEB_NEWMESSAGE
+		WHERE ID IN
+		<foreach collection="array" item="messageid03" open="(" close=")"
+			separator=",">
+			#{messageid03}
+		</foreach>
+	</delete>
+	<!--根据id查询当前资讯的图片,主要用于在修改页面进行回显  -->
+	<select id="selectImageByMessageId" resultType="cn.cebest.entity.system.Image">
+		SELECT I.IMGURL AS imgurl,I.IMAGE_ID AS imageId,I.TITLE AS title,I.TOURL AS tourl,I.BZ AS bz
+		FROM WEB_NEWMESSAGE M 
+		LEFT JOIN WEB_IMAGE I ON M.SURFACE_IMAGE=I.IMAGE_ID
+		WHERE M.ID=#{ID}
+	</select>
+	
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessage" id="resultMessage">
+		<id property="id" column="id" />
+		<result property="site_id" column="SITE_ID" />
+		<result property="type_id" column="TYPE_ID" />
+		<result property="type_name" column="TYPE_NAME" />
+		<result property="message_title" column="MESSAGE_TITLE" />
+		<result property="link" column="LINK" />
+		<result property="message_template" column="MESSAGE_TEMPLATE" />
+		<result property="message_templateName" column="TEM_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="surface_image" column="SURFACE_IMAGE" />
+		<result property="detail" column="DETAIL" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="release_time" column="RELEASE_TIME" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="author" column="AUTHOR" />
+		<result property="resource" column="RESOURCE" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="hot" column="HOT" />
+		<result property="created_time" column="CREATED_TIME" />
+		<collection property="messageTypeList"
+			ofType="cn.cebest.entity.system.newMessage.NewMessageType">
+			<id property="id" column="ID_" />
+			<result property="type_name" column="TYPE_NAME_" />
+		</collection>
+	</resultMap>
+	
+	<!-- 根据多个资讯类型id查询资讯 -->
+	<select id="selectMessageBytypeId" resultMap="resultMessage">
+		SELECT DISTINCT M.ID,M.MESSAGE_TITLE,MT.ID AS ID_,MT.TYPE_NAME AS TYPE_NAME_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE MT.ID in
+		<foreach collection="array" item="messageid04" close=")" open="(" separator=",">
+			#{messageid04}
+		</foreach>
+	</select>
+	<!-- 用于前端页面显示 -->
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessage" id="resultMessageImage">
+		<id property="id" column="ID" />
+		<result property="site_id" column="SITE_ID" />
+		<result property="columid" column="COLUMID" />
+		<result property="type_id" column="TYPE_ID" />
+		<result property="type_name" column="TYPE_NAME" />
+		<result property="message_title" column="MESSAGE_TITLE" />
+		<result property="link" column="LINK" />
+		<result property="message_template" column="MESSAGE_TEMPLATE" />
+		<result property="message_templateName" column="TEM_NAME" />
+		<result property="status" column="STATUS" />
+		<result property="surface_image" column="SURFACE_IMAGE" />
+		<result property="detail" column="DETAIL" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="author" column="AUTHOR" />
+		<result property="resource" column="RESOURCE" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="hot" column="HOT" />
+		<result property="top" column="TOP" />
+		<result property="count" column="COUNT" />
+		<result property="sort" column="SORT" />
+		<result property="created_time" column="CREATED_TIME" />
+		<result property="video_url" column="VIDEO_URL" />
+		<result property="update_time" column="UPDATE_TIME" />
+		<result property="release_time" column="RELEASE_TIME" />
+		<result property="contentUrlName" column="contentUrlName" />
+		<result property="columUrlName" column="columUrlName" />
+		<association property="image" javaType="cn.cebest.entity.system.Image" >
+			<id property="id" column="IMAGE_ID" />
+			<result property="imgurl" column="IMGURL" />
+		</association>
+		<collection property="pictures" ofType="cn.cebest.entity.system.Image">
+			<id column="image_id_" property="imageId" />
+			<result column="type_" property="type" />
+			<result column="title_" property="title" />
+			<result column="imgurl_" property="imgurl" />
+			<result column="bz" property="bz" />
+			<result column="tourl_" property="tourl" />
+			<result column="forder_" property="forder" />
+		</collection>
+		<collection property="videos" ofType="cn.cebest.entity.system.Video">
+			<id column="video_id_" property="id" />
+			<result column="VIDEO_TYPE_" property="video_type" />
+			<result column="VIDEO_TITLE_" property="video_title" />
+			<result column="VIDEO_URL_" property="video_url" />
+			<result column="VIDEO_CONTENT_" property="video_content" />
+			<result column="VIDEO_TOURL" property="tourl" />
+			<result column="VIDEO_FORDER" property="forder" />
+			<result column="NAME" property="name" />
+		</collection>
+	</resultMap>
+	<!-- 根据 一个资讯类型id查询资讯 -->
+	<select id="selectlistPageMessageByOnetypeId" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,
+		M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,
+		M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,DATE_FORMAT(M.UPDATE_TIME,'%Y-%m-%d') as UPDATE_TIME
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE MT.ID=#{pd.id}
+		ORDER BY M.UPDATE_TIME DESC
+	</select>
+	
+	
+	<!-- 保存资讯和资讯类型关系 -->
+	<insert id="insertType_message_relation" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		<if test="messagetypeids !=null and messagetypeids.length>0">
+			INSERT INTO WEB_TYPE_MESSAGE_RELATION(MESSAGEID,MESSAGETYPEID) VALUES
+			<foreach collection="messagetypeids" item="messagetypeid"
+				open="" separator="," close="">
+				(#{id},#{messagetypeid})
+			</foreach>
+		</if>
+	</insert>
+	<!-- 保存资讯和资讯类型关系 -->
+	<insert id="insertTypeMessageColumRelation" parameterType="pd">
+		INSERT INTO WEB_TYPE_MESSAGE_RELATION(MESSAGEID,MESSAGETYPEID,COLUMID) VALUES(#{id},#{messagetypeid},#{columnid})
+	</insert>
+	
+	<!-- 保存资讯地址栏的url信息 -->
+	<insert id="saveContentUrlName" parameterType="pd">
+		insert into WEB_SKIPPATH (CONTENTID,COLUMNID,TYPEID) values (#{id},#{columnid},#{messagetypeid})
+	</insert>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentUrlNameList" parameterType="cn.cebest.entity.system.newMessage.NewMessage" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH 
+		WHERE CONTENTID = #{id}
+	</select>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findMyMessageUrlNameList" parameterType="pd" resultType="pd">
+		SELECT CONTENTID,COLUMNID,TYPEID
+		FROM WEB_SKIPPATH
+		WHERE CONTENTID = #{id}
+		<if test="columnid!=null and columnid!=''">
+			AND	COLUMNID = #{columnid}
+		</if>
+		<if test="messagetypeid!=null and messagetypeid!=''">
+			AND	TYPEID = #{messagetypeid}
+		</if>
+	</select>
+	
+	<!-- 修改栏目url信息 -->
+	<update id="editContentUrlNameconfig" parameterType="pd" >
+		UPDATE WEB_SKIPPATH
+		<set>
+			<if test="columnid!=null and columnid!=''">
+				COLUMNID			= #{columnid}
+			</if>
+			<if test="messagetypeid!=null and messagetypeid!=''">
+				,TYPEID			= #{messagetypeid}
+			</if>
+		</set>
+		WHERE 
+			CONTENTID 			= #{id}
+		<if test="columnid!=null and columnid!=''">
+			AND	COLUMNID = #{columnid}
+		</if>
+		<if test="messagetypeid!=null and messagetypeid!=''">
+			AND	TYPEID = #{messagetypeid}
+		</if>
+	</update>
+	
+	<!-- 删除资讯和资讯关系 -->
+	<delete id="deleteType_message_relation" >
+	DELETE FROM WEB_TYPE_MESSAGE_RELATION
+	WHERE MESSAGEID IN
+	<foreach collection="array" item="messageid05" close=")" open="(" separator=",">
+		#{messageid05}
+	</foreach>
+	</delete>
+
+	<!-- 保存图片 -->
+	<insert id="saveImage" parameterType="pd">
+		INSERT INTO WEB_IMAGE(
+		IMAGE_ID,TITLE,IMGURL,TOURL,TYPE,FORDER,BZ,MASTER_ID,NAME,CREATE_TIME
+		) values (#{messageImageId},#{messageTitle},#{messageImageUrl},#{tourl},6,#{forder},#{bz},#{messageId},#{name},#{ImageTime})
+	</insert>
+	<!--保存视频 -->
+	<select id="saveVideo" parameterType="pd">
+		INSERT INTO WEB_VIDEO(ID,VIDEO_NAME,VIDEO_TITLE,VIDEO_URL,VIDEO_TYPE,CREATETIME,MASTER_ID,VIDEO_CONTENT,TOURL)
+		VALUES(#{messageVideoId},#{name},#{messageVideoTitle},#{messageVideoUrl},#{extensionName},#{videoTime},#{messageId},#{videoContent},#{tourl})
+	</select>
+	<!-- 保存资讯 -->
+	<insert id="saveNewMessage" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		INSERT INTO WEB_NEWMESSAGE
+		(ID,SITE_ID,TYPE_ID,TYPE_NAME,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,IMAGEID,RECOMMEND,HOT,VALUETEXT,UPDATE_TIME,RELEASE_TIME)
+		VALUES
+		(#{id},#{site_id},#{type_id},#{type_name},#{message_title},#{link},#{message_template},#{status},#{surface_image},#{detail},#{description},#{keyword},#{author},#{resource},#{created_time},#{surface_image},#{recommend},#{hot},#{valuetext},#{update_time},#{release_time})
+	</insert>
+<!--保存资讯和资讯类型之间的关系  -->
+	<insert id="saveMessageRelevant" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		<if test="messageRelevantIdList !=null and messageRelevantIdList.length>0">
+			INSERT INTO WEB_NEWMESSAGE_RELEVANT(NEWMESSAGEID,RELEVANTID) VALUES
+			<foreach collection="messageRelevantIdList" item="messageRelevantId"
+				open="" separator="," close="">
+				(#{id},#{messageRelevantId})
+			</foreach>
+		</if>
+	</insert>
+	<!-- 删除图片 -->
+	<delete id="deleteMessageImage">
+		DELETE FROM WEB_IMAGE
+		WHERE IMAGE_ID IN
+		<foreach collection="array" close=")" item="messageid06" open="("
+			separator=",">
+			#{messageid06}
+		</foreach>
+	</delete>
+	<!-- 修改图片 -->
+	<update id="updateMessageImage" parameterType="pd">
+		UPDATE WEB_IMAGE
+		SET IMGURL=#{messageImageUrl}
+		WHERE IMAGE_ID=#{messageImageId}
+	</update>
+
+	<!-- 删除相关联资讯类型关系 -->
+	<delete id="deleteMessageRelevant">
+		DELETE FROM
+		WEB_NEWMESSAGE_RELEVANT WHERE NEWMESSAGEID = #{id}
+	</delete>
+	<!-- 批量删除相关联资讯类型关系 -->
+	<delete id="deleteMessageRelevantList">
+		DELETE FROM WEB_NEWMESSAGE_RELEVANT WHERE NEWMESSAGEID in
+		<foreach collection="array" item="messageid07" close=")" open="("
+			separator=",">
+			#{messageid07}
+		</foreach>
+	</delete>
+	
+	<!-- 删除资讯地址栏的url信息 -->
+	<delete id="delMessageUrlName">
+		DELETE FROM WEB_SKIPPATH
+		WHERE CONTENTID IN
+		<foreach collection="array" close=")" item="messageid07" open="("
+			separator=",">
+			#{messageid07}
+		</foreach>
+	</delete>
+	<!-- 保存富文本 -->
+	<insert id="saveMessageTxt" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		INSERT INTO
+		WEB_TXT(CONTENT_ID,txt)
+		VALUES(#{id},#{detail})
+	</insert>
+
+	<!-- 刪除富文本 -->
+	<delete id="deleteMessageTxt">
+		DELETE FROM WEB_TXT
+		WHERE CONTENT_ID IN
+		<foreach collection="array" item="messageid08" open="(" close=")"
+			separator=",">
+			#{messageid08}
+		</foreach>
+	</delete>
+
+	<!-- 修改富文本 -->
+	<update id="upateMessageTxt" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		UPDATE
+		WEB_TXT
+		SET
+		TXT=#{detail}
+		WHERE CONTENT_ID =#{id}
+	</update>
+	<!-- 根据id查询相关资讯 -->
+	<select id="selectMessageRelevant" resultType="pd">
+		SELECT 
+		M2.ID,
+		M2.MESSAGE_TITLE,
+		MT.TYPE_NAME 
+		FROM WEB_NEWMESSAGE M2 
+		LEFT JOIN WEB_NEWMESSAGE_RELEVANT MR ON MR.RELEVANTID=M2.ID
+		LEFT JOIN WEB_NEWMESSAGE M1 ON MR.NEWMESSAGEID=M1.ID 
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M1.ID 
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE M1.ID=#{id}
+	</select>
+	
+	<!-- 根据资讯的id查询图片的路径 -->
+	<select id="selectImagePath" resultType="pd">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_NEWMESSAGE P
+		LEFT JOIN WEB_IMAGE I ON
+		P.IMAGEID=I.IMAGE_ID
+		WHERE P.ID IN
+		<foreach collection="array" item="messageid09" open="(" close=")"
+			separator=",">
+			<if test="messageid09 !=null and messageid09 != ''">
+				#{messageid09}
+			</if>
+		</foreach>
+	</select>
+
+	<!-- 根据资讯的id查询单个视频的路径 -->
+	<select id="selectVideoPath" resultType="pd">
+		SELECT V.VIDEO_URL,V.MASTER_ID
+		FROM WEB_NEWMESSAGE B
+		LEFT JOIN WEB_VIDEO V ON B.ID=V.MASTER_ID
+		WHERE B.ID IN
+		<foreach collection="array" item="messageid10" open="(" close=")"
+			separator=",">
+			<if test="messageid10 !=null and messageid10 != ''">
+				#{messageid10}
+			</if>
+		</foreach>
+	</select>	
+	<!-- 删除资讯对应的视频信息-->
+	<delete id="deleteMessageVideo">
+		DELETE FROM WEB_VIDEO
+		WHERE MASTER_ID IN
+		<foreach collection="array" item="messageid11" open="(" close=")"
+			separator=",">
+			#{messageid11}
+		</foreach>
+	</delete>
+	
+	
+	
+	<!-- 查询相同类型的资讯 -->
+	<select id="selectMessageRelevantBycode" resultType="pd">
+		SELECT
+		P.ID,P.MESSAGE_TITLE
+		FROM WEB_NEWMESSAGE P
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TPR ON TPR.MESSAGEID=P.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE PTY ON PTY.ID=TPR.MESSAGETYPEID
+		WHERE PTY.ID= #{id}
+	</select>
+	<!--修改资讯 -->
+	<update id="updateMessage" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		UPDATE WEB_NEWMESSAGE
+		<set>
+			<if test="message_template !=null and message_template !='' ">MESSAGE_TEMPLATE=#{message_template},</if>
+			LINK=#{link},
+			DESCRIPTION=#{description},
+			<if test="keyword !=null and keyword !=''">keyword=#{keyword},</if>
+			<if test="status !=null and status !=''">STATUS=#{status},</if>
+			<if test="message_title !=null and message_title !=''">MESSAGE_TITLE=#{message_title},</if>
+			<if test="type_id !=null and type_id !=''">TYPE_id=#{type_id},</if>
+			<if test="type_name !=null and type_name !=''">TYPE_NAME=#{type_name},</if>
+			<if test="detail !=null and detail !=''">DETAIL=#{detail},</if>
+			<if test="surface_image !=null and surface_image !=''">SURFACE_IMAGE=#{surface_image},</if>
+			<if test="author !=null and author !=''">AUTHOR=#{author},</if>
+			<if test="resource !=null and resource !=''">RESOURCE=#{resource},</if>
+			<if test="site_id !=null and site_id !=''">SITE_ID=#{site_id},</if>
+			<if test="created_time !=null and created_time !=''">CREATED_TIME=#{created_time},</if>
+			<if test="update_time !=null and update_time !=''">UPDATE_TIME=#{update_time},</if>
+			<if test="recommend !=null and recommend !=''">RECOMMEND=#{recommend},</if>
+			<if test="valuetext !=null and valuetext !=''">VALUETEXT=#{valuetext},</if>
+			<if test="hot !=null and hot !=''">HOT=#{hot},</if>
+			<if test="release_time !=null">RELEASE_TIME=#{release_time}</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!-- 修改资讯状态 -->
+	<update id="updateMessageStatus" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE
+		<set>
+			<if test="status !=null and status !=''">STATUS=#{status},</if>
+		</set>
+		WHERE
+		ID IN
+		<foreach collection="ids" item="messageid12" close=")" open="("
+			separator=",">
+			#{messageid12}
+		</foreach>
+	</update>
+	<!-- 以下为导入导出功能 -->
+	<!-- 资讯全部列表 -->
+	<select id="listAllMessage" parameterType="pd" resultType="pd" >
+		SELECT ID,SITE_ID,TYPE_ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,RECOMMEND,HOT,AUTHOR,RESOURCE,CREATED_TIME,TOP
+		FROM WEB_NEWMESSAGE
+	</select>
+	
+	<!-- 资讯全部列表 -->
+	<select id="listPartMessage"  resultType="pd" >
+		SELECT ID,SITE_ID,TYPE_ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,RECOMMEND,HOT,AUTHOR,RESOURCE,CREATED_TIME,TOP
+		FROM WEB_NEWMESSAGE
+		WHERE ID IN
+		<foreach collection="array" item="messageid13" open="(" close=")"
+			separator=",">
+			#{messageid13}
+		</foreach>
+	</select>
+	
+	<!-- 新增Excel资讯信息 -->
+	<insert id="saveExcelMessage" parameterType="pd" >
+		INSERT INTO WEB_NEWMESSAGE
+		(ID,SITE_ID,TYPE_ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,TOP)
+		VALUES
+		(#{id},#{site_id},#{type_id},#{message_title},#{link},#{message_template},#{status},#{surface_image},#{detail},#{description},#{keyword},#{author},#{resource},#{created_time},#{recommend},#{hot},#{top})
+	</insert>
+	
+	<!-- 修改推荐与置顶 -->
+	<update id="updataRecommendAndTopByIds" parameterType="cn.cebest.entity.system.newMessage.NewMessage">
+		UPDATE WEB_NEWMESSAGE
+		<set>
+			<if test="recommend_time !=null and recommend_time !=''">RECOMMEND=#{recommend},</if>
+			<if test="recommend_time !=null and recommend_time !=''">RECOMMEND_TIME=#{recommend_time},</if>
+			<if test="top_time !=null and top_time !=''">TOP=#{top},</if>
+			<if test="top_time !=null and top_time !=''">TOP_TIME=#{top_time}</if>
+		</set>
+		WHERE ID  IN
+		<foreach collection="messageRelevantIdList" item="messageid14" close=")" open="(" separator=",">
+			#{messageid14}
+		</foreach> 
+	</update>
+	<!-- 根据栏目id查询类型id -->
+	<select id="selectTypeId" resultType="String">
+	    SELECT MT.ID
+		FROM WEB_NEWMESSAGE_TYPE MT
+		LEFT JOIN WEB_NEWMESSAGETYPE_COLUMN MC ON MC.NEWMESSAGETYPEID=MT.ID
+		WHERE MC.COLUMNID=#{id}
+	</select>
+	<!-- 根据产品类型id查询资讯-->
+	<select id="selectMessageBytypeIds" parameterType="pd" resultType="cn.cebest.entity.system.newMessage.NewMessage">
+		SELECT DISTINCT M.ID,M.NAME,M.CREATED_TIME
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		WHERE M.RECOMMEND=#{RECOMMEND} AND M.RECOMMEND_TIME &gt; #{TIME} AND TMR.MESSAGETYPEID in
+		<foreach collection="ids" item="messageid15" close=")" open="(" separator=",">
+			#{messageid15}
+		</foreach>
+	</select>
+	<!-- 查询各个栏目下置顶的咨询 -->
+	<select id="findTopContentList" resultType="pd">
+	  	SELECT M.ID,M.MESSAGE_TITLE,M.CREATED_TIME,M.TOP_TIME,TC.COLUMNID
+		FROM WEB_NEWMESSAGE M
+		INNER JOIN WEB_TYPE_MESSAGE_RELATION TM ON TM.MESSAGEID=M.ID
+		INNER JOIN WEB_NEWMESSAGETYPE_COLUMN TC ON TC.NEWMESSAGETYPEID=TM.MESSAGETYPEID
+		WHERE M.TOP='1'
+	</select>
+	<!-- 查询各个栏目下推荐的咨询 -->
+	<select id="selectAllByAll" resultType="pd" parameterType="HashMap"> 
+	  	SELECT M.ID,M.MESSAGE_TITLE AS TITLE,M.DESCRIPTION AS DESCRIPTION,M.RECOMMEND_TIME,
+	  	TC.COLUMNID,WS.ID AS contentUrlName
+		FROM WEB_NEWMESSAGE M
+		INNER JOIN WEB_TYPE_MESSAGE_RELATION TM ON TM.MESSAGEID=M.ID
+		INNER JOIN WEB_NEWMESSAGETYPE_COLUMN TC ON TC.NEWMESSAGETYPEID=TM.MESSAGETYPEID
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID=WS.CONTENTID
+		<where>
+		   <if test="SITEID !=null and SITEID !=''">and SITE_ID=#{SITEID}</if>
+		   <if test="RECOMMEND !=null and RECOMMEND !=''">and RECOMMEND=#{RECOMMEND}</if>
+		   <if test="RECOMMEND_TIME !=null and RECOMMEND_TIME !=''">and RECOMMEND_TIME&gt;#{RECOMMEND_TIME}</if>
+		</where>
+	</select>
+	<!-- 根据资讯的id查询图片的详细信息 -->
+	<select id="selectImageDetail" resultType="cn.cebest.entity.system.Image">
+		SELECT I.IMGURL AS imgurl,I.IMAGE_ID AS imageId,I.TITLE AS title,I.TOURL AS tourl,I.BZ AS bz,I.FORDER AS forder,I.NAME AS name
+		FROM WEB_NEWMESSAGE P
+		LEFT JOIN WEB_IMAGE I ON
+		P.ID=I.MASTER_ID
+		WHERE P.ID=#{id}
+	</select>
+	<!-- 根据资讯的id查询图片的详细信息 -->
+	<select id="selectImageOneDetail" resultType="cn.cebest.entity.system.Image">
+		SELECT I.IMGURL,I.IMAGE_ID,I.TITLE,I.TOURL,I.BZ
+		FROM WEB_NEWMESSAGE P
+		LEFT JOIN WEB_IMAGE I ON
+		P.IMAGEID=I.IMAGE_ID
+		WHERE P.SURFACE_IMAGE=#{id}
+	</select>
+	<!-- 根据id查询模板路径 -->
+	<select id="selectTemplatePachById" resultType="pd">
+	  	SELECT T.TEM_FILEPATH as template_Path
+		FROM WEB_TEMPLATE T
+		LEFT JOIN WEB_NEWMESSAGE M  ON T.ID=M.MESSAGE_TEMPLATE
+        WHERE M.ID=#{contentId}
+	</select>
+	<!-- 找到资讯的最新推荐的一条资讯 -->
+	<select id="findNewRecommendMessage" resultMap="resultMessageImage">
+		SELECT P.ID,P.MESSAGE_TITLE,P.LINK,P.MESSAGE_TEMPLATE,P.STATUS,P.SURFACE_IMAGE,P.DETAIL,P.DESCRIPTION,P.KEYWORD,P.AUTHOR,P.RESOURCE,P.CREATED_TIME,P.RECOMMEND,P.HOT,P.IMAGEID,P.RECOMMEND_TIME,P.TOP_TIME,P.TOP,P.IMGURL,P.num,WS.ID AS contentUrlName
+		FROM(SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+						FROM WEB_NEWMESSAGE M
+						LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+						LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+						WHERE TMR.COLUMID=#{columnId}
+						ORDER BY RECOMMEND DESC,RECOMMEND_TIME DESC,CREATED_TIME DESC) N,(SELECT @y:=0)d) P
+		LEFT JOIN WEB_SKIPPATH WS ON P.ID=WS.CONTENTID
+		WHERE P.num BETWEEN 1 AND 2
+	</select>
+	<!--更新资讯的浏览次数  -->
+	<update id="updateReadCount" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE SET COUNT=#{count}
+		WHERE ID=#{id}
+	</update>
+	<!--以下为天华集团所需要的sql语句**********************************************************-->
+	<!-- 找到资讯的最新推荐的一条资讯 -->
+	<select id="findRecommendTimeThMessage" resultMap="resultMessageImage">
+		SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,P.num
+		FROM(SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+						FROM WEB_NEWMESSAGE M
+						LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+						WHERE RECOMMEND='1'
+						ORDER BY CREATED_TIME DESC) N,(SELECT @y:=0)d) P
+		WHERE P.num BETWEEN 1 AND 5
+	</select>
+	<!-- 根据一个资讯类型id查询资讯 -->
+	<select id="selectThNewsByOnetypeId"  resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		WHERE MT.ID=#{id}
+		ORDER BY M.CREATED_TIME DESC
+	</select>
+	<!-- 天华首页详细内容显示,并有上一篇下一篇的效果 -->
+	<select id="findThIndexMessageById" resultMap="resultMessageImage" parameterType="java.lang.String">
+		SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,num
+		FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				WHERE RECOMMEND='1'
+				ORDER BY CREATED_TIME DESC) N,(SELECT @y:=0)d)P
+		
+		WHERE P.num in ((SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				WHERE RECOMMEND='1'
+				ORDER BY CREATED_TIME DESC) N,(SELECT @y:=0)d)N
+		WHERE ID=#{id}),(SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				WHERE RECOMMEND='1'
+				ORDER BY CREATED_TIME DESC) N,(SELECT @y:=0)d)N
+		WHERE ID=#{id})-1,(SELECT N.num
+				FROM (SELECT ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,TOP_TIME,TOP,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				WHERE RECOMMEND='1'
+				ORDER BY CREATED_TIME DESC) N,(SELECT @y:=0)d)N
+		WHERE ID=#{id})+1)
+		
+	</select>
+	<!-- 根据资讯id查找其对应的栏目 -->
+	<select id="selectColumConfigById" resultType="cn.cebest.entity.system.ColumConfig">
+		SELECT C.ID AS ID,C.COLUM_NAME AS columName
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID=TMR.COLUMID
+		WHERE M.ID=#{id}
+	</select>
+	<select id="selectalltype_ids" parameterType="page" resultType="HashMap">
+		SELECT ID,PID
+		FROM WEB_NEWMESSAGE_TYPE
+	</select>
+	<!-- 根据栏目id查询全部列表直至查出为止 -->
+	<select id="selectByTypeIDlistPage" parameterType="page" resultMap="resultMessageRelation">
+		SELECT M.ID,M.TYPE_ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.RECOMMEND,M.HOT,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,
+			M.RECOMMEND_TIME,M.TOP,M.TOP_TIME,Y.TYPE_NAME AS TYPE_NAME_,Y.ID AS ID_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE Y ON TMR.MESSAGETYPEID=Y.ID
+		WHERE 
+		Y.ID IN	
+		<foreach collection="pd.list" item="cid" close=")" open="(" separator=",">
+			${cid}
+		</foreach>
+		ORDER BY M.CREATED_TIME DESC	
+	</select>
+	<select id="selectType" parameterType="pd" resultType="pd">
+		SELECT Y.ID,Y.TYPE_NAME
+		FROM WEB_NEWMESSAGE_TYPE Y
+        WHERE Y.SITEID=#{SITEID}
+	</select>
+	<!--展示排序  -->
+	<select id="findMessageSortlistPage"  parameterType="page"
+		resultMap="resultMessageRelation">
+		SELECT M.ID,M.TYPE_ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.RECOMMEND,M.HOT,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND_TIME,M.TOP,M.TOP_TIME,Y.TYPE_NAME AS TYPE_NAME_,Y.ID AS ID_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE Y ON TMR.MESSAGETYPEID=Y.ID
+        LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.IMAGEID
+        WHERE M.SITE_ID=#{pd.SITEID}
+		<if test="pd.UPDATE_DESC !=null and pd.UPDATE_DESC != ''">
+			ORDER BY M.UPDATE_TIME DESC
+		</if>
+		<if test="pd.HOT_DESC !=null and pd.HOT_DESC != ''">
+		ORDER BY M.HOT DESC,M.CREATED_TIME DESC
+		</if>
+		<if test="pd.TOP_DESC !=null and pd.TOP_DESC != ''">
+		ORDER BY M.TOP DESC,M.CREATED_TIME DESC
+		</if>
+		<if test="pd.RECOMMEND_DESC !=null and pd.RECOMMEND_DESC != ''">
+		ORDER BY M.RECOMMEND DESC,M.CREATED_TIME DESC
+		</if>
+	</select>
+	<!-- 前端页面展示接口根据栏目id和资讯类型id查找资讯 -->
+	<select id="selectMessageBycolumtypeid" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.RELEASE_TIME,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,WS.ID AS contentUrlName
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID=WS.CONTENTID
+		WHERE
+		 <if test="pd.id !=null and pd.id != ''">
+			 MT.ID=#{pd.id} AND
+		 </if>
+		 TMR.COLUMID=#{pd.columId}
+		ORDER BY 
+		<if test="pd.flag !=null and pd.flag != ''">
+		 	M.SORT ASC ,
+		 </if>
+		M.CREATED_TIME DESC
+	</select>
+	
+	<!-- 前端页面展示接口根据栏目id或者资讯类型id查找资讯 -->
+	<select id="selectMessageBycolumtypeidlistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT DISTINCT WSC.SKIPPATH AS columUrlName, M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.SORT,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,
+		I2.IMGURL AS IMGURL_, I2.TITLE AS TITLE_, I2.FORDER AS FORDER_,I2.BZ,M.RELEASE_TIME,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_CONTENT AS VIDEO_CONTENT_,TMR.COLUMID,M.TYPE_NAME,TMR.MESSAGETYPEID AS TYPE_ID
+		,WS.ID AS contentUrlName
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID = M.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID = M.ID
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID=#{pd.columId}
+		<where>
+			1=1
+			<if test="pd.id !=null and pd.id != ''">
+				AND MT.ID=#{pd.id}
+			</if>
+			<if test="pd.columId !=null and pd.columId != ''">
+				AND TMR.COLUMID=#{pd.columId}
+			</if>
+			<if test="null != pd.top and '' != pd.top">
+				AND M.TOP = '1'
+			</if>
+			<if test="null != pd.hot and '' != pd.hot">
+				AND M.HOT = '1'
+			</if>
+			<if test="null == pd.top or '' == pd.top">
+				<if test="null == pd.noTop or '' == pd.noTop">
+					AND M.TOP NOT IN (1)
+				</if>
+			</if>
+			<if test="null != pd.recommend and '' != pd.recommend">
+				AND M.RECOMMEND = '1'
+			</if>
+			<if test="null == pd.recommend or '' == pd.recommend">
+				AND M.RECOMMEND NOT IN (1)
+			</if>
+			<if test="null != pd.time1 and '' != pd.time1">
+				AND M.RELEASE_TIME &gt; NOW()
+			</if>
+			<if test="null != pd.time2 and '' != pd.time2">
+				AND M.RELEASE_TIME &lt; NOW()
+			</if>
+		</where>
+		GROUP BY ID
+		<if test="null != pd.createdTime and '' != pd.createdTime">
+			ORDER BY M.CREATED_TIME DESC, I2.FORDER
+		</if>
+		<if test="null != pd.sort and '' != pd.sort">
+			ORDER BY M.SORT,I2.FORDER
+		</if>
+		<if test="null != pd.sort1 and '' != pd.sort1">
+			ORDER BY M.SORT DESC,I2.FORDER
+		</if>
+		<if test="null != pd.top and '' != pd.top">
+			ORDER BY M.TOP_TIME DESC,M.SORT,M.UPDATE_TIME DESC,I2.FORDER
+		</if>
+		<if test="null != pd.time1 and '' != pd.time1">
+			ORDER BY M.RELEASE_TIME,M.SORT
+		</if>
+		<if test="null != pd.time and '' != pd.time1">
+			ORDER BY M.RELEASE_TIME DESC
+		</if>
+	</select>
+	
+	<!-- 前端页面展示接口根据栏目id查找资讯类型id为空的资讯列表 -->
+	<select id="selectMessagelistPageNoTypeid" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,
+			M.TOP_TIME,M.TOP,I.IMGURL,M.RELEASE_TIME
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		<where>
+			TMR.MESSAGETYPEID IS NULL
+			<if test="pd.id !=null and pd.id != ''">
+				AND MT.ID=#{pd.id}
+			</if>
+			<if test="pd.columId !=null and pd.columId != ''">
+				AND TMR.COLUMID=#{pd.columId}
+			</if>
+		</where>
+		ORDER BY M.CREATED_TIME DESC, I.FORDER
+	</select>
+	
+	<!-- 前端页面通过栏目id和类型id查找资讯 -->
+		<select id="findMessageBycolumtypeId" resultMap="resultMessageImage" parameterType="cn.cebest.util.PageData">
+		SELECT P.ID,P.MESSAGE_TITLE,P.LINK,P.MESSAGE_TEMPLATE,P.STATUS,P.SURFACE_IMAGE,P.DETAIL,P.DESCRIPTION,P.RELEASE_TIME,P.KEYWORD,P.AUTHOR,P.RESOURCE,P.CREATED_TIME,P.RECOMMEND,P.HOT,P.COUNT,P.IMAGEID,P.RECOMMEND_TIME,P.TOP_TIME,P.TOP,P.IMGURL,P.video_url,P.SORT,P.num,WS.ID AS contentUrlName
+		FROM (SELECT SORT,ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,RELEASE_TIME,TOP_TIME,TOP,video_url,IMGURL,@y:=@y+1 as num
+				FROM (SELECT M.SORT,M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.RELEASE_TIME,M.TOP_TIME,M.TOP,I.IMGURL,V.VIDEO_URL AS video_url
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_VIDEO V ON M.ID=V.MASTER_ID
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE TMR.COLUMID=#{columId})N,(SELECT @y:=0)d
+											<choose>
+												<when test="sort != null and sort != ''"> ORDER BY SORT</when>
+												<otherwise>ORDER BY HOT DESC,CREATED_TIME DESC</otherwise>
+											</choose>
+											)P
+		LEFT JOIN WEB_SKIPPATH WS ON P.ID=WS.CONTENTID
+		WHERE P.num in ((SELECT N.num
+				FROM (SELECT SORT,ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,RELEASE_TIME,TOP_TIME,TOP,IMGURL,video_url,@y:=@y+1 as num
+				FROM (SELECT M.SORT,M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.RELEASE_TIME,M.TOP_TIME,M.TOP,I.IMGURL,V.VIDEO_URL AS video_url
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_VIDEO V ON M.ID=V.MASTER_ID
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE TMR.COLUMID=#{columId})N,(SELECT @y:=0)d
+											<choose>
+												<when test="sort != null and sort != ''"> ORDER BY SORT</when>
+												<otherwise>ORDER BY HOT DESC,CREATED_TIME DESC</otherwise>
+											</choose>
+											)N
+		WHERE ID=#{id}),(SELECT N.num
+				FROM (SELECT SORT,ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,RELEASE_TIME,TOP_TIME,TOP,IMGURL,video_url,@y:=@y+1 as num
+				FROM (SELECT M.SORT, M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.RELEASE_TIME,M.TOP_TIME,M.TOP,I.IMGURL,V.VIDEO_URL AS video_url
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_VIDEO V ON M.ID=V.MASTER_ID
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE TMR.COLUMID=#{columId})N,(SELECT @y:=0)d
+											<choose>
+												<when test="sort != null and sort != ''"> ORDER BY SORT</when>
+												<otherwise>ORDER BY HOT DESC,CREATED_TIME DESC</otherwise>
+											</choose>
+											)N
+		WHERE ID=#{id})-1,(SELECT N.num
+				FROM (SELECT SORT,ID,MESSAGE_TITLE,LINK,MESSAGE_TEMPLATE,STATUS,SURFACE_IMAGE,DETAIL,DESCRIPTION,KEYWORD,AUTHOR,RESOURCE,CREATED_TIME,RECOMMEND,HOT,COUNT,IMAGEID,RECOMMEND_TIME,RELEASE_TIME,TOP_TIME,TOP,IMGURL,video_url,@y:=@y+1 as num
+				FROM (SELECT M.SORT,M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.COUNT,M.IMAGEID,M.RECOMMEND_TIME,M.RELEASE_TIME,M.TOP_TIME,M.TOP,I.IMGURL,V.VIDEO_URL AS video_url
+				FROM WEB_NEWMESSAGE M
+				LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+				LEFT JOIN WEB_VIDEO V ON M.ID=V.MASTER_ID
+				LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+				LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+				WHERE TMR.COLUMID=#{columId})N,(SELECT @y:=0)d
+											<choose>
+												<when test="sort != null and sort != ''"> ORDER BY SORT</when>
+												<otherwise>ORDER BY HOT DESC,CREATED_TIME DESC</otherwise>
+											</choose>
+											)N
+		WHERE ID=#{id})+1)
+	</select>
+	<!-- 根据资讯的id查询多个视频的详细信息 -->
+	<select id="selectVideoDetail" resultType="cn.cebest.entity.system.Video">
+		SELECT V.ID,V.VIDEO_TITLE,V.VIDEO_CONTENT,V.VIDEO_URL,V.TOURL,V.VIDEO_NAME AS name
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_VIDEO V ON
+		M.ID=V.MASTER_ID
+		WHERE M.ID=#{id}
+	</select>
+	<!--动态视频和图片的更新操作开始 ****************** -->
+	<!-- 根据banner的id查询多张图片详情 -->
+	 <select id="findImagesBymessid" resultType="cn.cebest.entity.system.Image" >
+		SELECT IMAGE_ID AS imageId,TITLE AS title,IMGURL AS imgurl,TYPE AS type,BZ AS bz,TOURL AS tourl
+		FROM WEB_IMAGE 
+		WHERE MASTER_ID=#{id}
+	</select> 
+	<!-- 根据图片的id查询图片详情 -->
+	 <select id="selectImagePathByid" resultType="cn.cebest.entity.system.Image" >
+		SELECT IMAGE_ID AS imageId,TITLE AS title,IMGURL AS imgurl,TYPE AS type,BZ AS bz,TOURL AS tourl
+		FROM WEB_IMAGE 
+		WHERE IMAGE_ID=#{id}
+	</select>
+	<!--删除图片详情-->
+	<delete id="deleteImage">
+		DELETE FROM WEB_IMAGE
+		WHERE IMAGE_ID=#{id}
+	</delete>
+	<!-- 根据banner的id查询多张视频详情 -->
+	 <select id="findVideosBymessid" resultType="cn.cebest.entity.system.Video" >
+		SELECT ID AS id,VIDEO_TITLE AS video_title,VIDEO_CONTENT AS video_content,VIDEO_URL AS video_url,CREATETIME AS createtime,TOURL AS tourl
+		FROM WEB_VIDEO 
+		WHERE MASTER_ID=#{id}
+	</select> 
+	<!-- 根据视频的id查询视频详情 -->
+	 <select id="selectVideoPathByid" resultType="cn.cebest.entity.system.Video" >
+		SELECT ID AS id,VIDEO_TITLE AS video_title,VIDEO_CONTENT AS video_content,VIDEO_URL AS video_url,CREATETIME AS createtime,TOURL AS tourl
+		FROM WEB_VIDEO 
+		WHERE ID=#{id}
+	</select>
+	<!--删除视频详情-->
+	<delete id="deleteVideo">
+		DELETE FROM WEB_VIDEO
+		WHERE ID=#{id}
+	</delete>
+	<!--根据图片id更新图片-->
+	<update id="updateImage" parameterType="cn.cebest.entity.web.Banner">
+		UPDATE WEB_IMAGE
+		<set>
+			<if test="title !=null and title !='' ">TITLE=#{title},</if>
+			<if test="imgurl !=null and imgurl !=''">IMGURL=#{imgurl},</if>
+			<if test="tourl !=null and tourl !=''">TOURL=#{tourl},</if>
+			<if test="bz !=null and bz !=''">BZ=#{bz},</if>
+			<if test="forder !=null and forder !=''">FORDER=#{forder},</if>
+			<if test="name !=null and name !=''">NAME=#{name},</if>
+		</set>
+		WHERE IMAGE_ID=#{imageId}
+	</update>
+	<!--根据图片id更新视频-->
+	<update id="updateVideo" parameterType="cn.cebest.entity.web.Banner">
+		UPDATE WEB_VIDEO
+		<set>
+			<if test="video_title !=null and video_title !='' ">VIDEO_TITLE=#{video_title},</if>
+			<if test="video_url !=null and video_url !=''">VIDEO_URL=#{video_url},</if>
+			<if test="tourl !=null and tourl !=''">TOURL=#{tourl},</if>
+			<if test="video_content !=null and video_content !=''">VIDEO_CONTENT=#{video_content},</if>
+			<if test="name !=null and name !=''">VIDEO_NAME=#{name},</if>
+		</set>
+		WHERE ID=#{id}
+	</update>
+	<!--动态视频和图片的更新操作结束 -->
+	<!-- =============增加扩展字段开始 =============-->
+	<!-- 保存扩展字段 -->
+	<insert id="insertExtendWord" parameterType="pd">
+		INSERT INTO
+		WEB_CONTENT_DAYNAMIC_PROPERTY(ID,NAME,TYPE,PID,FIELDTYPE,SITEID)
+		VALUES(#{id},#{name},2,0,#{fieldtype},#{SITEID})
+	</insert>
+	<!-- 查询字段 -->
+	<select id="selectExtendWordTopList" resultType="cn.cebest.entity.system.newMessage.MessageExtendWords">
+		SELECT
+		ID,NAME,FIELDTYPE
+		FROM WEB_CONTENT_DAYNAMIC_PROPERTY
+		WHERE TYPE='2' AND SITEID=#{SITEID}
+	</select>
+	<select id="selectExtendWordlistPage" parameterType="page" resultType="pd">
+		SELECT
+		ID,NAME,FIELDTYPE
+		FROM WEB_CONTENT_DAYNAMIC_PROPERTY
+		WHERE TYPE='2' AND SITEID=#{pd.SITEID}
+	</select>
+	<!-- 根据id查询字段 -->
+	<select id="selectExtendWordById" resultType="cn.cebest.entity.system.newMessage.MessageExtendWords">
+		SELECT
+		ID,NAME,PID,FIELDTYPE
+		FROM WEB_CONTENT_DAYNAMIC_PROPERTY
+		WHERE ID=#{id}
+	</select>
+	<!-- 删除字段 -->
+	<delete id="deleteExtendWord">
+		DELETE FROM WEB_CONTENT_DAYNAMIC_PROPERTY
+		WHERE ID IN
+		<foreach collection="array" close=")" item="messageid16" open="(" separator=",">
+			#{messageid16}
+		</foreach>
+	</delete>
+	<!-- 修改字段-->
+	<update id="updateExtendWord" parameterType="pd">
+		UPDATE WEB_CONTENT_DAYNAMIC_PROPERTY
+		SET NAME=#{name},
+		FIELDTYPE=#{fieldtype}
+		WHERE ID=#{id}
+	</update>
+	<!-- =============增加扩展字段结束============== -->
+	<!-- 江心味业前端使用开始================ -->
+	<select id="selectFirstMessageId" parameterType="page" resultType="java.lang.String">
+		SELECT N.ID
+		FROM(SELECT M.ID
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		WHERE TMR.COLUMID=#{pd.id}
+		ORDER BY M.TOP DESC,M.TOP_TIME DESC,M.CREATED_TIME DESC)N LIMIT 0,1;
+	</select>
+	<select id="selectNewMessageByexcludelistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.RELEASE_TIME,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.IMAGEID,I.IMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		WHERE TMR.COLUMID=#{pd.id} AND M.ID !=#{pd.exid}
+		ORDER BY M.TOP DESC,M.TOP_TIME DESC,M.CREATED_TIME DESC
+	</select>
+	<select id="selectNewMessagelistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.RELEASE_TIME,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.IMAGEID,I.IMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		WHERE TMR.COLUMID=#{pd.id}
+		ORDER BY M.TOP DESC,M.TOP_TIME DESC,M.CREATED_TIME DESC
+	</select>
+	<!-- 汉能 -->
+	<select id="selectNewMessageByHotlistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,TMR.COLUMID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,WS.ID AS contentUrlName,WSC.SKIPPATH AS columUrlName
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WS.COLUMNID=WSC.COLUMNID
+		WHERE  (M.HOT='1' OR M.RECOMMEND='1')
+		ORDER BY M.HOT DESC,M.CREATED_TIME DESC
+	</select>
+	
+	<select id="selectColumnByColumId" parameterType="page" resultType="cn.cebest.entity.system.ColumConfig">
+ 		SELECT C.ID AS id,C.COLUM_NAME AS columName,WSC.SKIPPATH as columUrlName
+	    FROM WEB_COLUMCONFIG C
+	    LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON C.ID = WSC.COLUMNID
+	    WHERE C.PARENTID=#{pd.columId}
+ 	</select>
+ 	<select id="selectAllByColumIdlistPage" parameterType="page" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS TOURL_,WS.ID AS contentUrlName
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID=M.ID
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_SKIPPATH WS ON M.ID=WS.CONTENTID
+		WHERE TMR.COLUMID=#{pd.columId}
+		<if test="pd.RECOMMEND !=null and pd.RECOMMEND !=''">
+		   AND M.RECOMMEND=#{pd.RECOMMEND}
+		</if>
+		ORDER BY M.CREATED_TIME DESC
+	</select>
+	<!-- 江铜前端使用结束================ -->
+	
+	<!-- 根据栏目ID查询其内容  -->
+	<select id="selectIdsByColumID" parameterType="pd" resultType="String">
+		SELECT DISTINCT MESSAGEID FROM WEB_TYPE_MESSAGE_RELATION 
+		WHERE 1=1
+		<if test="columId !=null and columId !=''">
+			AND COLUMID=#{columId} 
+		</if>
+		<if test="typeId !=null and typeId !=''">
+			AND MESSAGETYPEID=#{typeId}
+		</if>
+		<if test="typeId =='-1'">
+			AND (MESSAGETYPEID IS NULL OR MESSAGETYPEID ='')
+		</if>
+	</select>
+	
+	<!-- 根据内容ID数组，查询其关联信息  -->
+	<select id="selectlistPageInfoByIdArry" parameterType="page" resultMap="resultMessageRelation">
+		SELECT
+		M.ID,M.MESSAGE_TITLE,M.IMAGEID,NT.TYPE_NAME AS TYPE_NAME_,M.CREATED_TIME,M.STATUS,M.STATUS,M.UPDATE_TIME,
+		M.TOP,M.TOP_TIME,M.RECOMMEND,M.RECOMMEND_TIME,M.HOT,M.HOT_TIME,M.SORT,
+		CC.COLUM_NAME AS COLUMN_NAME_,CC.ID AS CID_,
+		NT.ID AS ID_,NT.TYPE_NAME AS TYPE_NAME_
+		FROM (/*start*/
+			SELECT * FROM WEB_NEWMESSAGE MS WHERE 1=1
+			<if test="pd.keyword!=null and pd.keyword !=''">
+				AND MESSAGE_TITLE LIKE '%' #{pd.keyword} '%'
+			</if>
+			<if test="pd.idArry !=null and pd.idArry.length>0">
+				AND MS.ID IN 
+				<foreach collection="pd.idArry" close=")" item="messageId" open="(" separator=",">
+					'${messageId}'
+				</foreach>
+			</if>			
+		  /*end*/) M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TNR ON TNR.MESSAGEID=M.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID=TNR.COLUMID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE NT ON TNR.MESSAGETYPEID=NT.ID
+		ORDER BY M.TOP_TIME DESC,M.SORT, M.UPDATE_TIME DESC
+	</select>
+	
+	<!-- 修改推荐与置顶 -->
+	<update id="updataRecommendAndTopAndHotByIds" parameterType="cn.cebest.entity.system.newMessage.NewMessageType">
+		UPDATE WEB_NEWMESSAGE
+		<set>
+		<if test="recommend !=null and recommend !=''">
+			RECOMMEND=#{recommend},
+		</if>
+			RECOMMEND_TIME=#{recommend_time},
+		<if test="hot !=null and hot !=''">
+			HOT=#{hot},
+		</if>	
+			HOT_TIME=#{hot_time},
+		<if test="top !=null and top !=''">
+			TOP=#{top},
+		</if>	
+			TOP_TIME=#{top_time}
+		</set>
+		WHERE ID  IN
+		<foreach collection="messageRelevantIdList" item="messageid17" close=")" open="(" separator=",">
+			#{messageid17}
+		</foreach> 
+	</update>
+	
+	<!-- 保存图片 -->
+	<insert id="saveContentImage" parameterType="pd">
+		INSERT INTO WEB_CONTENT_IMAGE(
+		ID,IMAGE_ID
+		) values (#{messageImageId},#{messageId})
+	</insert>
+	<!--保存视频 -->
+	<select id="saveContentVideo" parameterType="pd">
+		INSERT INTO WEB_CONTENT_VIDEO(ID,VIDEO_ID)
+		VALUES(#{messageVideoId},#{messageId})
+	</select>
+	
+	<!--  根据 栏目Id Or 分类Id or 两者一起 获取推荐资讯列表-->
+	<select id="selectRecommendMessageByColumnIdOrTypeId" parameterType="pd"  resultMap="resultMessageRelation">
+		SELECT
+		M.ID,M.MESSAGE_TEMPLATE,MTY.ID AS ID_,M.LINK,M.DESCRIPTION,M.KEYWORD,M.STATUS,M.MESSAGE_TITLE,M.HOT,M.RECOMMEND,M.IMAGEID,M.CREATED_TIME,MT.TXT,M.DETAIL,M.VALUETEXT,M.AUTHOR,M.RESOURCE,
+		I.TITLE,I.IMGURL AS IMGURL,I.IMAGE_ID AS IMAGE_ID,MTY.ID AS TYPE_ID,MTY.TYPE_NAME AS TYPE_NAME_,T.TEM_NAME,M.RELEASE_TIME,TMR.COLUMID
+		FROM WEB_NEWMESSAGE M
+		INNER JOIN WEB_RECOMMEND TPR ON TPR.CONTENT_ID=M.ID
+		LEFT JOIN WEB_TXT MT ON M.ID=MT.CONTENT_ID
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MTY ON MTY.ID=TMR.MESSAGETYPEID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TEMPLATE T ON M.MESSAGE_TEMPLATE=T.ID
+		<where>
+			1=1
+			<if test="columId !=null and columId !=''">
+				and TPR.COLUM_ID=#{columId}
+			</if>
+			<if test="typeId !=null and typeId !=''">
+				and TPR.TYPE_ID=#{typeId}
+			</if>
+			AND M.STATUS = '1'
+		</where>
+		ORDER BY M.CREATED_TIME DESC,M.UPDATE_TIME DESC,IF(ISNULL(M.SORT),1,0),M.SORT,I.FORDER ASC,M.RECOMMEND_TIME DESC
+		
+	</select>
+	
+	<update id="updateSort" parameterType="pd">
+		UPDATE WEB_NEWMESSAGE SET SORT = #{sort}
+		WHERE ID = #{id}
+	</update>
+	<select id="selectProductsByColumnIdslistPage" parameterType="page" resultType="cn.cebest.entity.system.newMessage.NewMessage">
+		SELECT
+			M.ID
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON M.ID = TMR.MESSAGEID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID = TMR.COLUMID
+		WHERE M.SITE_ID = #{pd.siteId} AND C.ID = #{pd.columnId}
+		ORDER BY M.SORT
+	</select>
+	<select id="selectProductsByColumnIdsToplistPage" parameterType="page" resultType="cn.cebest.entity.system.newMessage.NewMessage">
+		SELECT
+			M.ID
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON M.ID = TMR.MESSAGEID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID = TMR.COLUMID
+		LEFT JOIN WEB_COLUMCONFIG C2 ON C.PARENTID = C2.ID
+		WHERE M.SITE_ID = #{pd.siteId} AND C2.ID = #{pd.columnId}
+		ORDER BY M.SORT
+	</select>
+	<select id="selectProductsByColumnIds" resultMap="resultMessageImage">
+		SELECT M.ID,M.MESSAGE_TITLE,M.LINK,M.MESSAGE_TEMPLATE,M.STATUS,M.SURFACE_IMAGE,M.DETAIL,M.DESCRIPTION,M.SORT,M.KEYWORD,M.AUTHOR,M.RESOURCE,M.CREATED_TIME,M.RECOMMEND,M.HOT,M.IMAGEID,M.RECOMMEND_TIME,M.TOP_TIME,M.TOP,I.IMGURL,
+		I2.IMGURL AS IMGURL_, I2.TITLE AS TITLE_, I2.FORDER AS FORDER_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=M.SURFACE_IMAGE
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON TMR.MESSAGEID=M.ID
+		LEFT JOIN WEB_NEWMESSAGE_TYPE MT ON MT.ID=TMR.MESSAGETYPEID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID = M.ID
+		WHERE M.ID IN
+		<foreach collection="array" item="mid" open="(" separator="," close=")">
+			#{mid}
+		</foreach>
+		ORDER BY M.SORT, I2.FORDER
+	</select>
+	<select id="selectMsgCount" parameterType="page" resultType="Integer">
+		SELECT
+			COUNT(1)
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON M.ID = TMR.MESSAGEID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID = TMR.COLUMID
+		WHERE M.SITE_ID = #{pd.siteId} AND C.ID = #{pd.columnId}
+		ORDER BY M.SORT
+	</select>
+	<select id="selectMsgCountTop" parameterType="page" resultType="Integer">
+		SELECT
+			COUNT(1)
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_TYPE_MESSAGE_RELATION TMR ON M.ID = TMR.MESSAGEID
+		LEFT JOIN WEB_COLUMCONFIG C ON C.ID = TMR.COLUMID
+		LEFT JOIN WEB_COLUMCONFIG C2 ON C.PARENTID = C2.ID
+		WHERE M.SITE_ID = #{pd.siteId} AND C2.ID = #{pd.columnId}
+		ORDER BY M.SORT
+	</select>
+	<resultMap type="cn.cebest.entity.system.newMessage.NewMessage" id="productDetailMap">
+		<id column="ID" property="id"/>
+		<result column="MESSAGE_TITLE" property="message_title"/>
+		<result column="DETAIL" property="detail"/>
+		<result column="DESCRIPTION" property="description"/>
+		<result column="AUTHOR" property="author"/>
+		<result column="RESOURCE" property="resource"/>
+		<result column="CREATED_TIME" property="created_time"/>
+		<association javaType="cn.cebest.entity.system.Image" property="image">
+			<id column="SID" property="imageId"/>
+            <result column="SIMGURL" property="imgurl"/>
+		</association>
+		<collection ofType="cn.cebest.entity.system.Image" property="pictures">
+			<id column="IID_" property="imageId"/>
+            <result column="IIMGURL_" property="imgurl"/>
+            <result column="IFORDER_" property="forder"/>
+            <result column="ITITLE_" property="title"/>
+		</collection>
+	</resultMap>
+	<select id="selectProductDetailByProId" parameterType="pd" resultMap="productDetailMap">
+		SELECT
+			M.ID, M.MESSAGE_TITLE, M.DETAIL, M.DESCRIPTION, M.AUTHOR, M.RESOURCE, M.CREATED_TIME,
+			I1.IMAGE_ID AS SID, I1.IMGURL AS SIMGURL,
+			I2.IMAGE_ID AS IID_, I2.IMGURL AS IIMGURL_, I2.FORDER AS IFORDER_, I2.TITLE AS ITITLE_
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I1 ON M.SURFACE_IMAGE = I1.IMAGE_ID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID = M.ID
+		WHERE M.SITE_ID = #{siteId} AND M.ID = #{proId}
+		ORDER BY I2.FORDER
+	</select>
+	<select id="selectRelProByProId" parameterType="pd" resultMap="productDetailMap">
+		SELECT	
+			M.ID, M.SITE_ID, M.MESSAGE_TITLE, M.AUTHOR,
+			I1.IMGURL AS SIMGURL
+		FROM WEB_NEWMESSAGE M
+		LEFT JOIN WEB_IMAGE I1 ON M.SURFACE_IMAGE = I1.IMAGE_ID
+		LEFT JOIN WEB_NEWMESSAGE_RELEVANT MR ON M.ID = MR.RELEVANTID
+		WHERE M.SITE_ID = #{siteId} AND MR.NEWMESSAGEID = #{proId}
+		ORDER BY M.SORT
+		LIMIT 0, 3 
+	</select>
+	
+	<!-- 保存资讯url信息 -->
+	<insert id="insertTypeMessageUrlNameColumRelation" parameterType="pd">
+		INSERT INTO WEB_SKIPPATH(CONTENTID,COLUMNID,TYPEID) VALUES(#{id},#{columnid},#{messagetypeid})
+	</insert>
+	
+	<!-- 根据资讯的id查询图片的路径 -->
+	<select id="selectMessageUrlName" parameterType="String" resultType="pd">
+		SELECT MESSAGEID AS id,MESSAGETYPEID AS messagetypeid,COLUMID AS columnid
+		FROM WEB_TYPE_MESSAGE_RELATION 
+		WHERE MESSAGEID = #{id}
+	</select>
+	
+	<!--根据id查询-->
+	<select id="findMessageByTypeOrColumnid" parameterType="pd" resultMap="resultMessageRelation">
+		SELECT
+			M.ID,
+			M.MESSAGE_TEMPLATE,
+			M.LINK,
+			M.DESCRIPTION,
+			M.KEYWORD,
+			M.STATUS,
+			M.MESSAGE_TITLE,
+			M.HOT,
+			M.RECOMMEND,
+			M.IMAGEID,
+			M.CREATED_TIME,
+			M.DETAIL,
+			M.VALUETEXT,
+			M.AUTHOR,
+			M.RESOURCE,
+			WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName
+		FROM WEB_NEWMESSAGE M
+			LEFT JOIN WEB_SKIPPATH WS ON WS.CONTENTID = M.ID
+			LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WS.COLUMNID = WSC.COLUMNID
+		<where>
+			1=1
+			<if test="SITEID !=null and SITEID !=''">and M.SITE_ID=#{SITEID}</if>
+			<if test="contentId !=null and contentId !=''">and M.ID=#{contentId}</if>
+			<if test="columnId !=null and columnId !=''">and WS.COLUMNID=#{columnId}</if>
+			<if test="typeId !=null and typeId !=''">and WS.TYPEID=#{typeId}</if>
+		</where>
+	</select>
+</mapper>

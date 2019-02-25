@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ie ie6 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 7]><html class="ie ie7 lt8 lt9 lt10"><![endif]-->
+<!--[if IE 8]><html class="ie ie8 lt9 lt10"><![endif]-->
+<!--[if IE 9]><html class="ie ie9 lt10"><![endif]-->
+<!--[if (gt IE 9) | !(IE)]><!-->
+<html>
+	<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="guanwang" />
+	<meta name="keywords" content="${seoKeywords!}" />
+	<meta name="description" content="${seoDescription!}" />
+	<meta name="renderer" content="webkit" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" name="viewport" />
+	<title>${seoTitle!}</title>
+	<link rel="shortcut icon" href="../../staticRelease/img/favicon.ico" type="image/x-icon" />
+	<script>
+	if( /*@cc_on!@*/ false && document.documentMode === 10) document.documentElement.className += ' ie10';
+</script>
+<script>
+	if( /*@cc_on!@*/ false && document.documentMode === 11) document.documentElement.className += ' ie11';
+</script>
+<!-- 添加IE10+Class -->
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/animate.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/idangerous.swiper.css" />
+<link rel="stylesheet" href="../../staticRelease/css/common.css">
+<link type="text/css" rel="stylesheet" href="../../staticRelease/css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/jquery.gridquote.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/index.css" />
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/jquery.bxslider.css"/>
+<link rel="stylesheet" type="text/css" href="../../staticRelease/css/swiper.fade.css"/>
+
+<!--[if lt IE 9]>
+<script src="../../staticRelease/js/html5.js"></script>
+<script src="../../staticRelease/js/respond.src.js"></script>
+<![endif]-->
+<!--公用文件 END-->
+<script type="text/javascript" src="../../staticRelease/js/jquery.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/wow.min.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/cookie.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/idangerous.swiper.min.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/image-scale.js"></script>
+<script src="../../staticRelease/js/jquery.bxslider.js" type="text/javascript" charset="utf-8"></script>
+<!--<script type="text/javascript" src="../../staticRelease/js/base.js"></script>-->
+<script src="../../staticRelease/js/jquery.gridquote.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../staticRelease/js/swiper.fade.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	$(function() {
+		$(document).on('click', '.browserupgrade .clock', function() {
+			$('.browserupgrade').hide();
+			$('.header').addClass('lt9_header')
+		});
+	})
+</script>
+<template id="typeList" style="display:none">
+	<div class="menu_inx fl">
+		<a href="${autoPath}/channel/solution.html?typeId={id}">
+			<div class="ment_clc_t wow fadeIn types" data-wow-delay="0s" data-wow-duration="1s">
+				<div class="img_w" style="background-image: url(${autoPath}/staticRelease/img/menu/menu_on{index}.png);">
+					<img class="scale" src="${autoPath}/staticRelease/img/menu/menu{index}.png"/>
+				</div>
+				<p class="menu_bt fnt_20 mt_25">{name}</p>
+				<img class="down" src="${autoPath}/staticRelease/img/down.png"/>
+			</div>
+		</a>
+	</div>
+ </template>
+ <template id="bannerList" style="display:none">
+ 	<div class="swiper-slide">
+		<div class="slideBox prz">
+			<img src="${imgPath}{imageUrl}" alt="">
+			<div class="slideConBox pra">
+				<div class="">
+					<p class="fnt_52 til">{title}</p>
+					<p class="desc fnt_34">{subhead}</p>
+					<p class="btn"><a href="{toUrl}" class="fnt_16 btn1">{bz}&nbsp&nbsp</a></p> 
+				</div>
+			</div>
+		</div>
+	</div>
+ </template>
+ <template id="smallList" style="display:none">
+ 	<div class="swiper-slide" style="background: {COLOR};">
+		<div class="slideBox">
+			<div class="img_w" style="background-image: url(${imgPath}{IMGURL});"></div>
+			<div class="slideConBox">
+				<div class="wrap">
+					<p class="fnt_52 til">{TITLE}</p>
+					<p class="desc fnt_30">{SUBHEAD}</p>
+					 	<p class="btn"><a href="{TOURL}" class="fnt_18 btn1">{BZ}&nbsp&nbsp</a></p> 
+				</div>
+			</div>
+		</div>
+	</div>
+ </template>
+</head>
+
+<body>
+		<!--[if lt IE 9]>
+  <p class="browserupgrade">您在使用&nbsp;<strong></strong>&nbsp;标准浏览本网站。请 <a href="http://browsehappy.com/" target="_blank">升级Internet Explorer浏览器</a> 来更好的体验本网站.</p>
+<![endif]-->
+
+<!--header begin-->
+<#include "../htmlFront/include/header.html">
+<!--header end-->
+<div class="bannerBox prz">
+	<div class="swiper-container">
+		<div class="swiper-wrapper" id="banners">
+		
+		<!-- <@banner_list currentId="87a2cdbfb8344f8a9822e02aea60bfe8" sort="sort">
+			<#if out_list?? && out_list?size gt 0>
+				<#list out_list as out>
+					<div class="swiper-slide">
+						<div class="slideBox prz">
+							<img src="${imgPath}${out.imageUrl!}" alt="">
+							<div class="slideConBox pra">
+								<div class="">
+									<p class="fnt_52 til">${out.title!}</p>
+									<p class="desc fnt_34">${out.subhead!}</p>
+									<#if out.toUrl?? && out.toUrl != "" && out.bz?? && out.bz != "">
+									 	<p class="btn"><a href="${out.toUrl!}" class="fnt_16 btn1">${out.bz!}&nbsp&nbsp</a></p> 
+									</#if>
+								</div>
+							</div>
+						</div>
+					</div>
+				</#list>
+			</#if>
+		</@banner_list> -->
+		
+			
+		</div>
+	</div>
+	<div class="paginationBox pra">
+		<div class="wrap">
+			<div class="pagination"></div>
+		</div>
+	</div>
+</div>
+
+<div class="small_banner">
+	<div class="swiper-container">
+		<div class="swiper-wrapper" id="smallbanners">
+			<!-- <@pmm_content_image_list currentId="111ae37e76f84cedb4210e9064db668a" sort="sort">
+				<#if out_list?? && out_list?size gt 0>
+					<#list out_list as image>
+						<div class="swiper-slide" style="background: ${image.COLOR!};">
+							<div class="slideBox">
+								<div class="img_w" style="background-image: url(${imgPath}${image.IMGURL!});"></div>
+								<div class="slideConBox">
+									<div class="wrap">
+										<p class="fnt_52 til">${image.TITLE!}</p>
+										<p class="desc fnt_30">${image.SUBHEAD!}</p>
+										<#if image.tourl?? && image.tourl != "" && image.bz?? && image.bz != "">
+										 	<p class="btn"><a href="${image.TOURL!}" class="fnt_18 btn1">${image.BZ!}&nbsp&nbsp</a></p> 
+										</#if>
+									</div>
+								</div>
+							</div>
+						</div>
+					</#list>
+				</#if>
+			</@pmm_content_image_list> -->
+		</div>
+	</div>
+</div>
+
+
+	<div class="menu_tab pt_75 pb_75">
+	<div class="bt">
+		<p class="fnt_32 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">应用领域</p>
+		<i class="mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s"></i>
+	</div> 			
+  			
+	<div class="menu_tab_n pt_75 pb_75">
+		<div class="menu_list pt_30">
+			<div class="menu_list_t fa" id="types">
+				
+			</div>
+		</div>
+	</div>
+	<p class="moreBtn">
+		<a href="${autoPath}/channel/solution" class="fnt_14">更多应用领域</a>
+	</p>
+</div>
+
+
+<div class="hot_pro pt_75 pb_75">
+	<div class="bt">
+		<p class="fnt_32 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">热门方案</p>
+		<i class="mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s"></i>
+	</div>
+	<div class="swiper-container2 hot_pro_n pt_55 wow fadeIn" data-wow-delay="0.5s" data-wow-duration="1s">
+	  <ul class="swiper-wrapper">
+		  <@pmm_content_list currentId="0ac6d48dc93b42a499ef8ab9732e78b8" hot="1">
+		  		<#if out_list?? && out_list?size gt 0>
+		  			<#list out_list as list>
+				      <li class="swiper-slide">
+				      	<a href="${autoPath}/skippath/${list.columUrlName!}/${list.columUrlName!}_${list.contentUrlName!}" class="hot_pro_inx pb_40">
+				      		<div class="img_w">
+				      			<img class="" src="${imgPath}${(list.surface_imageurl2)!}"/>
+					      	</div>
+					      	<p class="p1 fnt_20 line_height21 pt_30">${list.contentTitle!}</p>
+					      	<p class="p2 fnt_16">${list.contentSummary!}</p>
+				      	</a>
+				      </li>
+		  			</#list>
+		  		</#if>
+		   </@pmm_content_list>
+	   </ul>
+	  <div class="swiper-button-prev swiper_btn"></div>
+      <div class="swiper-button-next swiper_btn"></div>
+	</div>
+	<div class="clear"></div>
+	<p class="moreBtn pt_85">
+		<a href="${autoPath}/channel/solution" class="fnt_14">更多热门方案</a>
+	</p>
+</div>
+
+<div class="partner pt_75 pb_75">
+	<div class="bt">
+		<p class="fnt_32 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">合作伙伴</p>
+		<i class="mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s"></i>
+		<p class="p2 fnt_18 mt_20 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">致力于帮助合作伙伴构建电源与传感器业务的生态圈网络平台</p>
+	</div>
+	<p class="moreBtn mt_40 wow fadeInUp" data-wow-delay="1s" data-wow-duration="1s">
+		<a href="${autoPath}/channel/partner" class="fnt_14">我要加入</a>
+	</p>
+	<div class="partner_c pt_55 pb_55">
+	<@pmm_content_list currentId="3411b39e8012421d8d4418a7f8dc16cf" sort="sort">
+		<#if out_list?? && out_list?? && out_list?size gt 0>
+			<#if out_list?? && out_list[1]?? && out_list[1]?size gt 0>
+				<#list out_list[1].fileds as filed>
+					<#if filed_index lt 4>
+						<div class="partner_c_inx fl pt_30 pb_40 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s">
+							<img src="${autoPath}/staticRelease/img/right.png"/>
+							<p class="fnt_16 mt_55 p1">${filed.name}</p>
+							<p class="fnt_14 mt_10 p2">${filed.value}</p>
+						</div>
+					</#if>
+				</#list>
+			</#if>
+		</#if>
+	</@pmm_content_list>
+	<div class="swiper-container3 partner_b pt_30 pb_30 wow fadeIn" data-wow-delay="1s" data-wow-duration="1s">
+	  <div class="swiper-wrapper">
+	  <@pmm_content_list currentId="fb65fe99fc574aa4844646d83bc428a0" showCount="10">
+	  		<#if out_list?? && out_list?size gt 0>
+	  			<#list out_list as list>
+				    <a href="${autoPath}/skippath/${list.columUrlName!}/${list.columUrlName!}_${list.contentUrlName!}" class="swiper-slide">
+				    	<img src="${imgPath}${(list.surface_imageurl)!}"/>
+				    </a>
+	  			</#list>
+	  		</#if>
+	  </@pmm_content_list>
+	  </div>
+	</div>
+</div>
+
+<div class="index_new_list pt_75 pb_60">
+	<div class="index_new_con">
+		<div class="bt">
+			<p class="fnt_32 wow fadeInUp" data-wow-delay="0s" data-wow-duration="1s">新闻速递</p>
+			<i class="mt_15 wow fadeInUp" data-wow-delay="0.5s" data-wow-duration="1s"></i>
+		</div>
+	</div>
+	<div class="new_li pt_55 wow fadeIn" data-wow-delay="0.5s" data-wow-duration="1s">
+	<@pmm_newmessage_list columId="8e7f3bd84df041a28cab47035c91ddb3" hot="1" noTop="1" showCount="4" >
+		<#if out_list?? && out_list?size gt 0>
+			<#list out_list as message>
+				<#if message.link?? && message.link != "">
+					<#if message.link?contains("https")>
+						<a href="${message.link!}" class="new_inx fl">
+							<div class="img_w">
+								<img class="scale" src="${imgPath}${(message.image.imgurl)!}"/>
+							</div> 
+							<p class="fnt_16 mt_20">${message.message_title!}！ </p>
+						</a>
+					<#else>
+						<a href="https://${message.link!}" class="new_inx fl">
+							<div class="img_w">
+								<img class="scale" src="${imgPath}${(message.image.imgurl)!}"/>
+							</div> 
+							<p class="fnt_16 mt_20">${message.message_title!}！ </p>
+						</a>
+					</#if>
+				<#else>
+					<a href="${autoPath}/skippath/${message.columUrlName!}/${message.columUrlName!}_${message.contentUrlName!}" class="new_inx fl">
+						<div class="img_w">
+							<img class="scale" src="${imgPath}${(message.image.imgurl)!}"/>
+						</div> 
+						<p class="fnt_16 mt_20">${message.message_title!}！ </p>
+					</a>
+				</#if>
+			</#list>
+		</#if>
+	</@pmm_newmessage_list>
+		<div class="clear"></div>
+		
+			<p class="moreBtn pt_85">
+				<a href="${autoPath}/channel/news" class="fnt_14">了解更多</a>
+			</p>
+	</div>
+</div>
+<!--footer begin-->
+<#include "../htmlFront/include/footer.html">
+<!--footer end-->
+<!--<script>
+	$(function(){
+		$('.quote').css('display','none');
+		$('.menu_list_index').each(function(){
+			var menu_le = $(this).offset().left;
+			$(this).children('.quote').css("left",-menu_le);
+		});
+		$('.menu_list_index').click(function(){
+				$(this).find('.quote').css("display","block");
+				var quote_hei=$(this).find('.quote').height();
+				$('.menu_list_index').css("padding-bottom",quote_hei)
+		})
+	})
+</script>-->
+<script type="text/javascript" src="../../staticRelease/js/base.js"></script>
+<script type="text/javascript" src="../../staticRelease/js/index.js"></script>
+<script>
+	//wow.js
+	new WOW().init();
+	//图片自适应
+	$(function(){
+		findIndexBanner();
+		getTypeList();
+		$('img.scale').imageScale();
+	});
+	//banner
+	setTimeout(function() {
+		var _origin = window.location.origin;
+		var _pathname = window.location.pathname.split("/")[1];
+
+		//banner区js
+		var mySwiper = new Swiper('.bannerBox .swiper-container', {
+			autoplay: 6000, //可选选项，自动滑动
+			loop: true, //可选选项，开启循环
+			speed: 1000,
+			calculateHeight: true,
+			pagination: '.bannerBox .pagination',
+			paginationClickable: true,
+			onSwiperCreated: function(swiper) {
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .til').animate({
+					'opacity': "1",
+					'left': 0
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .desc').animate({
+					'opacity': "1",
+					'bottom': 0
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .btn').delay(300).animate({
+					'opacity': "1",
+					'bottom': 0
+				}, 1000);
+				$('.bannerBox .swiper-slide-active').find('.slideBox').addClass('img_scale')
+			},
+			onSlideChangeEnd: function(swiper) {
+				$('.bannerBox .swiper-slide-active').siblings().find('.slideConBox .til').animate({
+					'opacity': "0",
+					'left': 30
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .til').animate({
+					'opacity': "1",
+					'left': 0
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').siblings().find('.slideConBox .desc').animate({
+					'opacity': "0",
+					'bottom': -30
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .desc').animate({
+					'opacity': "1",
+					'bottom': 0
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').siblings().find('.slideConBox .btn').animate({
+					'opacity': "0",
+					'bottom': -30
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').find('.slideConBox .btn').delay(300).animate({
+					'opacity': "1",
+					'bottom': 0
+				}, 1000)
+				$('.bannerBox .swiper-slide-active').siblings().find('.slideBox').removeClass('img_scale')
+				$('.bannerBox .swiper-slide-active').find('.slideBox').addClass('img_scale')
+			}
+		});
+		$('.bannerBox .swiper-container').on('mouseenter', function() {
+			mySwiper.stopAutoplay();
+		})
+		$('.bannerBox .swiper-container').on('mouseleave', function() {
+			mySwiper.startAutoplay();
+		})
+		
+		
+		$(function(){
+			var mySwiper = new Swiper('.small_banner .swiper-container',{   
+								autoplay: 6000, //可选选项，自动滑动
+			     			fade: true,
+          		loop: true,
+          		onFirstInit: function(swiper){
+          			var act_hei2 =$('.small_banner .swiper-slide:nth-last-child(1)').height();
+					$('.small_banner .swiper-container').css('height',act_hei2);
+			    },
+          		onSlideChangeStart: function(swiper){
+          			var act_hei =$('.small_banner .swiper-slide-active').height();
+			      $('.small_banner .swiper-container').css('height',act_hei);
+			    },
+			}); 
+			
+		});
+	},150);
+	
+	function findIndexBanner(){
+		var type;
+		var currentId;
+		if((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+			type = "phone";
+			currentId = "111ae37e76f84cedb4210e9064db668a";
+		}else {
+			type="PC"
+			currentId = "87a2cdbfb8344f8a9822e02aea60bfe8";
+		}
+		$.ajax({
+			type : "POST",
+			url : "/index/findIndexBanner",
+			data:{
+				"currentId" : currentId,
+				"type":type
+			},
+			dataType : "json",
+			success : function(data) {
+				if(type == 'PC'){
+					$(data.data.list).each(function(index){
+						var bannerList = $("#bannerList").html();
+						bannerList = bannerList.replace("{imageUrl}",this.imageUrl);
+						bannerList = bannerList.replace("{title}",this.title);
+						bannerList = bannerList.replace("{subhead}",this.subhead);
+						if(this.toUrl != null && this.toUrl != null && this.bz != null && this.bz !=""){
+							bannerList = bannerList.replace("{toUrl}",this.toUrl);
+							bannerList = bannerList.replace("{bz}",this.bz);
+						}else{
+							bannerList = bannerList.replace("{toUrl}","");
+							bannerList = bannerList.replace("{bz}","");
+						}
+						$("#banners").append(bannerList);
+					});
+				}else{
+					$(data.data.list).each(function(index){
+						var bannerList = $("#smallList").html();
+						bannerList = bannerList.replace("{IMGURL}",this.IMGURL);
+						bannerList = bannerList.replace("{COLOR}",this.COLOR);
+						bannerList = bannerList.replace("{TITLE}",this.TITLE);
+						bannerList = bannerList.replace("{SUBHEAD}",this.SUBHEAD);
+						if(this.BZ != null && this.BZ !=""){
+							bannerList = bannerList.replace("{BZ}",this.BZ);
+						}else{
+							bannerList = bannerList.replace("{BZ}","");
+						}
+						$("#smallbanners").append(bannerList);
+					});
+				}
+			}// end success
+			
+		});//ajax end
+	}
+	
+	function getTypeList(){
+		$.ajax({
+			type : "POST",
+			url : "/productfront/findTypeListById",
+			data:{
+				"columId" : '0ac6d48dc93b42a499ef8ab9732e78b8'
+			},
+			async:false,
+			dataType : "json",
+			success : function(data) {
+				$(data.list).each(function(index){
+					if(index==0){
+						$(this.childList).each(function(i){
+							if(i<10){
+								var typeList = $("#typeList").html();
+								typeList = typeList.replace("{id}",this.id);
+								typeList = typeList.replace("{name}",this.name);
+								typeList = typeList.replace("{index}",(i+1));
+								typeList = typeList.replace("{index}",(i+1));
+								$("#types").append(typeList);
+							}
+						})
+					}
+				});
+				$("#types").append('<div class="clear"></div>');
+			}// end success
+			
+		});//ajax end
+	}
+	
+</script>
+<!--bxslider轮播配置-->
+	<script type="text/javascript">
+		function swiper() {
+			var slidesPerView;
+			if ($(window).width()>640) {
+				slidesPerView = 2;
+			} else{
+				slidesPerView = 1;
+			}
+		  var mySwiper = new Swiper('.swiper-container2',{
+		    loop: true,
+		    slidesPerView : slidesPerView,
+		    autoplay : 5000,
+		    speed:1000
+		  });  
+		  $('.swiper-button-prev').on('click', function(e){
+		    e.preventDefault()
+		    mySwiper.swipePrev()
+		  })
+		  $('.swiper-button-next').on('click', function(e){
+		    e.preventDefault()
+		    mySwiper.swipeNext()
+		  })
+		  var slidesPerView2;
+		  if ($(window).width()>1024) {
+				slidesPerView2 = 5;
+			} else if($(window).width()<=1024&&$(window).width()>768){
+				slidesPerView2 = 4;
+			} else if($(window).width()<=768&&$(window).width()>580){
+				slidesPerView2 = 3;
+			}else if($(window).width()<=580){
+				slidesPerView2 = 3;
+			}
+			
+		  var mySwiper2 = new Swiper('.swiper-container3',{
+		    loop: true,
+		    slidesPerView : slidesPerView2,
+		    autoplay : 3000,
+		    speed:1000
+		  }); 
+		}
+		$(function(){
+			swiper();
+		})
+	</script>
+	
+	
+	
+	
+	
+	<!--应用领域区域-->
+	
+	<script type="text/javascript">
+				//移入效果
+//			$('.menu_inx').mouseover(function(){
+//				var lit_hei = $(this).children('.menu_inx_list').outerHeight();
+//				$(this).children('.menu_inx_list').stop().fadeToggle(500);
+//				$(this).css('padding-bottom',lit_hei);
+//			});
+//			$('.menu_inx').mouseout(function(){
+//				$(this).children('.menu_inx_list').stop().fadeToggle(100);
+//				$(this).css('padding-bottom',0);
+//			});	
+			
+			
+			//点击效果
+			
+			
+			</script>
+</body>
+</html>

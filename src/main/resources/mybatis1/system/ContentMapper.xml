@@ -1,0 +1,1917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContentMapper">
+	<resultMap id="BaseResultMap" type="cn.cebest.entity.system.ColumConfig">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="COLUM_NAME" property="columName" jdbcType="VARCHAR" />
+		<result column="COLUM_URLPATH" property="columUrlpath"
+			jdbcType="VARCHAR" />
+		<result column="COLUM_DISPLAY" property="columDisplay"
+			jdbcType="VARCHAR" />
+		<result column="PARENTID" property="parentid" jdbcType="VARCHAR" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+		<result column="SITEID" property="siteid" jdbcType="VARCHAR" />
+		<result column="COLUM_TEMPLATETID" property="columTemplatetid"
+			jdbcType="VARCHAR" />
+		<result column="COLUM_SUBNAME" property="columSubname"
+			jdbcType="VARCHAR" />
+		<result column="COLUM_IMAGE" property="columImage" jdbcType="VARCHAR" />
+		<result column="COLUM_DESC" property="columDesc" jdbcType="VARCHAR" />
+		<result column="OUT_URL" property="outUrl" jdbcType="VARCHAR" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+		<association property="template" resultMap="TemplateMap" />
+	</resultMap>
+
+	<resultMap id="TemplateMap" type="cn.cebest.entity.system.Template">
+		<id column="TEM_ID" jdbcType="VARCHAR" property="id" />
+		<result column="TEM_NAME" jdbcType="VARCHAR" property="temName" />
+		<result column="TEM_FILEPATH" jdbcType="VARCHAR" property="temFilepath" />
+		<result column="TEM_FILENAME" jdbcType="VARCHAR" property="temFilename" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="TEM_TYPE" jdbcType="VARCHAR" property="temType" />
+		<result column="TEM_IMAGEPATH" jdbcType="VARCHAR" property="temImagepath" />
+	</resultMap>
+
+	<resultMap type="cn.cebest.entity.system.content.Content" id="detailAndImgRelevantList">
+		<id column="id" property="id" />
+		<result column="contentTitle" property="contentTitle" />
+		<result column="contentWbUrl" property="contentWbUrl" />
+		<result column="contentSummary" property="contentSummary" />
+		<result column="contentKeyWords" property="contentKeyWords" />
+		<result column="contentStatus" property="contentStatus" />
+		<result column="typeId" property="typeId" />
+		<result column="typeName" property="typeName" />
+		<result column="typeCode" property="typeCode" />
+		<result column="source" property="source" />
+		<result column="detailTitle" property="detailTitle" />
+		<result column="createdTime" property="createTime" />
+		<result column="releaseTime" property="releaseTime" />
+		<result column="pv" property="pv" />
+		<result column="shareCount" property="shareCount" />
+		<result column="contentTxt" property="contentTxt" />
+		<result column="columconfigId" property="columconfigId" />
+		<result property="sort" column="SORT"/>
+		<result column="contentTemplatetId" property="contentTemplatetId" />
+		<result column="contentUrlName" property="contentUrlName" />
+		<result column="columUrlName" property="columUrlName" />
+		<collection property="contentTypeList" ofType="cn.cebest.entity.system.content.ContentType">
+			<id column="typeId_" property="id" />
+			<result column="contentTypeName" property="typeName" />
+			<result column="contentTypePid" property="pId" />
+		</collection>
+		<collection property="imageList" column="imgId" javaType="ArrayList"
+			ofType="cn.cebest.entity.system.Image">
+			<id column="imgId" property="imageId" />
+			<result column="imgurl" property="imgurl" />
+		</collection>
+		<collection property="contentRelevantList" column="contentId"
+			ofType="cn.cebest.entity.system.content.Content" javaType="ArrayList">
+			<id column="contentId" property="id" />
+			<result column="contentTitle" property="contentTitle" />
+			<result column="contentWbUrl" property="contentWbUrl" />
+			<result column="contentSummary" property="contentSummary" />
+			<result column="contentKeyWords" property="contentKeyWords" />
+			<result column="createdTime" property="createTime" />
+			<result column="contentStatus" property="contentStatus" />
+		</collection>
+	</resultMap>
+	<resultMap id="SeoMap" type="cn.cebest.entity.system.Seo">
+	   <id column="SEO_ID" jdbcType="VARCHAR" property="id" />
+	   <result column="SEO_TITLE" jdbcType="VARCHAR" property="seoTitle" />
+	   <result column="SEO_KEYWORDS" jdbcType="VARCHAR" property="seoKeywords" />
+	   <result column="SEO_DESCRIPTION" jdbcType="VARCHAR" property="seoDescription" />
+	   <result column="SEO_TYPE" jdbcType="VARCHAR" property="seoType" />
+	   <result column="MASTER_ID" jdbcType="VARCHAR" property="masterId" />
+	 </resultMap>
+	<!-- begin wzd -->
+	<resultMap type="cn.cebest.entity.system.content.Content" id="resultContent">
+		<id property="id" column="ID" />
+		<result property="friend" column="FRIEND" />
+		<result property="programme" column="PROGRAMME" />
+		<result property="contentTitle" column="CONTENT_TITLE" />
+		<result property="subtitle" column="SUBTITLE" />
+		<result property="contentWbUrl" column="CONTENT_WBURL" />
+		<result property="contentSummary" column="CONTENT_SUMMARY" />
+		<result property="contentKeyWords" column="CONTENT_KEYWORDS" />
+		<result column="TYPEId" property="typeId" />
+		<result property="contentStatus" column="CONTENT_STATUS" />
+		<result property="solrStatus" column="SOlR_STATUS" />
+		<result property="source" column="SOURCE" />
+		<result property="detailTitle" column="DETAIL_TITLE" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="releaseTime" column="RELEASE_TIME" />
+		<result property="recommend" column="RECOMMEND" />
+		<result property="recommend_time" column="RECOMMEND_TIME"/>
+		<result property="hot" column="HOT" />
+		<result property="hot_time" column="HOT_TIME"/>
+		<result property="top" column="TOP" />
+		<result property="top_time" column="TOP_TIME"/>
+		<result property="siteId" column="SITEID" />
+		<result property="title" column="TITLE" />
+		<result property="title2" column="TITLE2" />
+		<result property="pv" column="PV" />
+		<result property="shareCount" column="SHARE_COUNT" />
+		<result property="contentTxt" column="TXT" />
+		<result property="filedJson" column="FILEDJSON" />
+		<result column="SURFACE_IMAGEURL" property="surface_imageurl" />
+		<result column="IMAGE_ID" property="surface_imageid" />
+		<result column="SURFACE_IMAGEURL2" property="surface_imageurl2" />
+		<result column="IMAGE_ID2" property="surface_imageid2" />
+		<result property="contentTemplateId" column="CONTENT_TEMPLATEID" />
+		<result property="sort" column="SORT" />
+		<result property="contentUrlName" column="contentUrlName" />
+		<result property="columUrlName" column="columUrlName" />
+		<association property="seoInfo" resultMap="SeoMap"/>
+		<collection property="contentTypeList" ofType="cn.cebest.entity.system.content.ContentType">
+			<id column="typeId_" property="id" />
+			<result column="contentTypeName" property="typeName" />
+			<result column="contentTypePid" property="pId" />
+		</collection>
+		<collection property="imageList" ofType="cn.cebest.entity.system.Image">
+			<id column="image_id_" property="imageId" />
+			<result column="type_" property="type" />
+			<result column="title_" property="title" />
+			<result column="imgurl_" property="imgurl" />
+			<result column="forder_" property="forder" />
+			<result column="bz" property="bz" />
+			<result column="tourl_" property="tourl" />
+			<result column="SUBHEAD" property="subhead" />
+			<result column="AUTHOR" property="author" />
+			<result column="IMAGE_NAME" property="name" />
+			<result column="COLOR" property="color" />
+		</collection>
+		<collection property="videoList" ofType="cn.cebest.entity.system.Video">
+			<id column="video_id_" property="id" />
+			<result column="video_type_" property="video_type" />
+			<result column="video_title_" property="video_title" />
+			<result column="video_url_" property="video_url" />
+			<result column="video_forder_" property="forder" />
+			<result column="VIDEO_RELEASETIME_" property="releaseTime" />
+			<result column="video_content_" property="video_content" />
+			<result column="VIDEO_NAME" property="name" />
+			<result column="VIDEO_TOURL" property="tourl" />
+		</collection>
+		<collection property="contentRelevantList"
+			ofType="cn.cebest.entity.system.content.Content">
+			<id property="id" column="ID_" />
+			<result property="contentTitle" column="CONTENT_TITLE_" />
+			<result property="contentSummary" column="CONTENT_SUMMARY_" />
+		</collection>
+		<collection property="columConfigList" ofType="cn.cebest.entity.system.ColumConfig">
+			<id property="id" column="CID_" />
+			<result property="columName" column="COLUMN_NAME_" />
+		</collection>
+	</resultMap>
+	
+	<!-- end wzd -->
+	<!-- 保存内容和内容关系 -->
+	<insert id="insertContent_Type_Colum" parameterType="cn.cebest.entity.system.content.Content">
+			INSERT INTO
+			WEB_CONTENT_COLUM(CONTENTID,COLUMNID,TYPEID) VALUES
+			<foreach collection="objKey_Value" item="kv" open=""
+				separator="," close="">
+				(#{id},#{kv.key},#{kv.values})
+			</foreach>
+	</insert>
+	<select id="selectTestlist" parameterType="page" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		<if test="(pd.colum_id !=null and pd.colum_id !='') or (pd.TYPEID !=null and pd.TYPEID !='')">
+			LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		</if>
+		<where>
+			1=1
+			<if test="pd.queryName !=null and pd.queryName !=''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.queryName} '%'
+			</if>
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND C.SITEID=#{pd.SITEID}
+			</if>
+			<if test="pd.TYPEID !=null and pd.TYPEID !=''">
+				AND CC.TYPEID=#{pd.TYPEID}
+			</if>
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CC.COLUMNID IN ( #{pd.colum_id} )
+			</if>
+			<if test="pd.recommend !=null and pd.recommend !=''">
+				AND C.RECOMMEND=#{pd.recommend}
+			</if>
+			<if test="pd.hot !=null and pd.hot !=''">
+				AND C.hot=#{pd.hot}
+			</if>
+		</where>
+		<if test="pd.CREATE_TIME !=null">
+			ORDER BY C.CREATED_TIME DESC
+		</if>
+		<if test="pd.UPDATE_TIME !=null">
+			ORDER BY C.UPDATE_TIME DESC
+		</if>
+		<if test="pd.TOP_TIME !=null">
+			ORDER BY C.TOP DESC, C.TOP_TIME DESC
+		</if>
+		<if test="pd.RECOMMEND_TIME !=null">
+			ORDER BY C.RECOMMEND DESC, C.RECOMMEND_TIME DESC
+		</if>
+		
+		<if test="pd.NAME !=null and pd.NAME !=''">
+			ORDER BY C.CONTENT_TITLE DESC
+		</if>
+		<if test="pd.sort !=null and pd.sort !=''">
+			ORDER BY C.SORT
+		</if>
+
+	</select>
+	<select id="selectlistByColumIDlist" parameterType="pd"
+		resultType="map">
+		SELECT
+		C.ID,C.CONTENT_TITLE,C.CONTENT_SUMMARY,CC.COLUMNID,
+		I.IMGURL AS SURFACE_IMAGEURL
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		
+		where C.ID IN
+		<foreach collection="ids" close=")" item="id18" open="("
+			separator=",">
+			#{id18}
+		</foreach>
+		limit #{skipNum},6
+	</select>
+	<select id="selectContentlistPage" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+			LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		<where>
+			1=1
+				AND CC.COLUMNID = #{idOne}
+		</where>
+	</select>
+	
+		<select id="querySondIds"  resultType="string">
+		SELECT 
+			C.ID
+		FROM
+			WEB_COLUMCONFIG C
+		WHERE 
+			C.PARENTID IN
+		<foreach collection="pd.colum_id" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+	<select id="queryContentIds"  resultType="string">
+		SELECT 
+			CC.CONTENTID
+		FROM
+			WEB_CONTENT_COLUM CC
+		WHERE 
+			CC.COLUMNID	IN
+		<foreach collection="array" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+	<select id="selectlistByIds"  resultType="java.util.Map">
+		SELECT
+			C.ID,CC.COLUMNID,C.CONTENT_TITLE,S.SEO_DESCRIPTION,I.IMGURL
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN
+			WEB_CONTENT_COLUM CC
+		ON 
+			CC.CONTENTID=C.ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_SEO S ON S.MASTER_ID=C.ID
+		WHERE
+			C.ID IN
+		<foreach collection="array" item="id" close=")" open="(" separator=",">
+			#{id}
+		</foreach>
+	</select>
+	
+	<!-- 删除产品和产品关系 -->
+	<delete id="deleteContent_Type_Colum">
+		DELETE FROM WEB_CONTENT_COLUM
+		WHERE CONTENTID IN
+		<foreach collection="array" item="id1" close=")" open="("
+			separator=",">
+			#{id1}
+		</foreach>
+	</delete>
+	
+	<!-- 前台接口,查询内容列表 -->
+	<select id="listContentlistPage" resultMap="detailAndImgRelevantList"
+		parameterType="page">
+		SELECT
+		WC.ID AS id,
+		WC.TYPEID AS typeId,
+		WCT.TYPE_NAME AS typeName,
+		WI.IMAGE_ID AS imgId,
+		WI.IMGURL AS imageUrl,
+		WC.CONTENT_TITLE AS contentTitle,
+		WC.CREATED_TIME AS createdTime,
+		WC.CONTENT_SUMMARY AS contentSummary,
+		WC.CONTENT_KEYWORDS AS contentKeyWords
+		FROM
+		WEB_CONTENT WC
+		LEFT JOIN WEB_CONTENTTYPE WCT ON WC.TYPEID = WCT.ID
+		LEFT JOIN
+		WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_IMAGE WI
+		ON WCI.IMAGE_ID = WI.IMAGE_ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			WC.CONTENT_STATUS = '0'
+			<if test="pd.typeId!=null and pd.typeId!=''">
+				AND WCT.TYPEID =#{pd.typeId}
+			</if>
+		</trim>
+		ORDER BY WC.CREATED_TIME
+	</select>
+	<!-- 前台接口,根据内容id查询内容详情和相关内容 -->
+	<select id="detailByContentId" resultMap="detailAndImgRelevantList"
+		parameterType="page">
+		SELECT
+		WC.ID AS id,
+		WCTY.TYPE_NAME AS typeName,
+		WC.SOURCE AS source,
+		WC.RELEASE_TIME AS releaseTime,
+		WC.PV AS pv,
+		WC.SHARE_COUNT AS shareCount,
+		WCT.TXT AS contentTxt,
+		WI.IMAGE_ID AS imgId,
+		WI.IMGURL AS imgUrl,
+		WC1.ID AS contentId,
+		WC1.CONTENT_TITLE AS contentTitle,
+		WC1.CONTENT_WBURL AS contentWbUrl,
+		WC1.CONTENT_SUMMARY AS contentSummary,
+		WC1.CONTENT_KEYWORDS AS contentKeyWords,
+		WC1.CREATED_TIME AS createdTime,
+		WC1.CONTENT_STATUS AS contentStatus
+		FROM
+		WEB_CONTENT WC
+		LEFT JOIN WEB_TXT WCT ON WCT.CONTENT_ID = WC.ID
+		LEFT JOIN
+		WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_IMAGE WI
+		ON WCI.IMAGE_ID = WI.IMAGE_ID
+		LEFT JOIN WEB_CONTENTTYPE WCTY ON
+		WC.TYPEID = WCTY.ID
+		LEFT JOIN WEB_CONTENT_RELEVANT WCR ON
+		WCR.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_CONTENT WC1 ON WCR.RELEVANT_ID =
+		WC1.ID
+		AND WC1.CONTENT_STATUS = '0'
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			WC.CONTENT_STATUS = '0'
+			<if test="pd.id!=null and pd.id!=''">
+				AND WC.ID = #{pd.id}
+			</if>
+		</trim>
+	</select>
+	<!-- 后台接口,内容列表 -->
+	<select id="contentlistPage" resultMap="detailAndImgRelevantList"
+		parameterType="page">
+		SELECT
+		WC.ID AS id,
+		WC.TYPEID AS typeId,
+		WCT.TYPE_NAME AS typeName,
+		WI.IMAGE_ID AS imgId,
+		WI.IMGURL AS imgurl,
+		WC.CONTENT_TITLE AS contentTitle,
+		WC.CREATED_TIME AS createdTime,
+		WC.CONTENT_SUMMARY AS contentSummary,
+		WC.CONTENT_KEYWORDS AS contentKeyWords,
+		WC.CONTENT_STATUS AS contentStatus,
+		WCTT.TXT AS contentTxt
+		FROM
+		WEB_CONTENT WC
+		LEFT JOIN WEB_CONTENTTYPE WCT ON WC.TYPEID = WCT.ID
+		LEFT JOIN
+		WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_IMAGE WI
+		ON WCI.IMAGE_ID = WI.IMAGE_ID
+		LEFT JOIN WEB_TXT WCTT ON WCTT.CONTENT_ID
+		= WC.ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="pd.keywords!=null and pd.keywords!=''">
+				AND WC.CONTENT_TITLE LIKE CONCAT(CONCAT('%',
+				#{pd.keywords}), '%')
+			</if>
+			<if test="pd.startTime!=null and pd.startTime!=''">
+				AND WC.CREATED_TIME &gt;= #{pd.startTime}
+			</if>
+			<if test="pd.endTime!=null and pd.endTime!=''">
+				AND WC.CREATED_TIME &lt;= #{pd.endTime}
+			</if>
+			<if test="pd.status!=null and pd.status!=''">
+				AND WC.CONTENT_STATUS = #{pd.status}
+			</if>
+		</trim>
+		ORDER BY WC.CREATED_TIME
+	</select>
+	<!-- 更新内容的状态 -->
+	<update id="updateContent" parameterType="pd">
+		<if test="contentId!=null and contentId!=''">
+			UPDATE WEB_CONTENT WC
+			SET WC.CONTENT_STATUS = '2'
+			WHERE
+			WC.ID = #{contentId}
+		</if>
+	</update>
+	<!-- 批量更新内容的状态 -->
+	<update id="updateAllContent" parameterType="String">
+		UPDATE WEB_CONTENT WC
+		SET WC.CONTENT_STATUS = '2'
+		where WC.ID in
+		<foreach item="item7" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item7}
+		</foreach>
+	</update>
+
+	<!-- 删除栏目的中间表关系 -->
+	<delete id="delContentColumconfig">
+		DELETE FROM WEB_CONTENT_COLUM WHERE CONTENTID = #{id}
+	</delete>
+
+
+	<!-- 查询内容类型 -->
+	<select id="contentTypeList" parameterType="pd" resultType="pd">
+		SELECT
+		WCTY.ID AS typeId,
+		WCTY.TYPE_NAME AS typeName
+		FROM
+		WEB_CONTENTTYPE WCTY
+		WHERE WCTY.TYPE_STATES='0'
+	</select>
+	<!-- 查询相关内容 -->
+	<select id="contentRelevantList" parameterType="pd" resultType="pd">
+		SELECT
+		WC.ID AS contentRelevantId,
+		WC.CONTENT_TITLE AS contentRelevantTitle
+		FROM
+		WEB_CONTENT WC
+		WHERE
+		WC.CONTENT_STATUS = '0'
+		<if test="contentId!=null and contentId!=''">
+			AND WC.ID != #{contentId}
+		</if>
+	</select>
+
+	<!-- 修改内容 -->
+	<update id="editContent" parameterType="cn.cebest.entity.system.content.Content">
+		UPDATE WEB_CONTENT SET
+		TYPEID = #{typeId},
+		CONTENT_TEMPLATEID = #{contentTemplatetId},
+		CONTENT_TITLE = #{contentTitle},
+		CONTENT_WBURL = #{contentWbUrl},
+		CONTENT_SUMMARY = #{contentSummary},
+		CONTENT_KEYWORDS = #{contentKeyWords},
+		UPDATE_TIME = #{updateTime},
+		SOURCE = #{source},
+		DETAIL_TITLE = #{detailTitle},
+		PV = #{pv},
+		SHARE_COUNT = #{shareCount}
+		WHERE
+		ID = #{id}
+	</update>
+
+	<!-- 先删除相关内容关系 -->
+	<delete id="delContentRelevant">
+		DELETE FROM WEB_CONTENT_RELEVANT WHERE CONTENT_ID =
+		#{id}
+	</delete>
+
+	<!-- 修改状态 -->
+	<update id="auditContent" parameterType="pd">
+		<if test="status!=null and status!=''">
+			UPDATE WEB_CONTENT WC
+			SET WC.CONTENT_STATUS = #{status}
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				1=1
+				<if test="contentId!=null and contentId!=''">
+					AND WC.ID = #{contentId}
+				</if>
+			</trim>
+		</if>
+	</update>
+	<select id="findContentById" parameterType="pd"
+		resultMap="detailAndImgRelevantList">
+		SELECT
+		WC.ID AS id,
+		WC.CONTENT_TITLE AS contentTitle,
+		WC.CONTENT_WBURL AS contentWbUrl,
+		WC.CONTENT_SUMMARY AS contentSummary,
+		WC.CONTENT_KEYWORDS AS contentKeyWords,
+		WC.CREATED_TIME AS createdTime,
+		WC.CONTENT_STATUS AS contentStatus,
+		WC.SOURCE AS source,
+		WC.DETAIL_TITLE AS detailTitle,
+		WC.PV AS pv,
+		WC.SHARE_COUNT AS shareCount,
+		WC.RELEASE_TIME AS releaseTime,
+		WC.CONTENT_TEMPLATEID AS contentTemplatetId,
+		WCT.TXT AS contentTxt,
+		WCTY.ID AS typeId_,
+		WCTY.TYPE_NAME AS contentTypeName,
+		WCTY.PID AS contentTypePid,
+		WCCT.CONTENTTYPEID AS typeId,
+		WI.IMAGE_ID AS imgId,
+		WI.IMGURL AS imgurl,
+		WC1.ID AS contentId,
+		WC1.CONTENT_TITLE AS contentTitle,
+		WCCG.ID AS columconfigId
+		FROM
+		WEB_CONTENT WC
+		LEFT JOIN WEB_CONTENTTYPE WCTY ON WC.TYPEID = WCTY.ID
+		LEFT JOIN
+		WEB_CONTENT_IMAGE WCI ON WCI.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_IMAGE WI
+		ON WCI.IMAGE_ID = WI.IMAGE_ID
+		LEFT JOIN WEB_CONTENT_RELEVANT WCR ON WCR.CONTENT_ID = WC.ID
+		LEFT JOIN WEB_CONTENT WC1 ON WCR.RELEVANT_ID =WC1.ID
+		LEFT JOIN WEB_TXT WCT ON WCT.CONTENT_ID=WC.ID
+		LEFT JOIN WEB_CONTENT_COLUM WCCT ON WCCT.CONTENTID=WC.ID
+		LEFT JOIN WEB_COLUMCONFIG WCCG ON WCCT.COLUMNID=WCCG.ID
+		WHERE
+		WC.ID =#{contentId} AND WC.CONTENT_STATUS = '1'
+	</select>
+	<!-- 根据id查询内容文本 -->
+	<select id="findContentTxtById" parameterType="pd" resultType="pd">
+		SELECT
+		WCTT.CONTENT_ID AS id,
+		WCTT.TXT AS contentTxt
+		FROM
+		WEB_CONTENT_TXT WCTT
+		WHERE WCTT.CONTENT_ID=#{id}
+	</select>
+	<!-- begin=========================================================================================== 
+		wzd -->
+	<!-- ceshikaishi -->
+	<select id="selectTestlistPage" parameterType="page" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		<if test="(pd.colum_id !=null and pd.colum_id !='') or (pd.TYPEID !=null and pd.TYPEID !='')">
+			LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		</if>
+		<where>
+			1=1
+			<if test="pd.queryName !=null and pd.queryName !=''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.queryName} '%'
+			</if>
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND C.SITEID=#{pd.SITEID}
+			</if>
+			<if test="pd.TYPEID !=null and pd.TYPEID !=''">
+				AND CC.TYPEID=#{pd.TYPEID}
+			</if>
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CC.COLUMNID IN ( #{pd.colum_id} )
+			</if>
+			<if test="pd.recommend !=null and pd.recommend !=''">
+				AND C.RECOMMEND=#{pd.recommend}
+			</if>
+			<if test="pd.hot !=null and pd.hot !=''">
+				AND C.HOT=#{pd.hot}
+			</if>
+			<if test="pd.CONTENT_STATUS !=null and pd.CONTENT_STATUS !=''">
+				AND C.CONTENT_STATUS=#{pd.CONTENT_STATUS}
+			</if>
+		</where>
+		<if test="pd.CREATE_TIME !=null">
+			ORDER BY C.CREATED_TIME DESC
+		</if>
+		<if test="pd.UPDATE_TIME !=null">
+			ORDER BY C.UPDATE_TIME DESC
+		</if>
+		<if test="pd.TOP_TIME !=null">
+			ORDER BY C.TOP DESC, C.TOP_TIME DESC
+		</if>
+		<if test="pd.RECOMMEND_TIME !=null">
+			ORDER BY C.RECOMMEND DESC, C.RECOMMEND_TIME DESC
+		</if>
+		
+		<if test="pd.NAME !=null and pd.NAME !=''">
+			ORDER BY C.CONTENT_TITLE DESC
+		</if>
+		<if test="pd.sort !=null and pd.sort !=''">
+			ORDER BY C.SORT
+		</if>
+
+	</select>
+	
+	<select id="selectByColumOrTypePage" parameterType="pd" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		<if test="(columId !=null and columId !='') or (typeId !=null and typeId !='')">
+			LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		</if>
+		<where>
+			<if test="columId !=null and columId !=''">
+				AND CC.COLUMNID=#{columId}
+			</if>
+			<if test="typeId !=null and typeId !=''">
+				AND CC.TYPEID=#{typeId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectByColumIDDlistPage" parameterType="page"
+		resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		<where>
+			1=1
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND C.SITEID=#{pd.SITEID}
+			</if>
+
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CC.COLUMNID in
+				<foreach collection="pd.list" close=")" item="cid" index="index"
+					open="(" separator=",">
+					"${cid}"
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<select id="selectTest" parameterType="pd" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,
+		I.IMGURL,CF.COLUM_NAME AS COLUMN_NAME_,CF.ID AS
+		CID_,C.RELEASE_TIME,C.TOP,C.RECOMMEND,C.CREATED_TIME,C.SORT
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CF ON CF.ID=CC.COLUMNID
+	
+		where C.ID IN
+		<foreach collection="ids" close=")" item="id2" open="("
+			separator=",">
+			#{id2}
+		</foreach>
+		<if test="CREATED_TIME !=null and CREATED_TIME !=''">
+			ORDER BY C.CREATED_TIME DESC
+		</if>
+		<if test="UPDATE_TIME !=null and UPDATE_TIME !=''">
+			ORDER BY C.UPDATE_TIME DESC
+		</if>
+		<if test="TOP_TIME !=null and TOP_TIME !=''">
+			ORDER BY C.TOP DESC, C.TOP_TIME DESC
+		</if>
+		<if test="RECOMMEND_TIME !=null and RECOMMEND_TIME !=''">
+			ORDER BY C.RECOMMEND DESC, C.RECOMMEND_TIME DESC
+		</if>
+
+	</select>
+	<!-- ceshijieshu -->
+	<select id="selectlistPage" parameterType="page" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,
+		I.IMGURL,CF.COLUM_NAME AS COLUMN_NAME_,CF.ID AS
+		CID_,C.RELEASE_TIME,C.TOP,C.RECOMMEND,C.RECOMMEND_TIME,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN
+		WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CF ON CF.ID=CC.COLUMNID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		<where>
+			1=1
+			<if test="pd.SITEID !=null and pd.SITEID != ''">
+				AND C.SITEID=#{pd.SITEID}
+			</if>
+
+			<if test="pd.keywords !=null and pd.keywords != ''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keywords}
+				'%'
+			</if>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				AND CF.ID=#{pd.colum_id}
+			</if>
+		  AND C.RECOMMEND='1'
+		</where>
+		ORDER BY C.RECOMMEND_TIME DESC
+	</select>
+
+	<!-- 通过id获取数据 -->
+	<select id="selectById" resultMap="resultContent">
+		SELECT
+			C.ID,
+			C.FRIEND,
+			C.PROGRAMME,
+			C.SUBTITLE,
+			C.CONTENT_WBURL,
+			C.CONTENT_SUMMARY,
+			C.CONTENT_STATUS,
+			C.CONTENT_KEYWORDS,
+			C.CONTENT_TITLE,
+			C.RECOMMEND,
+			C.HOT,
+			C.PV,
+			C.SOLR_STATUS,
+			T.TXT,
+			C.SURFACE_IMAGEID,
+			C.AUTHOR,
+			C.RELEASE_TIME,
+			C.SOURCE,
+			C.CONTENT_TEMPLATEID,
+			CC.COLUM_NAME AS COLUMN_NAME_,
+			C2.ID AS ID_,
+			C2.CONTENT_TITLE AS CONTENT_TITLE_,
+			I.TITLE,
+			C.CONTENT_TEMPLATEID,
+			CC.COLUM_NAME AS COLUMN_NAME_,
+			CC.ID AS CID_,
+			I2.TYPE AS TYPE_,
+			I2.IMAGE_ID AS IMAGE_ID_,
+			I2.COLOR AS COLOR,
+			I2.TITLE AS TITLE_,
+			I2.IMGURL AS IMGURL_,
+			I2.FORDER AS FORDER_,
+			I2.BZ,
+			I2.TOURL AS TOURL_,
+			I2.NAME AS IMAGE_NAME,
+			C.FILEDJSON,
+			I2.SUBHEAD,
+			V.ID AS VIDEO_ID_,
+			V.VIDEO_TITLE AS VIDEO_TITLE_,
+			V.VIDEO_TYPE AS VIDEO_TYPE_,
+			V.VIDEO_URL AS VIDEO_URL_,
+			V.VIDEO_CONTENT AS VIDEO_CONTENT_,
+			V.TOURL AS VIDEO_TOURL,
+			V.VIDEO_NAME AS VIDEO_NAME,
+			V.FORDER AS VIDEO_FORDER_,
+			V.RELEASETIME AS VIDEO_RELEASETIME_,
+			I.IMGURL AS SURFACE_IMAGEURL,
+			I.IMAGE_ID,
+			I3.IMGURL AS SURFACE_IMAGEURL2,
+			I3.IMAGE_ID IMAGE_ID2,
+			I3.TITLE TITLE2,
+			C.TYPEID AS typeId,
+			CT.ID AS typeId_,
+			CT.TYPE_NAME AS contentTypeName,
+			CT.PID AS contentTypePid
+		FROM
+			WEB_CONTENT C
+		LEFT JOIN WEB_TXT T ON C.ID = T.CONTENT_ID
+		LEFT JOIN WEB_CONTENT_COLUM CTC ON CTC.CONTENTID = C.ID
+		LEFT JOIN WEB_CONTENTTYPE CT ON CTC.TYPEID = CT.ID
+		LEFT JOIN WEB_CONTENT_RELEVANT CR ON C.ID = CR.CONTENT_ID
+		LEFT JOIN WEB_CONTENT C2 ON C2.ID = CR.RELEVANT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID = C.SURFACE_IMAGEID
+		LEFT JOIN WEB_IMAGE I3 ON I3.IMAGE_ID = C.SURFACE_IMAGEID2
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID = C.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID = CCT.COLUMNID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID = C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID = C.ID
+		WHERE
+			C.ID = #{id}
+		ORDER BY
+			I2.FORDER ASC,V.FORDER ASC
+	</select>
+	<!-- 批量添加图片 -->
+	<insert id="saveImages" parameterType="cn.cebest.entity.system.content.Content">
+		INSERT INTO
+		WEB_IMAGE(IMAGE_ID,TITLE,IMGURL,TOURL,TYPE,FORDER,BZ,MASTER_ID,SUBHEAD,NAME) VALUES
+		<foreach collection="timageList" item="image" open=""
+			separator="," close="">
+			(#{image.imageId},#{image.title},#{image.imgurl},#{image.tourl},6,#{image.forder},#{image.bz},#{image.master_id},#{image.subhead},#{image.name})
+		</foreach>
+	</insert>
+
+	<!-- 批量添加图片 -->
+	<insert id="1saveImages" parameterType="cn.cebest.entity.system.content.Content">
+		INSERT INTO
+		WEB_IMAGE(IMAGE_ID,TITLE,IMGURL,TOURL,TYPE,FORDER,BZ,MASTER_ID,SUBHEAD,NAME,COLOR) VALUES
+		<foreach collection="imageList" item="image" open=""
+			separator="," close="">
+			(#{image.imageId},#{image.title},#{image.imgurl},#{image.tourl},6,#{image.forder},#{image.bz},#{image.master_id},#{image.subhead},#{image.name},#{image.color})
+		</foreach>
+	</insert>
+
+	<!-- 添加图片 -->
+	<insert id="saveImage" parameterType="cn.cebest.entity.system.Image">
+		INSERT INTO WEB_IMAGE(IMAGE_ID,TITLE,IMGURL,TOURL,TYPE,FORDER,BZ,MASTER_ID,SUBHEAD,NAME)
+		VALUES
+		(#{imageId},#{title},#{imgurl},#{tourl},6,#{forder},#{bz},#{master_id},#{subhead},#{name})
+
+	</insert>
+	<!-- 修改图片 -->
+	<update id="updateImageById" parameterType="cn.cebest.entity.system.Image">
+		update WEB_IMAGE
+		<set>
+			TITLE=#{title},
+			TOURL=#{tourl},
+			SUBHEAD=#{subhead},
+			<if test="imgurl !=null and imgurl !=''">IMGURL=#{imgurl},</if>
+			<if test="forder !=null and forder !=''">FORDER=#{forder},</if>
+			<if test="name !=null and name !=''">NAME=#{name},</if>
+			<if test="color !=null and color !=''">COLOR=#{color},</if>
+			BZ=#{bz}
+		</set>
+		where IMAGE_ID=#{imageId}
+	</update>
+	<!-- 批量添加视频 -->
+	<insert id="savevideos" parameterType="cn.cebest.entity.system.content.Content">
+		INSERT INTO
+		WEB_VIDEO(ID,VIDEO_TITLE,VIDEO_CONTENT,TOURL,VIDEO_URL,VIDEO_TYPE,CREATETIME,MASTER_ID,VIDEO_NAME,RELEASETIME)
+		VALUES
+		<foreach collection="tvideoList" item="video" open=""
+			separator="," close="">
+			(#{video.id},#{video.video_title},#{video.video_content},#{video.tourl},#{video.video_url},#{video.video_type},#{video.createtime},#{video.master_id},#{video.name},#{video.releaseTime})
+		</foreach>
+	</insert>
+	<!-- 批量添加视频 -->
+	<insert id="1savevideos" parameterType="cn.cebest.entity.system.content.Content">
+		INSERT INTO
+		WEB_VIDEO(ID,VIDEO_TITLE,VIDEO_CONTENT,TOURL,VIDEO_URL,VIDEO_TYPE,CREATETIME,MASTER_ID,VIDEO_NAME,FORDER,RELEASETIME)
+		VALUES
+		<foreach collection="videoList" item="video" open=""
+			separator="," close="">
+			(#{video.id},#{video.video_title},#{video.video_content},#{video.tourl},#{video.video_url},#{video.video_type},#{video.createtime},#{video.master_id},#{video.name},#{video.forder},#{video.releaseTime})
+		</foreach>
+	</insert>
+
+	<!-- 添加视频 -->
+	<insert id="savevideo" parameterType="cn.cebest.entity.system.Video">
+		INSERT INTO
+		WEB_VIDEO(ID,VIDEO_TITLE,VIDEO_CONTENT,TOURL,VIDEO_URL,VIDEO_TYPE,CREATETIME,MASTER_ID,VIDEO_NAME)
+		VALUES
+
+		(#{id},#{video_title},#{video_content},#{tourl},#{video_url},#{video_type},#{createtime},#{master_id},#{name})
+
+	</insert>
+	<!-- 修改视频 -->
+	<update id="updateVideoById" parameterType="cn.cebest.entity.system.Video">
+		update WEB_VIDEO
+		<set>
+			VIDEO_TITLE=#{video_title},
+			TOURL=#{tourl},
+			<if test="video_url !=null and video_url !=''">VIDEO_URL=#{video_url},</if>
+			<if test="video_type !=null and video_type !=''">VIDEO_TYPE=#{video_type},</if>
+			<if test="name !=null and name !=''">VIDEO_NAME=#{name},</if>
+			VIDEO_CONTENT=#{video_content},
+			FORDER=#{forder},
+			RELEASETIME=#{releaseTime}
+		</set>
+		where ID=#{id}
+	</update>
+	<!-- 创建内容文本表数据 -->
+	<insert id="saveContentTxt" parameterType="cn.cebest.entity.system.content.Content">
+		insert into WEB_TXT (
+		CONTENT_ID,TXT
+		) values (
+		#{id},#{contentTxt}
+		)
+	</insert>
+
+	<!-- 保存内容栏目 -->
+	<insert id="saveContentColumconfig" parameterType="cn.cebest.entity.system.content.Content">
+		insert into WEB_COLUMCONTENT (
+		CONTENT_ID,COLUMCONFIG_ID
+		) values
+		<foreach collection="columconfigIds" item="columconfigId"
+			close="" open="" separator=",">
+			(
+			#{id},#{columconfigId}
+			)
+		</foreach>
+
+	</insert>
+
+	<!-- 保存相关内容关系 -->
+	<insert id="saveContentRelevant" parameterType="cn.cebest.entity.system.content.Content">
+		<if test="contentRelevantIdList!=null and contentRelevantIdList.length>0">
+			INSERT INTO WEB_CONTENT_RELEVANT(CONTENT_ID,RELEVANT_ID) VALUES
+			<foreach collection="contentRelevantIdList" item="contentRelevantId"
+				open="" separator="," close="">
+				(#{id},#{contentRelevantId})
+			</foreach>
+		</if>
+	</insert>
+
+	<!-- 保存内容 -->
+	<insert id="saveContent" parameterType="cn.cebest.entity.system.content.Content">
+		insert into WEB_CONTENT
+		(id,FILEDJSON,SITEID,CONTENT_TEMPLATEID,TYPEID,CONTENT_TITLE,SUBTITLE,CONTENT_WBURL,CONTENT_SUMMARY,CONTENT_KEYWORDS,CREATED_TIME,UPDATE_TIME,CONTENT_STATUS,SOURCE,DETAIL_TITLE,PV,SHARE_COUNT,RELEASE_TIME,SURFACE_IMAGEID,SURFACE_IMAGEID2,AUTHOR,SOLR_STATUS,RECOMMEND,HOT,PROGRAMME,FRIEND)
+		values
+		(#{id},#{filedJson},#{siteId},#{contentTemplateId},#{typeId},#{contentTitle},#{subtitle},#{contentWbUrl},#{contentSummary},#{contentKeyWords},#{createdTime},#{updateTime},#{contentStatus},#{source},#{detailTitle},#{pv},#{shareCount},#{releaseTime},#{surface_imageid},#{surface_imageid2},#{author},#{solrStatus},#{recommend},#{hot},#{programme},#{friend})
+	</insert>
+	<!-- 查询图片路径 -->
+	<select id="selectImagePach" resultType="pd">
+		SELECT IMAGE_ID,IMGURL
+		FROM WEB_IMAGE
+		WHERE MASTER_ID IN
+		<foreach collection="array" close=")" item="id4" open="("
+			separator=",">
+			#{id4}
+		</foreach>
+	</select>
+	<!-- 根据id查询图片路径 -->
+	<select id="selectImagePachById" resultType="HashMap">
+		SELECT IMGURL,IMAGE_ID
+		FROM WEB_IMAGE
+		WHERE IMAGE_ID =#{id}
+	</select>
+	<!-- 根据内容第查询图片路径 -->
+	<select id="selectImagePachByContentId" resultType="pd">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_IMAGE I ON
+		C.SURFACE_IMAGEID=I.IMAGE_ID
+		WHERE C.ID IN
+		<foreach collection="array" item="ids" open="(" close=")"
+			separator=",">
+			<if test="ids !=null and ids != ''">
+				#{ids}
+			</if>
+		</foreach>
+	</select>
+	<select id="selectImagePachByContentId2" resultType="pd">
+		SELECT I.IMGURL,I.IMAGE_ID
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_IMAGE I ON
+		C.SURFACE_IMAGEID2=I.IMAGE_ID
+		WHERE C.ID IN
+		<foreach collection="array" item="ids" open="(" close=")"
+			separator=",">
+			<if test="ids !=null and ids != ''">
+				#{ids}
+			</if>
+		</foreach>
+	</select>
+	<!-- 根据内容id批量删除图片信息 -->
+	<delete id="deleteImages">
+		DELETE FROM WEB_IMAGE
+		WHERE MASTER_ID IN
+		<foreach collection="array" close=")" item="id7" open="("
+			separator=",">
+			#{id7}
+		</foreach>
+	</delete>
+	
+	<!-- 根据内容id批量删除图片信息 -->
+	<delete id="deleteContentImage">
+		DELETE FROM WEB_IMAGE
+		WHERE IMAGE_ID IN
+		<foreach collection="array" close=")" item="id500" open="("
+			separator=",">
+			#{id500}
+		</foreach>
+	</delete>
+
+	<!-- 查询视频路径 -->
+	<select id="selectVideoPach" resultType="pd">
+		SELECT ID,VIDEO_URL
+		FROM WEB_VIDEO
+		WHERE MASTER_ID IN
+		<foreach collection="array" close=")" item="id8" open="("
+			separator=",">
+			#{id8}
+		</foreach>
+	</select>
+
+	<!-- 根据id查询视频路径 -->
+	<select id="selectVideoPachById" resultType="HashMap">
+		SELECT VIDEO_URL,ID
+		FROM WEB_VIDEO
+		WHERE ID =#{id}
+	</select>
+
+	<!-- 批量删除视频 -->
+	<delete id="deleteVideos">
+		DELETE FROM WEB_VIDEO
+		WHERE MASTER_ID IN
+		<foreach collection="array" close=")" item="id9" open="("
+			separator=",">
+			#{id9}
+		</foreach>
+	</delete>
+
+	<select id="selectTXTCount" parameterType="cn.cebest.entity.system.download.FileResources"
+		resultType="Integer">
+		select count(1)
+		from WEB_TXT
+		where CONTENT_ID=#{id}
+	</select>
+
+	<!-- 批量删除视频 -->
+	<delete id="deleteVideosByIds">
+		DELETE FROM WEB_VIDEO
+		WHERE ID IN
+		<foreach collection="array" close=")" item="id10" open="("
+			separator=",">
+			#{id10}
+		</foreach>
+	</delete>
+
+	<!-- 批量删除栏目中间表关系 -->
+	<delete id="delContentColumconfigs">
+		DELETE FROM WEB_CONTENT_COLUM WHERE CONTENTID
+		IN
+		<foreach collection="array" close=")" item="id11" open="("
+			separator=",">
+			#{id11}
+		</foreach>
+	</delete>
+
+	<!-- 修改内容文本 -->
+	<update id="editContentTxt" parameterType="cn.cebest.entity.system.content.Content">
+		UPDATE WEB_TXT SET
+		TXT = #{contentTxt}
+		WHERE
+		CONTENT_ID = #{id}
+	</update>
+
+	<!-- 批量删除中间关系 -->
+	<delete id="delContentRelevants">
+		DELETE FROM WEB_CONTENT_RELEVANT
+		WHERE CONTENT_ID IN
+		<foreach collection="array" close=")" item="id12" open="("
+			separator=",">
+			#{id12}
+		</foreach>
+	</delete>
+	<!-- 查询全部列表 -->
+	<select id="selectAll" parameterType="pd" resultType="pd">
+		SELECT
+		ID,SITEID,CONTENT_TEMPLATEID,TYPEID,CONTENT_TITLE,CONTENT_WBURL,CONTENT_SUMMARY,CONTENT_KEYWORDS,CREATED_TIME,UPDATE_TIME,CONTENT_STATUS,SOURCE,DETAIL_TITLE,PV,SHARE_COUNT,RELEASE_TIME,SURFACE_IMAGEID
+		FROM WEB_CONTENT
+		<where>
+			SITEID=#{SITEID}
+			<if test="ID !=null and ID !=''"> AND ID!=#{ID}</if>
+		</where>
+	</select>
+	<!-- 批量删除内容 -->
+	<delete id="deleteAll">
+		DELETE FROM WEB_CONTENT
+		WHERE ID IN
+		<foreach collection="array" close=")" item="id13" open="("
+			separator=",">
+			#{id13}
+		</foreach>
+	</delete>
+	<update id="updaeContent" parameterType="cn.cebest.entity.system.content.Content">
+		UPDATE WEB_CONTENT
+		<set>
+			<if test="siteId !=null and siteId !='' ">SITEID=#{siteId},</if>
+			<if test="contentTemplateId !=null and contentTemplateId !=''">CONTENT_TEMPLATEID=#{contentTemplateId},</if>
+			<if test="contentTitle !=null and contentTitle !=''">CONTENT_TITLE=#{contentTitle},</if>
+			<if test="updateTime !=null and updateTime !=''">UPDATE_TIME=#{updateTime},</if>
+			<if test="releaseTime !=null and releaseTime !=''">RELEASE_TIME=#{releaseTime},</if>
+			<if test="shareCount !=null and shareCount !=''">SHARE_COUNT=#{shareCount},</if>
+			<if test="surface_imageid !=null and surface_imageid !=''">SURFACE_IMAGEID=#{surface_imageid},</if>
+			<if test="surface_imageid2 !=null and surface_imageid2 !=''">SURFACE_IMAGEID2=#{surface_imageid2},</if>
+			TYPEID=#{typeId},
+			FRIEND=#{friend},
+			FILEDJSON=#{filedJson},
+			CONTENT_WBURL=#{contentWbUrl},
+			CONTENT_SUMMARY=#{contentSummary},
+			CONTENT_KEYWORDS=#{contentKeyWords},
+			CONTENT_STATUS=#{contentStatus},
+			SOLR_STATUS=#{solrStatus},
+			SOURCE=#{source},
+			SUBTITLE=#{subtitle},
+			RECOMMEND=#{recommend},
+			HOT=#{hot},
+			PROGRAMME=#{programme}
+		</set>
+		WHERE ID=#{id}
+	</update>
+
+	<!-- 根据栏目ids查询内容ids -->
+	<select id="selectIdsByColumnIds" resultType="String">
+		SELECT CONTENTID
+		FROM WEB_CONTENT_COLUM
+		WHERE COLUMNID IN
+		<foreach collection="array" item="id14" close=")" open="("
+			separator=",">
+			#{id14}
+		</foreach>
+	</select>
+	<!-- 查询类型对应的栏目数 -->
+	<select id="selectCountByIds" resultType="HashMap">
+		SELECT COUNT(*),CONTENTID
+		FROM WEB_CONTENT_COLUM
+		WHERE CONTENTID IN
+		<foreach collection="array" item="id15" close=")" open="("
+			separator=",">
+			#{id15}
+		</foreach>
+		GROUP BY CONTENTID
+	</select>
+	<!-- 根据栏目ids删除和栏目的关联关系 -->
+	<delete id="deleteByColumnIds">
+		DELETE FROM WEB_CONTENT_COLUM
+		WHERE COLUMNID IN
+		<foreach collection="array" item="id16" close=")" open="("
+			separator=",">
+			#{id16}
+		</foreach>
+	</delete>
+	<!-- 查询所有栏目 -->
+	<select id="findAllList" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+		colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,
+		colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,
+		temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH
+		FROM
+		WEB_COLUMCONFIG colum,WEB_TEMPLATE temp
+		WHERE colum.SITEID = #{siteid}
+		AND colum.COLUM_TEMPLATETID=temp.ID
+		ORDER BY colum.SORT
+	</select>
+
+	<!-- 查询顶级栏目 -->
+	<select id="findTopList1" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+		colum.ID,colum.COLUM_NAME,colum.COLUM_URLPATH,colum.COLUM_DISPLAY,colum.PARENTID,colum.SORT,
+		colum.SITEID,colum.COLUM_SUBNAME,colum.COLUM_IMAGE,colum.COLUM_DESC,colum.OUT_URL,colum.CREATETIME,
+		temp.ID as TEM_ID,temp.TEM_NAME,temp.TEM_TYPE,temp.TEM_IMAGEPATH
+		FROM
+		WEB_COLUMCONFIG colum,WEB_TEMPLATE temp
+		WHERE colum.SITEID = #{siteid}
+		AND colum.PARENTID='0' AND colum.COLUM_TEMPLATETID=temp.ID
+		ORDER BY
+		colum.SORT
+	</select>
+
+	<!-- 修改状态与置顶 -->
+	<update id="updataRecommendAndTopAndHotByIds" parameterType="cn.cebest.entity.system.content.Content">
+		UPDATE WEB_CONTENT
+		<set>
+			UPDATE_TIME=#{updateTime},
+			<if test="recommend !=null">recommend=#{recommend},</if>
+			<if test="recommend_time !=null">recommend_time=#{recommend_time},</if>
+			<if test="hot !=null">hot=#{hot},</if>
+			<if test="hot_time !=null">hot_time=#{hot_time},</if>
+			<if test="top !=null">top=#{top},</if>
+			<if test="top_time !=null">top_time=#{top_time}</if>
+		</set>
+		WHERE ID IN
+		<foreach collection="contentRelevantIdList" item="id17" close=")"
+			open="(" separator=",">
+			#{id17}
+		</foreach>
+	</update>
+
+	<select id="selectContentByColumnId" parameterType="pd"
+		resultType="cn.cebest.entity.system.content.Content">
+		SELECT C.ID,C.CONTENT_TITLE,C.CREATED_TIME
+		FROM WEB_CONTENT
+		C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON CC.CONTENTID=C.ID
+		WHERE
+		C.RELEASE_TIME &gt; #{TIME} AND CC.COLUMNID=#{id}
+	</select>
+
+	<!-- 根据条件查询文件类型 -->
+	<select id="selectAllByAll" parameterType="HashMap" resultMap="resultContent">
+		SELECT
+			C.ID,
+			C.CONTENT_WBURL,
+			C.CONTENT_SUMMARY,
+			C.CONTENT_STATUS,
+			C.CONTENT_KEYWORDS,
+			C.CONTENT_TITLE,
+			C.PV,
+			T.TXT,
+			C.SURFACE_IMAGEID,
+			C.AUTHOR,
+			C.RELEASE_TIME,
+			C.SOURCE,
+			C.CONTENT_TEMPLATEID,
+			I.TITLE,
+			C.CONTENT_TEMPLATEID,
+			CC.ID AS CID_,
+			I2.TYPE AS TYPE_,
+			I2.IMAGE_ID AS IMAGE_ID_,
+			I2.TITLE AS TITLE_,
+			I2.IMGURL AS IMGURL_,
+			I2.FORDER AS FORDER_,
+			I2.BZ,
+			I2.TOURL AS TOURL_,
+			I2.NAME AS IMAGE_NAME,
+			C.FILEDJSON,
+			I2.SUBHEAD,
+			I.IMGURL AS SURFACE_IMAGEURL,
+			I.IMAGE_ID,
+			C.TYPEID AS typeId,
+			WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON C.SURFACE_IMAGEID=I.IMAGE_ID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID = C.ID
+		INNER JOIN WEB_RECOMMEND CC ON C.ID=CC.CONTENT_ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		<where>
+		    <if test="COLUM_ID !=null and COLUM_ID !=''">and CC.COLUM_ID=#{COLUM_ID}</if>
+			<if test="SITEID !=null and SITEID !=''">and C.SITEID=#{SITEID}</if>
+			<if test="RECOMMEND !=null and RECOMMEND !=''">and C.RECOMMEND=#{RECOMMEND}</if>
+			<if test="RECOMMEND_TIME !=null and RECOMMEND_TIME !=''">and C.RECOMMEND_TIME &gt; #{RECOMMEND_TIME}</if>
+		</where>
+	</select>
+	
+
+	<select id="findContentsByColumnId"
+		resultType="cn.cebest.entity.system.content.Content">
+		SELECT C.ID,C.CONTENT_TITLE contentTitle,C.CREATED_TIME
+		createdTime,C.SURFACE_IMAGEID,
+		M.TITLE AS imgTitle,M.BZ AS imgDesc,M.IMGURL AS imgURL,TX.TXT AS contentTxt,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON CC.CONTENTID=C.ID
+		LEFT JOIN WEB_IMAGE M ON C.ID=M.MASTER_ID
+		LEFT JOIN WEB_TXT TX ON C.ID=TX.CONTENT_ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		WHERE CC.COLUMNID=#{id} ORDER BY C.CREATED_TIME DESC
+	</select>
+
+	<!-- 查询各个栏目下置顶的内容 -->
+	<select id="findTopContentList" resultType="pd">
+		SELECT C.ID,C.CONTENT_TITLE,C.CREATED_TIME,CC.COLUMNID,C.TOP_TIME
+		FROM WEB_CONTENT
+		C
+		INNER JOIN WEB_CONTENT_COLUM CC ON C.ID=CC.CONTENTID
+		WHERE C.TOP='1'
+	</select>
+	<!-- 根据id查询模板路径和栏目 -->
+	<select id="selectTemplatePachById" resultMap="resultContent">
+		SELECT
+		C.ID,T.TEM_FILEPATH AS CONTENT_TEMPLATEID,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID=CCT.COLUMNID
+		LEFT JOIN WEB_TEMPLATE T ON T.ID=C.CONTENT_TEMPLATEID
+		LEFT JOIN WEB_SEO s ON C.ID=s.MASTER_ID
+		WHERE C.ID=#{id}
+	</select>
+
+	<select id="selectColum" parameterType="pd" resultType="pd">
+		SELECT
+		C.ID,C.COLUM_NAME
+		FROM WEB_COLUMCONFIG C
+		WHERE C.SITEID=#{SITEID} AND C.COLUM_TYPE='1'
+	</select>
+	<!-- 根据内容Id查询详细描述 -->
+	<select id="findTxt" resultType="cn.cebest.entity.system.content.Content">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CREATED_TIME,C.CONTENT_SUMMARY,C.CONTENT_TITLE,T.TXT,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		WHERE
+		C.ID=#{contentId}
+	</select>
+	<!-- 根据栏目id查询全部列表 -->
+	<select id="selectlistByColumID" parameterType="pd"
+		resultMap="resultContent">
+		SELECT  WSC.SKIPPATH AS columUrlName,
+		C.ID,C.CONTENT_WBURL,C.SUBTITLE,C.CONTENT_SUMMARY,C.SORT,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,
+		C2.ID AS ID_,C2.CONTENT_TITLE AS
+		CONTENT_TITLE_,I.TITLE,C.CONTENT_TEMPLATEID,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.COLOR AS COLOR,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,I2.FORDER AS FORDER_,C.FILEDJSON,I2.SUBHEAD,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,S.SEO_KEYWORDS,S.SEO_DESCRIPTION,S.SEO_TITLE,WS.ID AS contentUrlName
+		,I3.IMGURL AS SURFACE_IMAGEURL2,I3.TITLE TITLE2,I3.IMAGE_ID IMAGE_ID2
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_CONTENT_RELEVANT CR ON
+		C.ID=CR.CONTENT_ID
+		LEFT JOIN WEB_CONTENT C2 ON C2.ID=CR.RELEVANT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_IMAGE I3 ON I3.IMAGE_ID=C.SURFACE_IMAGEID2
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SEO S ON S.MASTER_ID =C.ID
+		LEFT JOIN WEB_COLUMCONFIG
+		CC ON CC.ID=CCT.COLUMNID
+		LEFT JOIN WEB_IMAGE I2 ON
+		I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WSC.COLUMNID = CCT.COLUMNID
+		where C.ID IN
+		<foreach collection="ids" close=")" item="id18" open="("
+			separator=",">
+			#{id18}
+		</foreach>
+		<if test="CREATED_TIME !=null and CREATED_TIME !=''">
+			ORDER BY C.SORT,I2.FORDER,C.RELEASE_TIME 
+		</if>
+		<if test="sort !=null and sort !=''">
+			ORDER BY C.SORT,I2.FORDER,V.FORDER
+		</if>
+		<if test="NAME != null and NAME !=''">
+			ORDER BY C.CONTENT_TITLE DESC
+		</if>
+	</select>
+	<!-- 查询栏目下信息总数 -->
+	<select id="selectlistCountByColumID" parameterType="page"
+		resultType="Integer">
+		SELECT
+			COUNT(1)
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON C.ID = CC.CONTENTID
+		WHERE CC.COLUMNID = #{pd.colum_id}
+		<if test="pd.TYPEID != null and pd.TYPEID !=''">
+			AND CC.TYPEID=#{pd.TYPEID}
+		</if>
+	</select>
+
+	<!-- 根据栏目id查询全部列表直至查出为止 -->
+	<select id="selectByColumIDDlistPage1" parameterType="page"
+		resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,
+		I.IMGURL,CF.COLUM_NAME AS COLUMN_NAME_,CF.ID AS
+		CID_,C.RELEASE_TIME,C.TOP,C.RECOMMEND
+		FROM WEB_CONTENT C
+		LEFT JOIN
+		WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CF ON CF.ID=CC.COLUMNID
+		WHERE
+		CF.ID IN
+
+		<foreach collection="pd.list" item="cid" close=")" open="("
+			separator=",">
+			${cid}
+		</foreach>
+		ORDER BY C.RELEASE_TIME DESC
+
+	</select>
+
+	<!-- 根据栏目id查找内容 -->
+	<select id="findContentInfoBoById" resultType="cn.cebest.entity.bo.ContentInfoBo">
+		SELECT
+		WCN.ID
+		'ID',WCN.CONTENT_TITLE `NAME`,WC.ID 'type',WCN.RECOMMEND_TIME
+		'creatTime',wi.IMGURL 'imageUrl'
+		FROM WEB_COLUMCONFIG WC
+		LEFT JOIN WEB_CONTENT_COLUM WCC ON WC.ID=WCC.COLUMNID
+		LEFT JOIN WEB_CONTENT
+		WCN ON WCC.CONTENT_ID=WCN.ID
+		LEFT JOIN WEB_IMAGE wi ON
+		wi.IMAGE_ID=WCN.SURFACE_IMAGEID
+		WHERE (WC.ID=#{id} and
+		WCN.RECOMMEND='1')
+	</select>
+
+	<select id="findContentsByColumnIdOne" parameterType="pd"
+		resultType="cn.cebest.entity.system.content.Content">
+		SELECT C.ID,C.CONTENT_TITLE contentTitle,C.CREATED_TIME
+		createdTime,C.SURFACE_IMAGEID,M.IMGURL AS SURFACE_IMAGEURL
+		FROM
+		WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC ON CC.CONTENTID=C.ID
+		LEFT
+		JOIN WEB_IMAGE M ON C.SURFACE_IMAGEID=M.IMAGE_ID
+		WHERE
+		CC.COLUMNID=#{id} ORDER BY C.CREATED_TIME DESC
+		limit 1
+	</select>
+
+	<select id="selectallcolum_ids" parameterType="page" resultType="HashMap">
+		SELECT ID,PARENTID AS PID
+		FROM WEB_COLUMCONFIG
+		WHERE COLUM_TYPE='1'
+	</select>
+	<!-- 公司简介wzd -->
+	<select id="selectCompanyProfile" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,
+		C.CONTENT_TEMPLATEID,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,C.FILEDJSON,I2.SUBHEAD,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_IMAGE I2 ON
+		I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		WHERE 
+		C.ID in 
+		<foreach collection="ids" close=")" open="(" item="id19" separator=",">
+			#{id19}
+		</foreach>
+		ORDER BY I2.FORDER ASC
+	</select>
+	
+	<update id="updatePv">
+		UPDATE WEB_CONTENT
+		SET PV=PV+1
+		WHERE ID=#{id}
+	</update>
+	<!-- 根据内容id查询内容，按创建时间排序 -->
+	<select id="selectContentListOrderByCreateTime" parameterType="pd" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,
+		C.CONTENT_TEMPLATEID,
+		C.CREATED_TIME,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,C.FILEDJSON,I2.SUBHEAD,I2.FORDER AS FORDER_,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		WHERE 
+		C.ID in 
+		<foreach collection="ids" close=")" open="(" item="id20" separator=",">
+			#{id20}
+		</foreach>
+		ORDER BY C.CREATED_TIME,I2.FORDER 
+	</select>
+	
+	<!-- 通过id获取数据 -->
+
+	<select id="selectContent" parameterType="pd" resultMap="resultContent">
+		SELECT
+		C.ID,C.FRIEND,C.PROGRAMME,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,C.SUBTITLE,
+		C2.ID AS ID_,C2.CONTENT_TITLE AS
+		CONTENT_TITLE_,C2.CONTENT_SUMMARY CONTENT_SUMMARY_,I.TITLE,C.CONTENT_TEMPLATEID,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,I2.FORDER AS FORDER_,C.FILEDJSON,I2.SUBHEAD,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,
+		S.SEO_KEYWORDS,S.SEO_DESCRIPTION,S.SEO_TITLE,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_CONTENT_RELEVANT CR ON
+		C.ID=CR.CONTENT_ID
+		LEFT JOIN WEB_CONTENT C2 ON C2.ID=CR.RELEVANT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID=CCT.COLUMNID
+		LEFT JOIN WEB_IMAGE I2 ON I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SEO S ON S.MASTER_ID =C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		<where>
+			C.CONTENT_STATUS='1'
+			<if test="SITEID !=null and SITEID != ''">
+			AND C.SITEID=#{SITEID}
+			</if>
+			<if test="currentId !=null and currentId != ''">
+			AND CCT.COLUMNID=#{currentId}
+			</if>
+			<if test="ID !=null and ID != ''">
+			AND C.ID=#{ID}
+			</if>
+			<if test="contentTypeId !=null and contentTypeId != ''">
+			AND CCT.TYPEID=#{contentTypeId}
+			</if>
+		</where>
+		 ORDER BY C.SORT ,C.RELEASE_TIME DESC,I2.FORDER
+	</select>
+	<!-- end -->
+	
+	<!-- 前端页面展示接口根据栏目id或者内容类型id查找内容 不分页 -->
+	<select id="selectContentBycolumtypeid" parameterType="pd" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,
+		I.TITLE,C.CONTENT_TEMPLATEID,C.SORT,C.CREATED_TIME,C.FILEDJSON,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_CONTENTTYPE CT ON CCT.CONTENTTYPEID=CT.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID=CCT.COLUMNID
+		<where>
+			1=1
+			<if test="pd.id !=null and pd.id != ''">
+				AND CT.ID=#{pd.id}
+			</if>
+			<if test="pd.columId !=null and pd.columId != ''">
+				AND CCT.COLUMNID=#{pd.columId}
+			</if>
+			AND C.CONTENT_STATUS = '1'
+		</where>
+		ORDER BY C.SORT ASC,C.CREATED_TIME DESC,C.UPDATE_TIME DESC
+	</select>
+	
+	<!-- 更新排序值 -->
+	<update id="updateSort" parameterType="pd">
+		UPDATE WEB_CONTENT
+		SET SORT= #{sort}
+		WHERE ID =#{id}
+	</update>
+	
+	<!-- 根据栏目ID查询其内容  -->
+	<select id="selectIdsByColumID" parameterType="String" resultType="String">
+		SELECT DISTINCT CONTENTID FROM WEB_CONTENT_COLUM WHERE 1=1
+		<if test="columId !=null and columId !=''">
+			AND COLUMNID=#{columId} 
+		</if>
+		<if test="typeId !=null and typeId !=''">
+			AND typeId=#{typeId} 
+		</if>
+		ORDER BY
+		    CASE 
+		      WHEN typeId IN ('b2d4c067c73c4664aefa3f5dd257b00e','f0c3ae2512f740f78d905bcee861d116','0b895910f807496885542cff863203c6','ef6b191d1f4249e6bb313dbd35c30f76','e44f4133fa6644a69bbe4384d8c8e08d','85c0f0c4df764f108d6406133d80ac05') THEN 0
+			      else 1
+				END DESC
+	</select>
+	<!-- 根据内容ID数组，查询其关联信息  -->
+	<select id="selectlistPageInfoByIdArry" parameterType="page" resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.CONTENT_SUMMARY,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,
+		C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,C.FILEDJSON,C.CREATED_TIME,C.UPDATE_TIME,C.TOP,C.TOP_TIME,C.RECOMMEND,C.RECOMMEND_TIME,C.HOT,C.HOT_TIME,C.SORT,
+		CC.COLUM_NAME AS COLUMN_NAME_,CC.ID AS CID_,
+		CT.TYPE_NAME AS contentTypeName,CT.ID AS contentTypeId
+		FROM (/*start*/
+				 SELECT * FROM WEB_CONTENT CO where 1=1
+				 <if test="pd.keyword!=null and pd.keyword !=''">
+					AND CONTENT_TITLE LIKE '%' #{pd.keyword} '%'
+				 </if>
+				 <if test="pd.idArry !=null and pd.idArry.length>0">
+					AND CO.ID IN 
+					<foreach collection="pd.idArry" close=")" item="contentId" open="(" separator=",">
+						'${contentId}'
+					</foreach>
+				</if>
+				ORDER BY CO.UPDATE_TIME DESC
+		   /*end*/) C
+		LEFT JOIN WEB_CONTENT_COLUM CTC ON CTC.CONTENTID=C.ID
+		LEFT JOIN WEB_COLUMCONFIG CC ON CC.ID=CTC.COLUMNID
+		LEFT JOIN WEB_CONTENTTYPE CT ON CT.ID=CTC.TYPEID
+	</select>
+	
+	<!-- 显示与隐藏 -->
+	<update id="updateStatusByIds" parameterType="pd">
+		UPDATE WEB_CONTENT
+		SET CONTENT_STATUS = ${status}
+		WHERE
+		ID IN
+		<foreach collection="ids" item="id21" close=")" open="("
+			separator=",">
+			#{id21}
+		</foreach>
+	</update>
+	
+	<select id="selectlistPageByTypeIds" parameterType="page" resultType="String">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		<where>
+			<if test="pd.colum_id !=null and pd.colum_id !=''">
+				and CCT.COLUMNID=#{pd.colum_id}
+			</if>
+			<if test="pd.TYPEIDS !=null and pd.TYPEIDS.length gt 0">
+				and CCT.TYPEID in
+				<foreach collection="pd.TYPEIDS" close=")" item="typeid" open="("
+					separator=",">
+					'${typeid}'
+				</foreach>
+			</if>
+			<if test="pd.keyword !=null and pd.keyword !=''">
+				AND C.CONTENT_TITLE LIKE '%' #{pd.keyword} '%'
+			</if>
+		</where> 
+	</select>
+	
+	<!-- 保存内容地址栏的url信息 -->
+	<insert id="saveContentUrlName" parameterType="cn.cebest.entity.system.content.Content">
+		insert into WEB_SKIPPATH (
+		CONTENTID,COLUMNID,TYPEID
+		) values
+		<foreach collection="objKey_Value" item="kv"
+			close="" open="" separator=",">
+			(#{id},#{kv.key},#{kv.values})
+		</foreach>
+	</insert>
+	
+	<!-- 通过栏目Id获取栏目url信息数据 -->
+	<select id="findColumUrlNameconfigById" parameterType="cn.cebest.entity.system.content.Content" resultType="pd" >
+		SELECT 
+			COLUMNID AS Url_COLUMNID,
+			TYPEID AS Url_TYPEID,
+			TYPE AS Url_TYPE,
+			ISCHANNEL AS Url_ISCHANNEL,
+			SKIPPATH AS Url_SKIPPATH,
+			ISSELECT AS Url_ISSELECT
+		FROM
+			WEB_SKIPPATH_COLUMN
+		WHERE COLUMNID IN 
+		<foreach collection="columconfigIds" item="columconfigId"
+			close="" open="" separator=",">
+			(
+			#{columconfigId}
+			)
+		</foreach>
+	</select>
+	
+	<!-- 删除内容地址栏的url信息 -->
+	<delete id="delContentUrlName">
+		DELETE FROM WEB_SKIPPATH
+		WHERE CONTENTID IN
+		<foreach collection="array" close=")" item="id" open="("
+			separator=",">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 根据资讯的id查询图片的路径 -->
+	<select id="selectContentUrlName" parameterType="String" resultType="pd">
+		SELECT CONTENT_ID AS id,COLUMCONFIG_ID AS columnid
+		FROM WEB_COLUMCONTENT 
+		WHERE CONTENT_ID = #{id}
+	</select>
+	
+	<!-- 保存资讯url信息 -->
+	<insert id="insertTypeContentUrlNameColumRelation" parameterType="pd">
+		INSERT INTO WEB_SKIPPATH(CONTENTID,COLUMNID) VALUES(#{id},#{columnid})
+	</insert>
+	
+	<select id="findContentByTypeOrColumnid" parameterType="pd"
+		resultMap="detailAndImgRelevantList">
+		SELECT
+		WC.ID AS id,
+		WC.CONTENT_TITLE AS contentTitle,
+		WC.CONTENT_WBURL AS contentWbUrl,
+		WC.CONTENT_SUMMARY AS contentSummary,
+		WC.CONTENT_KEYWORDS AS contentKeyWords,
+		WC.CREATED_TIME AS createdTime,
+		WC.CONTENT_STATUS AS contentStatus,
+		WC.SOURCE AS source,
+		WC.DETAIL_TITLE AS detailTitle,
+		WC.PV AS pv,
+		WC.SHARE_COUNT AS shareCount,
+		WC.RELEASE_TIME AS releaseTime,
+		WS.ID AS contentUrlName,
+		WSC.SKIPPATH AS columUrlName
+		FROM
+		WEB_CONTENT WC
+		LEFT JOIN WEB_SKIPPATH WS ON WS.CONTENTID = WC.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WS.COLUMNID = WSC.COLUMNID
+		<where>
+			1=1
+			<if test="SITEID !=null and SITEID !=''">and WC.SITEID=#{SITEID}</if>
+			<if test="contentId !=null and contentId !=''">and WC.ID=#{contentId}</if>
+			<if test="columnId !=null and columnId !=''">and WS.COLUMNID=#{columnId}</if>
+			<if test="typeId !=null and typeId !=''">and WS.TYPEID=#{typeId}</if>
+		</where>
+	</select>
+	
+	<!-- 根据id查询内容文本 -->
+	<select id="findContentOrColumOrType" parameterType="pd" resultType="pd">
+		SELECT
+			WS.ID AS contentUrlName,
+			WSC.SKIPPATH AS columUrlName,
+			WSC.TYPEID AS columTypeId
+		FROM
+		WEB_SKIPPATH_COLUMN WSC
+		LEFT JOIN WEB_SKIPPATH WS ON WSC.COLUMNID = WS.COLUMNID
+		<where>
+			1=1
+			<if test="contentId !=null and contentId !=''">and WS.CONTENTID=#{contentId}</if>
+			<if test="columId !=null and columId !=''">and WSC.COLUMNID=#{columId}</if>
+			<if test="typeId !=null and typeId !=''">and WSC.TYPEID=#{typeId}</if>
+		</where>
+		GROUP BY WSC.SKIPPATH
+	</select>
+	
+	<!-- 查询改内容分类的地址栏URL信息 -->
+	<select id="findContentUrlNameList" parameterType="cn.cebest.entity.system.content.Content" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM WEB_SKIPPATH 
+		WHERE CONTENTID = #{id}
+	</select>
+	
+	<!-- 修改栏目url信息 -->
+	<update id="editContentUrlNameconfig" parameterType="cn.cebest.entity.system.content.Content" >
+		UPDATE WEB_SKIPPATH
+		<set>
+			<foreach collection="objKey_Value" item="kv" open=""
+				separator="," close="">
+				<if test="kv.key!=null and kv.key!=''">
+					COLUMNID			= #{kv.key}
+				</if>
+				<if test="kv.values!=null and kv.values!=''">
+					,TYPEID			= #{kv.values}
+				</if>
+			</foreach>
+		</set>
+		WHERE 
+			CONTENTID 			= #{id}
+	</update>
+	
+	<select id="findContentByCT" parameterType="pd"
+		resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.SUBTITLE,C.CONTENT_SUMMARY,C.SORT,C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,T.TXT,C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,
+		C2.ID AS ID_,C2.CONTENT_TITLE AS
+		CONTENT_TITLE_,I.TITLE,C.CONTENT_TEMPLATEID,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,I2.FORDER AS FORDER_,C.FILEDJSON,I2.SUBHEAD,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,S.SEO_KEYWORDS,S.SEO_DESCRIPTION,S.SEO_TITLE,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_CONTENT_RELEVANT CR ON
+		C.ID=CR.CONTENT_ID
+		LEFT JOIN WEB_CONTENT C2 ON C2.ID=CR.RELEVANT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SEO S ON S.MASTER_ID =C.ID
+		LEFT JOIN WEB_COLUMCONFIG
+		CC ON CC.ID=CCT.COLUMNID
+		LEFT JOIN WEB_IMAGE I2 ON
+		I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON WS.CONTENTID = C.ID
+		LEFT JOIN WEB_SKIPPATH_COLUMN WSC ON WS.COLUMNID = WSC.COLUMNID
+		<where>
+			1=1
+			<if test="columnId !=null and columnId !=''">and WS.COLUMNID=#{columnId}</if>
+			<if test="typeId !=null and typeId !=''">and WS.TYPEID=#{typeId}</if>
+		</where>
+	</select>
+	
+	
+	
+	<!-- 根据栏目id查询全部列表 -->
+	<select id="getContent" parameterType="pd"
+		resultMap="resultContent">
+		SELECT
+		C.ID,C.CONTENT_WBURL,C.SUBTITLE,C.CONTENT_SUMMARY,C.SORT,C.HOT,
+		C.CONTENT_STATUS,C.CONTENT_KEYWORDS,C.CONTENT_TITLE,C.PV,
+		T.TXT,C.SURFACE_IMAGEID,C.AUTHOR,C.RELEASE_TIME,C.SOURCE,
+		C2.ID AS ID_,C2.CONTENT_TITLE AS CONTENT_TITLE_,
+		I.TITLE,C.CONTENT_TEMPLATEID,CC.COLUM_NAME AS
+		COLUMN_NAME_,CC.ID AS CID_,
+		I2.TYPE AS TYPE_,I2.IMAGE_ID AS
+		IMAGE_ID_,I2.TITLE AS TITLE_,I2.IMGURL AS IMGURL_,I2.BZ,I2.TOURL AS
+		TOURL_,I2.FORDER AS FORDER_,C.FILEDJSON,I2.SUBHEAD,
+		V.ID AS VIDEO_ID_,V.VIDEO_TITLE AS VIDEO_TITLE_,V.VIDEO_TYPE AS
+		VIDEO_TYPE_,V.VIDEO_URL AS VIDEO_URL_,V.VIDEO_CONTENT AS
+		VIDEO_CONTENT_,V.TOURL AS VIDEO_TOURL,
+		I.IMGURL AS SURFACE_IMAGEURL,I.IMAGE_ID,S.SEO_KEYWORDS,S.SEO_DESCRIPTION,S.SEO_TITLE,WS.ID AS contentUrlName
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_TXT T
+		ON C.ID=T.CONTENT_ID
+		LEFT JOIN WEB_IMAGE I ON I.IMAGE_ID=C.SURFACE_IMAGEID
+		LEFT JOIN WEB_CONTENT_COLUM CCT ON CCT.CONTENTID=C.ID
+		LEFT JOIN WEB_SEO S ON S.MASTER_ID =C.ID
+		LEFT JOIN WEB_COLUMCONFIG
+		CC ON CC.ID=CCT.COLUMNID
+		LEFT JOIN WEB_IMAGE I2 ON
+		I2.MASTER_ID=C.ID
+		LEFT JOIN WEB_VIDEO V ON V.MASTER_ID=C.ID
+		LEFT JOIN WEB_SKIPPATH WS ON C.ID=WS.CONTENTID
+		LEFT JOIN WEB_CONTENT_RELEVANT CR ON C.ID=CR.CONTENT_ID
+		LEFT JOIN WEB_CONTENT C2 ON C2.ID=CR.RELEVANT_ID
+		where C.ID IN
+		<foreach collection="ids" close=")" item="id18" open="("
+			separator=",">
+			#{id18}
+		</foreach>
+		<if test="recommend != null and recommend != ''">
+			AND RECOMMEND = '1'
+		</if> 
+		<if test="timeFlag!=null">
+			ORDER BY C.RELEASE_TIME DESC
+		</if>
+		<if test="timeFlag==null">
+			ORDER BY C.SORT,I2.FORDER,C.RELEASE_TIME
+		</if>
+		,CASE 
+			      WHEN CCT.TYPEID IN ('b2d4c067c73c4664aefa3f5dd257b00e','f0c3ae2512f740f78d905bcee861d116','0b895910f807496885542cff863203c6','ef6b191d1f4249e6bb313dbd35c30f76','e44f4133fa6644a69bbe4384d8c8e08d','85c0f0c4df764f108d6406133d80ac05') THEN 0
+			      else 1
+				END DESC
+	</select>
+	
+	<select id="getTestlistPage" parameterType="page" resultType="string">
+		SELECT DISTINCT C.ID
+		FROM WEB_CONTENT C
+		LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+		<if test="pd.relevantId != null and pd.relevantId != ''">
+			LEFT JOIN WEB_CONTENT_RELEVANT CR ON C.ID=CR.CONTENT_ID
+			LEFT JOIN WEB_CONTENT C2 ON C2.ID=CR.RELEVANT_ID
+		</if>
+		WHERE CC.COLUMNID=#{pd.columId}
+		<if test="pd.hot != null and pd.hot != ''">
+			AND C.HOT = '1'
+		</if>
+		<if test="pd.relevantId != null and pd.relevantId != ''">
+			AND CR.RELEVANT_ID = #{pd.relevantId}
+		</if>
+		ORDER BY 
+			CASE
+			WHEN CC.TYPEID IN (
+				'b2d4c067c73c4664aefa3f5dd257b00e',
+				'f0c3ae2512f740f78d905bcee861d116',
+				'0b895910f807496885542cff863203c6',
+				'ef6b191d1f4249e6bb313dbd35c30f76',
+				'e44f4133fa6644a69bbe4384d8c8e08d',
+				'85c0f0c4df764f108d6406133d80ac05'
+			) THEN
+				C.ID 
+			END
+			DESC,
+			<if test="pd.timeFlag!=null">
+				C.RELEASE_TIME DESC
+			</if>
+			<if test="pd.timeFlag==null">
+				C.SORT,C.RELEASE_TIME
+			</if>
+			<if test="pd.hot1 != null and pd.hot1 != ''">
+				,C.HOT
+			</if> 
+	</select>
+	
+	
+	<select id="getTest2listPage" parameterType="page" resultType="string">
+		SELECT
+			DISTINCT N2.ID
+		FROM
+			(
+				SELECT
+					DISTINCT N.ID
+				FROM
+				(
+					SELECT DISTINCT C.ID
+					FROM WEB_CONTENT C
+					LEFT JOIN WEB_CONTENT_COLUM CC on CC.CONTENTID=C.ID
+					WHERE CC.COLUMNID=#{pd.columId}
+					<if test="pd.typeIds1 != null and pd.typeIds1 != ''">
+						AND CC.TYPEID IN 
+						<foreach collection="pd.ids1" item="item" index="index" open="("  separator="," close=")" >
+							'${item}'
+						</foreach>
+					</if>
+					<if test="pd.hot != null and pd.hot != ''">
+						AND C.HOT="1"
+					</if>
+					<if test="pd.timeFlag!=null">
+						ORDER BY C.RELEASE_TIME DESC
+					</if>
+				) N
+				LEFT JOIN WEB_CONTENT_COLUM c2 ON c2.CONTENTID = N.ID
+				WHERE 1=1
+				<if test="pd.typeIds2 != null and pd.typeIds2 != ''">
+					AND c2.TYPEID IN 
+					<foreach collection="pd.ids2" item="item" index="index" open="("  separator="," close=")" >
+						'${item}'
+					</foreach>
+				</if>
+			) N2
+		LEFT JOIN WEB_CONTENT_COLUM c3 ON c3.CONTENTID = N2.ID
+		WHERE 1=1
+		<if test="pd.typeIds3 != null and pd.typeIds3 != ''">
+			AND c3.TYPEID IN 
+			<foreach collection="pd.ids3" item="item" index="index" open="("  separator="," close=")" >
+				'${item}'
+			</foreach>
+		</if>
+	</select>
+	
+</mapper>

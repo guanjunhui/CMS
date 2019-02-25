@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StationMessageMapper">
+	
+	<resultMap type="cn.cebest.entity.system.infineon.StationMessage" id="BaseResultMap">
+		<id column="ID" property="id"/>
+		<result column="CONTENT" property="content"/>
+		<result column="TO_USER_ID" property="toUserId"/>
+		<result column="IS_READ" property="isRead"/>
+		<result column="CREATE_TIME" property="createTime"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="cn.cebest.entity.system.infineon.StationMessage">
+		INSERT INTO WEB_STATION_MESSAGE
+			(CONTENT, TO_USER_ID, CREATE_TIME)
+		VALUES
+			(#{content}, #{toUserId}, NOW())
+	</insert>
+	
+	<select id="getMessagelistPage" parameterType="cn.cebest.entity.Page" resultMap="BaseResultMap">
+		SELECT 
+			ID, CONTENT, TO_USER_ID, IS_READ,
+			DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') CREATE_TIME
+			FROM WEB_STATION_MESSAGE
+		WHERE TO_USER_ID=#{pd.userId}
+	</select>
+	
+	<select id="getNoReadNum" parameterType="cn.cebest.entity.Page" resultType="int">
+		SELECT COUNT(ID) FROM WEB_STATION_MESSAGE WHERE TO_USER_ID=#{pd.userId} AND IS_READ='0'
+	</select>
+	
+	<insert id="insertMore" parameterType="java.util.List">
+		INSERT INTO WEB_STATION_MESSAGE
+			(CONTENT, TO_USER_ID, CREATE_TIME)
+		VALUES
+		<foreach collection="list" separator="," item="item">
+			(#{item.content}, #{item.toUserId}, NOW())
+		</foreach>
+	</insert>
+	
+	<update id="updateRead" parameterType="cn.cebest.entity.system.infineon.StationMessage">
+		UPDATE WEB_STATION_MESSAGE SET IS_READ='1' 
+		WHERE ID IN
+		<foreach collection="array" item="item" index="index" open="("  separator="," close=")" >
+			#{item}
+		</foreach>
+	</update>
+	
+	<update id="updateReadAll" parameterType="string">
+		UPDATE WEB_STATION_MESSAGE SET IS_READ='1' 
+		WHERE TO_USER_ID=#{userId}
+	</update>
+	
+	<update id="updateReadMsg" parameterType="string">
+		UPDATE WEB_STATION_MESSAGE SET IS_READ='1' 
+		WHERE ID=#{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM 
+			WEB_STATION_MESSAGE
+		WHERE ID IN
+		<foreach collection="array" item="item" index="index" open="("  separator="," close=")" >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="selectKeyWordsList" resultType="cn.cebest.entity.system.infineon.KeyWords">
+		SELECT 
+			ID id,
+			KEY_WORDS keyWords,
+			STATUS status
+		FROM WEB_KEY_WORDS
+		WHERE STATUS = '1'
+	</select>
+</mapper>

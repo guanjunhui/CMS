@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AddressQueryMapper">
+	<select id="selectAddressQueryList" parameterType="page" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM WEB_ADDRESS_QUERY 
+		WHERE siteId=#{pd.siteId}
+		<if test="pd.province !=null and pd.province !=''">
+			AND PROVINCE=#{pd.province}
+		</if>
+		<if test="pd.city !=null and pd.city !=''">
+			AND CITY=#{pd.city}
+		</if>
+		<if test="pd.area !=null and pd.area !=''">
+			AND AREA=#{pd.area}
+		</if>
+		<if test="pd.brand !=null and pd.brand !=''">
+			AND BRAND=#{pd.brand}
+		</if>
+		ORDER BY find_in_set(CITY,#{pd.orderCity}) DESC
+	</select>
+	
+	
+	<select id="selectAddresslist" parameterType="pd" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM WEB_ADDRESS_QUERY 
+		WHERE siteId=#{SITEID}
+		<if test="ids !=null and ids !=''">
+		 and id in 
+		<foreach collection="ids" close=")" open="(" item="id" separator=",">
+			#{id}
+		</foreach>
+		</if>
+	</select>
+	
+	<insert id="insertAddressQuery" parameterType="cn.cebest.entity.system.addressquery.AddressQuery">
+		insert into WEB_ADDRESS_QUERY(ID,PROVINCE,CITY,AREA,BRAND,X_POINT,Y_POINT,MY_NAME,TEL,ADDRESS,CREATE_TIME,SITEID)
+	    values(#{id},#{province},#{city},#{area},#{brand},#{xPoint},#{yPoint},#{myName},#{tel},#{address},#{createTime},#{siteId})
+	</insert>
+
+	<select id="selectAddresslistPage" parameterType="page" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM WEB_ADDRESS_QUERY 
+		WHERE siteId=#{pd.siteId}
+		<if test="pd.myName !=null and pd.myName !=''">
+			AND MY_NAME LIKE '%' #{pd.myName} '%'
+		</if>
+		ORDER BY PROVINCE DESC
+	</select>
+	
+	<select id="selectAddressById" parameterType="String" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM WEB_ADDRESS_QUERY 
+		WHERE id=#{ID}
+	</select>
+	
+	<delete id="deleteAddressByIds" >
+	delete from WEB_ADDRESS_QUERY
+	where id in 
+	<foreach collection="array" close=")" item="id" separator="," open="(">
+		#{id}
+	</foreach>
+	</delete>
+	
+	<update id="updateAddressQuery" parameterType="cn.cebest.entity.system.addressquery.AddressQuery">
+		update WEB_ADDRESS_QUERY
+		set 
+		PROVINCE=#{province},
+		CITY=#{city},
+		AREA=#{area},
+		BRAND=#{brand},
+		X_POINT=#{xPoint},
+		Y_POINT=#{yPoint},
+		MY_NAME=#{myName},
+		TEL=#{tel},
+		ADDRESS=#{address}
+		where 
+		ID=#{id}
+	</update>
+	
+	<resultMap id="BaseResultMap" type="cn.cebest.entity.system.addressquery.AddressQuery">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="BRAND" property="brand" jdbcType="VARCHAR" />
+		<result column="X_POINT" property="xPoint" jdbcType="INTEGER" />
+		<result column="Y_POINT" property="yPoint" jdbcType="VARCHAR" />
+		<result column="MY_NAME" property="myName" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>
